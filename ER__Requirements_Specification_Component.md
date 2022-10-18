@@ -100,45 +100,43 @@
 >|US38|Notificação - Mudança de estado de encomenda|Média|Como utilizador autenticado, quero ser notificado quando a minha encomenda mudar de estado, para ter noção de quanto tempo falta para receber o produto que pedi|
 >|US39|Notificação - Produto na lista de favoritos disponível|Média|Como utilizador autenticado, quero receber uma notificação quando um produto em que tenho interesse esteja disponível, para conseguir encomendar o artigo antes de deixar de haver *stock* novamente|
 >|US40|Notificação - Mudança de preço do artigo no carrinho de compras|Média|Como utilizador autenticado, quero ser notificado se o preço de um dos artigos que tenho no carrinho for alterado, para não encomendar algo que custe mais do valor que pretendo gastar|
->|US41|Gerir *vouchers*|Baixa|Como utilizador autenticado, quero ver e gerir os *vouchers* que tenho disponíveis no momento, para saber quando devo fazer uma encomenda e conseguir aproveitar os descontos|
->|US42|Recomendações de produtos|Baixa|Como utilizador autenticado, quero receber recomendações de produtos, para encontrar artigos que devo gostar sem estar à procura|
->|US43|Gerir vários métodos de pagamento|Baixa|Como utilizador autenticado, quero gerir os métodos de pagamento que tenho associados à minha conta, para ter à disposição diversas formas de pagamento de forma fácil e direta|
->|US44|Reportar *review*|Baixa|Como utilizador autenticado, quero reportar avaliações, para alertar o sistema de uma avaliação/opinião inapropriada|
-
+>|US41|Recomendações de produtos|Baixa|Como utilizador autenticado, quero receber recomendações de produtos, para encontrar artigos que devo gostar sem estar à procura|
+>|US42|Gerir vários métodos de pagamento|Baixa|Como utilizador autenticado, quero gerir os métodos de pagamento que tenho associados à minha conta, para ter à disposição diversas formas de pagamento de forma fácil e direta|
+>|US43|Reportar *review*|Baixa|Como utilizador autenticado, quero reportar avaliações, para alertar o sistema de uma avaliação/opinião inapropriada|
 ><center>(Tabela 4: User stories do Utilizador Autenticado)</center><br>
 
 #### 2.5 Administrador
 
 >|Identificador|Nome|Prioridade|Descrição|
 >|---|------|---|---|
->|US45|Possuir conta|Média|Como administrador, quero possuir uma conta, para poder explorar e gerir o sistema e resolver possíveis problemas|
->|US46|Iniciar sessão|Média|Como administrador, eu quero fazer *log in* com a minha conta, para ter acesso às minhas funções e permissões.
->|US47|Terminar sessão|Média|Como administrador, eu quero fazer *log out* do sistema, para que seja possível sair da plataforma em segurança e/ou iniciar sessão com outra conta.
+>|US44|Possuir conta|Média|Como administrador, quero possuir uma conta, para poder explorar e gerir o sistema e resolver possíveis problemas|
+>|US45|Iniciar sessão|Média|Como administrador, eu quero fazer *log in* com a minha conta, para ter acesso às minhas funções e permissões.
+>|US46|Terminar sessão|Média|Como administrador, eu quero fazer *log out* do sistema, para que seja possível sair da plataforma em segurança e/ou iniciar sessão com outra conta.
 ><center>(Tabela 5: User stories do Administrador)</center><br>
 
 #### 2.4. Colaborador
 
 >|Identificador|Nome|Prioridade|Descrição|
 >|---|---|---|---|
->|US48|Adicionar artigo|Média|Como colaborador, quero adicionar um produto no sistema, para que o artigo da marca seja disponibilizado aos clientes no *site*|
->|US49|Gerir a informação dos produtos|Média|Como colaborador, quero ter controlo sobre as informações dos produtos, para poder modificar a descrição dos artigos disponibilizados no sistema|
->|US50|Gerir o *stock* dos produtos|Média|Como colaborador, quero ter controlo sobre o *stock* de um artigo no sistema, para poder alterá-lo consoante a disponibilidade do armazém e da fábrica|
->|US51|Gerir as categorias de artigos|Média|Como colaborador, quero ter controlo sobre as categorias de produtos no sistema, para poder adicionar ou remover alguma categoria|
->|US52|Ver histórico de compras dos utilizadores|Média|Como colaborador, quero ter acesso ao histórico de compras dos utilizadores, para poder verificar que artigos foram adquiridos recentemente e conseguir analisar estatísticas|
->|US53|Controlar o estado das encomendas|Média|Como colaborador, quero ter controlo sobre o estado das encomendas, para poder informar os clientes do processo dos seus pedidos|
->|US54|Ver estatísticas de vendas|Baixa|Como colaborador, quero ver as estatísticas das vendas da marca, para informar a About Fashion em que produtos deva investir mais ou menos e ter dados para analisar o rendimento da empresa|
->|US55|Gerir descontos de artigos|Baixa|Como colaborador, quero ter controlo sobre os descontos aplicados aos produtos, para poder adicionar/remover/modificar as promoções de um ou mais artigos|
+>|US47|Adicionar artigo|Média|Como colaborador, quero adicionar um produto no sistema, para que o artigo da marca seja disponibilizado aos clientes no *site*|
+>|US48|Gerir a informação dos produtos|Média|Como colaborador, quero ter controlo sobre as informações dos produtos, para poder modificar a descrição dos artigos disponibilizados no sistema|
+>|US49|Gerir o *stock* dos produtos|Média|Como colaborador, quero ter controlo sobre o *stock* de um artigo no sistema, para poder alterá-lo consoante a disponibilidade do armazém e da fábrica|
+>|US50|Gerir as categorias de artigos|Média|Como colaborador, quero ter controlo sobre as categorias de produtos no sistema, para poder adicionar ou remover alguma categoria|
+>|US51|Ver histórico de compras dos utilizadores|Média|Como colaborador, quero ter acesso ao histórico de compras dos utilizadores, para poder verificar que artigos foram adquiridos recentemente e conseguir analisar estatísticas|
+>|US52|Controlar o estado das encomendas|Média|Como colaborador, quero ter controlo sobre o estado das encomendas, para poder informar os clientes do processo dos seus pedidos|
+>|US53|Ver estatísticas de vendas|Baixa|Como colaborador, quero ver as estatísticas das vendas da marca, para informar a About Fashion em que produtos deva investir mais ou menos e ter dados para analisar o rendimento da empresa|
+>|US54|Gerir descontos de artigos|Baixa|Como colaborador, quero ter controlo sobre os descontos aplicados aos produtos, para poder adicionar/remover/modificar as promoções de um ou mais artigos|
 ><center>(Tabela 6: User stories do Colaborador)</center><br>
 
 #### 2.5. Técnico
 
 >|Identificador|Nome|Prioridade|Descrição|
 >|---|---|---|---|
->|US56|Administrar contas de utilizadores (pesquisar, ver, editar, criar)|Elevada|Como administrador técnico, quero ter acesso completo às contas dos utilizadores, para poder gerir e resolver possíveis problemas que os utilizadores tenham com elas|
->|US57|Bloquear contas de utilizadores|Média|Como técnico, quero bloquear a conta de um utilizador, para o impedir de fazer alguma encomenda no sistema|
->|US58|Desbloquear contas de utilizadores|Média|Como administrador técnico, quero desbloquear a conta de um utilizador, para o permitir fazer avaliações de artigos|
->|US59|Eliminar contas de utilizadores|Média|Como técnico, quero apagar contas de utilizadores, para poder remover contas de clientes que foram inapropriados|
->|US60|Gerir *reports*|Baixa|Como administrador técnico, quero gerir *reports*, para poder modificar o sistema consoante algum aviso de um utilizador|
+>|US55|Administrar contas de utilizadores (pesquisar, ver, editar, criar)|Elevada|Como administrador técnico, quero ter acesso completo às contas dos utilizadores, para poder gerir e resolver possíveis problemas que os utilizadores tenham com elas|
+>|US56|Bloquear contas de utilizadores|Média|Como técnico, quero bloquear a conta de um utilizador, para o impedir de fazer alguma encomenda no sistema|
+>|US57|Desbloquear contas de utilizadores|Média|Como administrador técnico, quero desbloquear a conta de um utilizador, para o permitir fazer avaliações de artigos|
+>|US58|Eliminar contas de utilizadores|Média|Como técnico, quero apagar contas de utilizadores, para poder remover contas de clientes que foram inapropriados|
+>|US59|Gerir *reports*|Baixa|Como administrador técnico, quero gerir *reports*, para poder modificar o sistema consoante algum aviso de um utilizador|
 ><center>(Tabela 7: User stories do Técnico)</center><br>
 
 ### 3. Supplementary Requirements
@@ -246,11 +244,13 @@
 
 ## Revision history
 
-(não aplicável de momento)
+Mudanças feitas à primeira submissão:
+
+1) retirou-se o *user storie* 41 - Gerir *vouchers* - prioridade baixa - "Como utilizador autenticado, quero ver e gerir os *vouchers* que tenho disponíveis no momento, para saber quando devo fazer uma encomenda e conseguir aproveitar os descontos"; A numeração dos *user stories* seguintes foi alterada devido à eliminação deste ponto. (18/10/2022)
 
 ---
 
-GROUP2251, 05/10/2022
+GROUP2251, 18/10/2022
 
 * Membro 1 - Alexandre Correia, up202007042@edu.fe.up.pt
 * Membro 2 - Ana Sofia Costa, up202007602@edu.fe.up.pt
