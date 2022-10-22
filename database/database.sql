@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS size;
 DROP TABLE IF EXISTS color;
 DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS details;
-DROP TABLE IF EXISTS order;
+DROP TABLE IF EXISTS user_order;
 DROP TABLE IF EXISTS order_details;
 
 --TYPE's
@@ -70,7 +70,7 @@ CREATE TABLE admin(
     birth_date DATE,
     gender TEXT,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE, --VER TRIGGER
-    role TYPE admin_type NOT NULL
+    TYPE admin_type NOT NULL
 );
 
 CREATE TABLE notification(
@@ -143,7 +143,7 @@ CREATE TABLE product_image(
 
 CREATE TABLE wishlist(
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
-    id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE,
+    id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE review(
@@ -161,8 +161,8 @@ CREATE TABLE report(
     description TEXT NOT NULL,
     resolved boolean NOT NULL DEFAULT FALSE,
     report_date TIMESTAMP NOT NULL,
-    type TYPE report_type NOT NULL, 
-    id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE DELETE CASCADE,
+    TYPE report_type NOT NULL, 
+    id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE,
     id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE
 );
 
@@ -203,9 +203,9 @@ CREATE TABLE details(
     id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE
 );
 
-CREATE TABLE order(
+CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
-    state TYPE order_state NOT NULL DEFAULT 'Shopping Cart',
+    TYPE order_state NOT NULL DEFAULT 'Shopping Cart',
     date TIMESTAMP NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE,
@@ -213,7 +213,7 @@ CREATE TABLE order(
 );
 
 CREATE TABLE order_details(
-    id_order INTEGER NOT NULL REFERENCES order(id) ON UPDATE CASCADE,
+    id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE,
     id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_order, id_details)
 );
