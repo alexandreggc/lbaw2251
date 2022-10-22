@@ -2,9 +2,9 @@
 DROP TYPE IF EXISTS admin_type;
 DROP TYPE IF EXISTS order_state_type;
 DROP TYPE IF EXISTS notification_type;
+DROP TYPE IF EXISTS report_type;
 
 DROP TABLE IF EXISTS image;
-DROP TABLE IF EXISTS report;
 DROP TABLE IF EXISTS authenticated_user;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS notification;
@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS product_image;
 DROP TABLE IF EXISTS wishlist;
 DROP TABLE IF EXISTS review;
+DROP TABLE IF EXISTS report;
 DROP TABLE IF EXISTS promotion;
 DROP TABLE IF EXISTS promotion_product;
 DROP TABLE IF EXISTS size;
@@ -26,15 +27,14 @@ DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS details;
 DROP TABLE IF EXISTS order;
 DROP TABLE IF EXISTS order_details;
-DROP TABLE IF EXISTS admin_order;
 
 --TYPE's
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
-CREATE TYPE order_state_type AS ENUM ('Shopping Cart', 
-                                      'Pending', 
-                                      'In Progress', 
-                                      'Completed', 
-                                      'Cancelled'); 
+CREATE TYPE order_state_type AS ENUM ('Shopping Cart',
+                                      'Pending',
+                                      'In Progress',
+                                      'Completed',
+                                      'Cancelled');
 CREATE TYPE notification_type AS ENUM ('New Promotion',
                                        'New Collection',
                                        'Recommended Product', 
@@ -42,18 +42,12 @@ CREATE TYPE notification_type AS ENUM ('New Promotion',
                                        'Payment accept', 
                                        'Product in Wishlist Available', 
                                        'Price Change of Item in Shopping Cart');
+CREATE TYPE report_type AS ENUM ('Technical', 'Review');
 
 --CREATE's
 CREATE TABLE image (
     id SERIAL PRIMARY KEY,
     file TEXT NOT NULL CONSTRAINT image_unique UNIQUE
-);
-
-CREATE TABLE report(
-    id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL,
-    resolved boolean NOT NULL DEFAULT FALSE,
-    report_date TIMESTAMP NOT NULL
 );
 
 CREATE TABLE authenticated_user (
@@ -162,6 +156,16 @@ CREATE TABLE review(
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
 
+CREATE TABLE report(
+    id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL,
+    resolved boolean NOT NULL DEFAULT FALSE,
+    report_date TIMESTAMP NOT NULL,
+    type TYPE report_type NOT NULL, 
+    id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE DELETE CASCADE,
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE
+);
+
 CREATE TABLE promotion(
     id SERIAL PRIMARY KEY,
     discount NUMERIC NOT NULL CHECK (discount > 0 AND discount < 100),
@@ -204,8 +208,8 @@ CREATE TABLE order(
     state TYPE order_state NOT NULL DEFAULT 'Shopping Cart',
     date TIMESTAMP NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
-    id_address INTEGER NOT NULL REFERENCES address(id) ON UPDATE CASCADE,
-    id_card INTEGER NOT NULL REFERENCES card(id) ON UPDATE CASCADE
+    id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE,
+    id_card INTEGER REFERENCES card(id) ON UPDATE CASCADE
 );
 
 CREATE TABLE order_details(
@@ -214,13 +218,5 @@ CREATE TABLE order_details(
     PRIMARY KEY (id_order, id_details)
 );
 
-CREATE TABLE admin_order(
-    id_admin NOT NULL REFERENCES admin(id) ON UPDATE CASCADE,
-    id_order NOT NULL REFERENCES order(id) ON UPDATE CASCADE,
-    PRIMARY KEY (id_admin, id_order)
-);
 
 --verificar se password não é palavra reservada
-
---TRANSACTIONS
-
