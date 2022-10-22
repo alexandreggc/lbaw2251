@@ -1,32 +1,32 @@
 --DROP's
-DROP TYPE IF EXISTS admin_type;
-DROP TYPE IF EXISTS order_state_type;
-DROP TYPE IF EXISTS notification_type;
-DROP TYPE IF EXISTS report_type;
+DROP TYPE IF EXISTS admin_type CASCADE;
+DROP TYPE IF EXISTS order_state_type CASCADE;
+DROP TYPE IF EXISTS notification_type CASCADE;
+DROP TYPE IF EXISTS report_type CASCADE;
 
-DROP TABLE IF EXISTS image;
-DROP TABLE IF EXISTS authenticated_user;
-DROP TABLE IF EXISTS admin;
-DROP TABLE IF EXISTS notification;
-DROP TABLE IF EXISTS admin_notification;
-DROP TABLE IF EXISTS user_notification;
-DROP TABLE IF EXISTS card;
-DROP TABLE IF EXISTS country;
-DROP TABLE IF EXISTS address;
-DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS product_image;
-DROP TABLE IF EXISTS wishlist;
-DROP TABLE IF EXISTS review;
-DROP TABLE IF EXISTS report;
-DROP TABLE IF EXISTS promotion;
-DROP TABLE IF EXISTS promotion_product;
-DROP TABLE IF EXISTS size;
-DROP TABLE IF EXISTS color;
-DROP TABLE IF EXISTS stock;
-DROP TABLE IF EXISTS details;
-DROP TABLE IF EXISTS user_order;
-DROP TABLE IF EXISTS order_details;
+DROP TABLE IF EXISTS image CASCADE;
+DROP TABLE IF EXISTS authenticated_user CASCADE;
+DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS notification CASCADE;
+DROP TABLE IF EXISTS admin_notification CASCADE;
+DROP TABLE IF EXISTS user_notification CASCADE;
+DROP TABLE IF EXISTS card CASCADE;
+DROP TABLE IF EXISTS country CASCADE;
+DROP TABLE IF EXISTS address CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS product CASCADE;
+DROP TABLE IF EXISTS product_image CASCADE;
+DROP TABLE IF EXISTS wishlist CASCADE;
+DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS report CASCADE;
+DROP TABLE IF EXISTS promotion CASCADE;
+DROP TABLE IF EXISTS promotion_product CASCADE;
+DROP TABLE IF EXISTS size CASCADE;
+DROP TABLE IF EXISTS color CASCADE;
+DROP TABLE IF EXISTS stock CASCADE;
+DROP TABLE IF EXISTS details CASCADE;
+DROP TABLE IF EXISTS user_order CASCADE;
+DROP TABLE IF EXISTS order_details CASCADE;
 
 --TYPE's
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
@@ -54,7 +54,7 @@ CREATE TABLE authenticated_user (
     id SERIAL PRIMARY KEY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
-    email TEXT NOT NULL CONSTRAINT email_unique UNIQUE,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     birth_date DATE,
     gender TEXT,
@@ -65,7 +65,7 @@ CREATE TABLE admin(
     id SERIAL PRIMARY KEY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
-    email TEXT NOT NULL CONSTRAINT email_unique UNIQUE,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     birth_date DATE,
     gender TEXT,
@@ -174,7 +174,7 @@ CREATE TABLE promotion(
 );
 
 CREATE TABLE promotion_product(
-    id_promo INTEGER NOT NULL REFERENCES promotion(id) ON UPDATE CASCADE,
+    id_promotion INTEGER NOT NULL REFERENCES promotion(id) ON UPDATE CASCADE,
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_promotion, id_product)
 );
@@ -197,6 +197,7 @@ CREATE TABLE stock(
 );
 
 CREATE TABLE details(
+	id SERIAL PRIMARY KEY,
     quantity SMALLINT NOT NULL CHECK (quantity > 0),
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE,
     id_size INTEGER NOT NULL REFERENCES size(id) ON UPDATE CASCADE,
@@ -205,7 +206,7 @@ CREATE TABLE details(
 
 CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
-    TYPE order_state NOT NULL DEFAULT 'Shopping Cart',
+    TYPE order_state_type NOT NULL DEFAULT 'Shopping Cart',
     date TIMESTAMP NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE,
