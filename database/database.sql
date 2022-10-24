@@ -149,6 +149,11 @@ CREATE TABLE review(
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
+CREATE TABLE user_like(
+    id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
+    id_review INTEGER NOT NULL REFERENCES review(id) ON UPDATE CASCADE,
+    PRIMARY KEY (id_user, id_review)
+);
 CREATE TABLE report(
     id SERIAL PRIMARY KEY,
     description TEXT NOT NULL,
@@ -206,8 +211,3 @@ CREATE TABLE order_details(
     id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_order, id_details)
 );
-CREATE TABLE user_like(
-    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE,
-    id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE,
-    PRIMARY KEY (id_user, id_review)
-)
