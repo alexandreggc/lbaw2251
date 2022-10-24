@@ -43,9 +43,11 @@ CREATE TYPE notification_type AS ENUM (
     'Change in Order State',
     'Payment accept',
     'Product in Wishlist Available',
-    'Price Change of Item in Shopping Cart'
+    'Price Change of Item in Shopping Cart',
+    'Order',
+    'Report',
+    'Other'
 );
-CREATE TYPE report_type AS ENUM ('Technical', 'Review');
 --CREATE's
 CREATE TABLE image (
     id SERIAL PRIMARY KEY,
@@ -159,7 +161,6 @@ CREATE TABLE report(
     description TEXT NOT NULL,
     resolved boolean NOT NULL DEFAULT FALSE,
     report_date TIMESTAMP NOT NULL,
-    TYPE report_type NOT NULL,
     id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE,
     id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE
 );
