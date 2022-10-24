@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS stock CASCADE;
 DROP TABLE IF EXISTS details CASCADE;
 DROP TABLE IF EXISTS user_order CASCADE;
 DROP TABLE IF EXISTS order_details CASCADE;
+DROP TABLE IF EXISTS user_like CASCADE;
 --TYPE's
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
 CREATE TYPE order_state_type AS ENUM (
@@ -58,6 +59,7 @@ CREATE TABLE authenticated_user (
     password TEXT NOT NULL,
     birth_date DATE,
     gender TEXT,
+    blocked BOOLEAN NOT NULL DEFAULT FALSE,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE --VER TRIGGER
 );
 CREATE TABLE admin(
@@ -144,7 +146,6 @@ CREATE TABLE review(
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     date TIMESTAMP NOT NULL,
-    likes INT NOT NULL CHECK(likes >= 0) DEFAULT 0,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
@@ -205,3 +206,8 @@ CREATE TABLE order_details(
     id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_order, id_details)
 );
+CREATE TABLE user_like(
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE,
+    id_review INTEGER REFERENCES review(id) ON UPDATE CASCADE,
+    PRIMARY KEY (id_user, id_review)
+)
