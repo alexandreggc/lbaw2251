@@ -72,11 +72,11 @@ CREATE TABLE admin(
     gender TEXT,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE,
     --VER TRIGGER
-    TYPE admin_type NOT NULL
+    role admin_type NOT NULL
 );
 CREATE TABLE notification(
     id SERIAL PRIMARY KEY,
-    type TEXT NOT NULL,
+    type_notification notification_type NOT NULL,
     message TEXT NOT NULL,
     date TIMESTAMP NOT NULL
 );
@@ -195,7 +195,7 @@ CREATE TABLE details(
 );
 CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
-    TYPE order_state_type NOT NULL DEFAULT 'Shopping Cart',
+    status order_state_type NOT NULL DEFAULT 'Shopping Cart',
     date TIMESTAMP NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE,
