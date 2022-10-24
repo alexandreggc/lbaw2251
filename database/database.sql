@@ -97,7 +97,7 @@ CREATE TABLE card(
     number TEXT NOT NULL CONSTRAINT cart_unique UNIQUE,
     month SMALLINT NOT NULL,
     year SMALLINT NOT NULL,
-    code SMALLINT NOT NULL CONSTRAINT code_unique UNIQUE,
+    code SMALLINT NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE
 );
 CREATE TABLE country(
