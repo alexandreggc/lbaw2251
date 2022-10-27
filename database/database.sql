@@ -94,7 +94,7 @@ CREATE TABLE user_notification(
 );
 CREATE TABLE card(
     id SERIAL PRIMARY KEY,
-    nickname TEXT CONSTRAINT payment_method_unique UNIQUE,
+    nickname TEXT,
     name TEXT NOT NULL,
     number TEXT NOT NULL CONSTRAINT cart_unique UNIQUE,
     month SMALLINT NOT NULL,
