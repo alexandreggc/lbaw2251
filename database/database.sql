@@ -170,7 +170,7 @@ CREATE TABLE promotion(
         discount > 0
         AND discount < 100
     ),
-    start_date TIMESTAMP NOT NULL,
+    start_date  TIMESTAMP NOT NULL,
     final_date TIMESTAMP NOT NULL CHECK (final_date > start_date)
 );
 CREATE TABLE promotion_product(
