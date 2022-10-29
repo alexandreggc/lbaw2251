@@ -401,7 +401,7 @@ EXECUTE PROCEDURE order_parameters();
 -- Adicionar um artigo ao carrinho: FEITO
 -- Remover um artigo do carrinho: FEITO
 -- Retornar o preço de uma order já com as promoções aplicadas FEITO
-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
 --Triggers:
 -- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida FEITO
 -- Verificar se um utilizador já comprou o produto antes de fazer uma review FEITO
