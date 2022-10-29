@@ -212,3 +212,165 @@ CREATE TABLE order_details(
     id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_order, id_details)
 );
+--TRIGGERS
+
+-- Verificar o stock dos produtos no momento da adição ao carrinho
+
+CREATE FUNCTION check_stock(Product details)
+RETURNS INTEGER AS
+$$ BEGIN
+    IF details.quantity = 0 THEN
+        RAISE EXCEPTION 'Product out of stock';
+    END IF;
+    RETURN 1;
+END; $$
+LANGUAGE plpgsql;
+
+-- Adicionar um artigo ao carrinho
+
+CREATE FUNCTION add_product_to_cart(Cart user_order, Product details)
+RETURNS user_order AS
+$$ BEGIN
+    IF Cart.state = 'Shopping Cart' THEN
+        FOR cnt in 1..Product.quantity LOOP
+            IF check_product_stock(Product) = 1 THEN
+                INSERT INTO order_details VALUES (Cart.id, Product.id);
+                UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
+            END IF;
+        END LOOP;
+        RETURN Cart;
+    ELSE
+        RAISE EXCEPTION 'Error adding product to cart';
+    END IF;
+END; $$
+LANGUAGE plpgsql;
+
+-- Remover um artigo ao carrinho
+
+CREATE FUNCTION remove_product_from_cart(Cart user_order, Product details)
+RETURNS user_order AS
+$$ BEGIN
+    IF Cart.state = 'Shopping Cart' THEN
+        FOR cnt in 1..Product.quantity LOOP
+            DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
+            UPDATE details SET quantity = quantity + 1 WHERE id = Product.id;
+        END LOOP;
+        RETURN Cart;
+    ELSE
+        RAISE EXCEPTION 'Error removing product from cart';
+    END IF;
+END; $$
+LANGUAGE plpgsql;
+
+-- Retornar o preço de uma order já com as promoções aplicadas
+
+CREATE FUNCTION product_price_with_promotion(Product product, Promotion promotion)
+RETURNS NUMERIC AS
+$$ BEGIN
+    RETURN Product.price * (1 - Promotion.discount);
+END; $$
+LANGUAGE plpgsql;
+
+-- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida
+
+CREATE FUNCTION delete_user_account()
+RETURNS TRIGGER AS
+$$ BEGIN
+    UPDATE report SET id_user = NULL WHERE id_user = OLD.id_user;
+    UPDATE review SET id_user = NULL WHERE id_user = OLD.id_user;
+    UPDATE user_like SET id_user = NULL WHERE id_user = OLD.id_user;
+    DELETE FROM wishlist WHERE id_user = OLD.id_user;
+    UPDATE user_order SET id_user = NULL, 
+                          id_address = NULL, 
+                          id_card = NULL 
+                          WHERE id_user = OLD.id_user;
+    RETURN OLD;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_user_account 
+AFTER DELETE ON authenticated_user
+FOR EACH ROW
+EXECUTE PROCEDURE delete_user_account();
+--UPDATE user_order SET id_address = NULL WHERE id_user = id;
+--UPDATE user_order SET id_card = NULL WHERE id_user = id;
+
+-- Verificar se um utilizador já comprou o produto antes de fazer uma review
+
+CREATE FUNCTION check_review_privileges() 
+RETURNS TRIGGER AS
+$$ BEGIN
+    IF NOT EXISTS (SELECT * 
+                   FROM (SELECT DISTINCT id_user, id_product, id_size, id_color
+                        FROM user_order, order_details, details 
+                        WHERE user_order.id = order_details.id_order AND order_details.id_details = details.id
+                        ORDER BY id_user, id_product, id_size, id_color) AS user_purchases
+                   WHERE NEW.id_user = user_purchases.id_user AND NEW.id_product = user_purchases.id_product) 
+                   -- se quisermos especificar o tamanho e cor podemos adicionar aqui
+    THEN
+        RAISE EXCEPTION 'An item can only be reviewed if it has been purchased';
+    END IF;
+    RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER before_review_insert
+BEFORE INSERT ON review
+FOR EACH ROW
+EXECUTE PROCEDURE check_review_privileges();
+
+-- O utilizador não pode meter um like na própia review
+
+CREATE FUNCTION check_like_privileges()
+RETURNS TRIGGER AS
+$$ BEGIN
+    IF EXISTS (SELECT id_user 
+               FROM review 
+               WHERE id_review = NEW.id_review AND id_user = NEW.id_user) 
+    THEN
+        RAISE EXCEPTION 'A user cannot like his own review';
+    END IF;
+    RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER before_like_insert
+BEFORE INSERT ON user_like
+FOR EACH ROW
+EXECUTE PROCEDURE check_like_privileges();
+
+-- Um utilizador não pode reportar a sua review 
+
+CREATE FUNCTION check_report_privileges()
+RETURNS TRIGGER AS
+$$ BEGIN
+    IF EXISTS (SELECT id_user 
+               FROM review 
+               WHERE id_review = NEW.id_review AND id_user = NEW.id_user) 
+    THEN
+        RAISE EXCEPTION 'A user cannot report his own review';
+    END IF;
+    RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER before_report_insert
+BEFORE INSERT ON report
+FOR EACH ROW 
+EXECUTE PROCEDURE check_report_privileges();
+
+
+
+---------------------------------------------------------------------------------------------------------------------
+--User-Defined Functions:
+-- Adicionar um artigo ao carrinho: FEITO
+-- Remover um artigo do carrinho: FEITO
+-- Retornar o preço de uma order já com as promoções aplicadas FEITO
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--Triggers:
+-- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida FEITO
+-- Verificar se um utilizador já comprou o produto antes de fazer uma review FEITO
+-- O utilizador não pode meter um like na própia review FEITO
+-- Verificar o stock dos produtos no momento da adição ao carrinho FEITO
+-- Um utilizador não pode reportar a sua review FEITO
+-- Quando um utilizador adiciona um artigo ao carrinho remove esse artigo da sua wishlist 
