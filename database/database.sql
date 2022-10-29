@@ -152,7 +152,7 @@ CREATE TABLE review(
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
 CREATE TABLE user_like(
-    id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_review INTEGER NOT NULL REFERENCES review(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_user, id_review)
 );
