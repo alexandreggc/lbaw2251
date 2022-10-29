@@ -148,7 +148,7 @@ CREATE TABLE review(
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     date TIMESTAMP NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE
 );
 CREATE TABLE user_like(
@@ -203,7 +203,7 @@ CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
     status order_state_type NOT NULL DEFAULT 'Shopping Cart',
     date TIMESTAMP NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE,
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE,
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE,
     id_card INTEGER REFERENCES card(id) ON UPDATE CASCADE
 );
