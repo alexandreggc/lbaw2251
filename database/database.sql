@@ -27,6 +27,21 @@ DROP TABLE IF EXISTS details CASCADE;
 DROP TABLE IF EXISTS user_order CASCADE;
 DROP TABLE IF EXISTS order_details CASCADE;
 DROP TABLE IF EXISTS user_like CASCADE;
+DROP FUNCTION IF EXISTS check_stock CASCADE;
+DROP FUNCTION IF EXISTS add_product_to_cart CASCADE;
+DROP FUNCTION IF EXISTS remove_product_from_cart CASCADE;
+DROP FUNCTION IF EXISTS product_price_with_promotion CASCADE;
+DROP FUNCTION IF EXISTS delete_user_information CASCADE;
+DROP TRIGGER IF EXISTS delete_user_account CASCADE;
+DROP FUNCTION IF EXISTS check_review_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_review_insert CASCADE;
+DROP FUNCTION IF EXISTS check_like_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_like_insert CASCADE;
+DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_report_insert CASCADE;
+DROP FUNCTION IF EXISTS order_parameters CASCADE;
+DROP TRIGGER IF EXISTS check_order_parameters CASCADE;
+
 --TYPE's
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
 CREATE TYPE order_state_type AS ENUM (
@@ -48,6 +63,7 @@ CREATE TYPE notification_type AS ENUM (
     'Report',
     'Other'
 );
+
 --CREATE's
 CREATE TABLE image (
     id SERIAL PRIMARY KEY,
@@ -212,7 +228,9 @@ CREATE TABLE order_details(
     id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_order, id_details)
 );
---TRIGGERS
+-----------------------------------------------------------------------------------------------
+
+--TRIGGERS and User Defined Functions
 
 -- Verificar o stock dos produtos no momento da adição ao carrinho
 
@@ -273,7 +291,7 @@ LANGUAGE plpgsql;
 
 -- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida
 
-CREATE FUNCTION delete_user_account()
+CREATE FUNCTION delete_user_information()
 RETURNS TRIGGER AS
 $$ BEGIN
     UPDATE report SET id_user = NULL WHERE id_user = OLD.id_user;
@@ -291,9 +309,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER delete_user_account 
 AFTER DELETE ON authenticated_user
 FOR EACH ROW
-EXECUTE PROCEDURE delete_user_account();
---UPDATE user_order SET id_address = NULL WHERE id_user = id;
---UPDATE user_order SET id_card = NULL WHERE id_user = id;
+EXECUTE PROCEDURE delete_user_information();
 
 -- Verificar se um utilizador já comprou o produto antes de fazer uma review
 
@@ -359,7 +375,26 @@ BEFORE INSERT ON report
 FOR EACH ROW 
 EXECUTE PROCEDURE check_report_privileges();
 
+-- verificar se uma order com estado diferente de "Shopping Cart" tem todos os parametros preenchidos
 
+CREATE FUNCTION order_parameters()
+RETURNS TRIGGER AS
+$$ BEGIN
+    IF (OLD.state = 'Shopping Cart' AND NEW.state <> 'Shopping Cart')
+    THEN
+        IF NEW.id_user IS NULL OR NEW.id_address IS NULL OR NEW.id_card IS NULL 
+        THEN
+            RAISE EXCEPTION 'Order must have an user, an address and a card';
+        END IF;
+    END IF;
+    RETURN NEW;    
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER check_order_parameters
+BEFORE UPDATE ON user_order
+FOR EACH ROW 
+EXECUTE PROCEDURE order_parameters();
 
 ---------------------------------------------------------------------------------------------------------------------
 --User-Defined Functions:
@@ -373,4 +408,4 @@ EXECUTE PROCEDURE check_report_privileges();
 -- O utilizador não pode meter um like na própia review FEITO
 -- Verificar o stock dos produtos no momento da adição ao carrinho FEITO
 -- Um utilizador não pode reportar a sua review FEITO
--- Quando um utilizador adiciona um artigo ao carrinho remove esse artigo da sua wishlist 
+-- verificar se uma order com estado diferente de "Shopping Cart" tem todos os parametros preenchidos FEITO
