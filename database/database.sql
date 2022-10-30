@@ -32,15 +32,22 @@ DROP FUNCTION IF EXISTS add_product_to_cart CASCADE;
 DROP FUNCTION IF EXISTS remove_product_from_cart CASCADE;
 DROP FUNCTION IF EXISTS product_price_with_promotion CASCADE;
 DROP FUNCTION IF EXISTS delete_user_information CASCADE;
-DROP TRIGGER IF EXISTS delete_user_account CASCADE;
+DROP FUNCTION IF EXISTS product_search_update CASCADE;
+DROP TRIGGER IF EXISTS delete_user_account on authenticated_user CASCADE;
 DROP FUNCTION IF EXISTS check_review_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_review_insert CASCADE;
+DROP TRIGGER IF EXISTS before_review_insert on review CASCADE;
 DROP FUNCTION IF EXISTS check_like_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_like_insert CASCADE;
+DROP TRIGGER IF EXISTS before_like_insert on user_like CASCADE;
 DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_report_insert CASCADE;
+DROP TRIGGER IF EXISTS before_report_insert on report CASCADE;
 DROP FUNCTION IF EXISTS order_parameters CASCADE;
-DROP TRIGGER IF EXISTS check_order_parameters CASCADE;
+DROP TRIGGER IF EXISTS check_order_parameters on user_order CASCADE;
+DROP TRIGGER IF EXISTS product_search_update on product CASCADE;
+DROP INDEX IF EXISTS user_order_idx  CASCADE;
+DROP INDEX IF EXISTS product_stock_idx  CASCADE;
+DROP INDEX IF EXISTS final_date_promo_idx  CASCADE;
+DROP INDEX IF EXISTS search_idx  CASCADE;
+
 
 --TYPE's
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
