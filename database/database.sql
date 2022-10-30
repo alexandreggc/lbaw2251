@@ -230,6 +230,56 @@ CREATE TABLE order_details(
 );
 -----------------------------------------------------------------------------------------------
 
+--INDICES
+
+-- Index na tabela user_order do parametro id_user
+
+CREATE INDEX user_order_idx ON user_order USING btree (id_user);
+CLUSTER user_order USING user_order_idx;
+
+-- Index na tabela stock do parametro id_product
+
+CREATE INDEX product_stock_idx ON stock USING hash (id_product);
+
+-- Index na tabela promotion do parametro final_date
+
+CREATE INDEX final_date_promo_idx ON promotion USING btree (final_date);
+
+--FULL-TEXT SEARCH INDICES 
+
+-- Full-text search indice na tabela product dos parametros name e description
+
+ALTER TABLE product
+ADD COLUMN tsvectors TSVECTOR;
+    
+CREATE FUNCTION product_search_update() RETURNS TRIGGER AS $$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.tsvectors = (
+      setweight(to_tsvector('english', NEW.name), 'A') ||
+      setweight(to_tsvector('english', NEW.description), 'B')
+    );
+  END IF;
+  IF TG_OP = 'UPDATE' THEN
+      IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) THEN
+        NEW.tsvectors = (
+          setweight(to_tsvector('english', NEW.name), 'A') ||
+          setweight(to_tsvector('english', NEW.description), 'B')
+        );
+      END IF;
+  END IF;
+  RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+    
+CREATE TRIGGER product_search_update
+  BEFORE INSERT OR UPDATE ON product
+  FOR EACH ROW
+  EXECUTE PROCEDURE product_search_update();
+     
+CREATE INDEX search_idx ON product USING GIN (tsvectors);
+
+
 --TRIGGERS and User Defined Functions
 
 -- Verificar o stock dos produtos no momento da adição ao carrinho
