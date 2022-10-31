@@ -317,16 +317,16 @@ LANGUAGE plpgsql;
 CREATE FUNCTION add_product_to_cart(Cart user_order, Product details)
 RETURNS user_order AS
 $$ BEGIN
-    IF (Cart.state = 'Shopping Cart') THEN
-        IF check_stock(Product) = 1 THEN
-            INSERT INTO order_details VALUES (Cart.id, Product.id);
+  IF (Cart.state = 'Shopping Cart') THEN
+      IF check_stock(Product) = 1 THEN
+          INSERT INTO order_details VALUES (Cart.id, Product.id);
     	ELSE
         	RAISE EXCEPTION 'Error adding product to cart';
-		END IF;
+	    END IF;
 	ELSE
-        	RAISE EXCEPTION 'Error adding product to cart';
-    END IF;
-    RETURN Cart;
+      RAISE EXCEPTION 'Error adding product to cart';
+  END IF;
+  RETURN Cart;
 END; $$
 LANGUAGE plpgsql;
 
