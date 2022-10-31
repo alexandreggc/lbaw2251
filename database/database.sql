@@ -489,3 +489,69 @@ WHERE stock.id_product = order_products.id_product AND
 SET stock = stock - quantity;
 
 END TRANSACTION;
+
+-- Cancelar uma encomenda
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+-- Delete order row
+UPDATE user_order
+SET status="Cancelled"
+WHERE id=$id_order;
+
+-- Restore the products from the cancelled order
+UPDATE stock
+SET stock = stock + quantity
+FROM (
+    SELECT id_order, id_product, quantity, color, size
+    FROM details INNER JOIN order_details
+    ON details.id = order_details.id_details
+    WHERE id_order = $id_order
+) AS order_products(id_order, id_product, quantity, color, size)
+WHERE stock.id_product = order_products.id_product, stock.size = order_products.size, stock.color = order_products.color;
+
+SELECT remove_product_from_cart($id_order, $details);
+
+END TRANSACTION;
+
+-- Adicionar um artigo
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+-- Insert product
+INSERT INTO product (id, name, description, price, id_category)
+VALUES ($id_product, $name, $description, $price, $id_category);
+
+-- Insert image
+INSERT INTO image (id, file)
+VALUES ($id_image, $file);
+
+-- Insert the product image
+INSERT INTO product_image(id_product, id_image)
+VALUES ($id_product, $id_image);
+
+-- Insert product color if not exists
+IF NOT EXISTS (SELECT * FROM color WHERE name=$name_color)
+BEGIN
+    INSERT INTO color (id, name)
+    VALUES ($id, $name);
+END
+
+-- Insert product size if not exists
+IF NOT EXISTS (SELECT * FROM size WHERE name=$name_size)
+BEGIN
+    INSERT INTO size (id, name)
+    VALUES ($id, $name_size);
+END
+
+-- Insert the new product in stock
+INSERT INTO stock (stock, id_product, id_size, id_color)
+VALUES (1, $id_product, $id_size, $id_color)
+ON DUPLICATE KEY UPDATE
+  stock = stock + 1;
+
+END TRANSACTION;
