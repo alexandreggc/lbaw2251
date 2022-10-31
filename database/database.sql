@@ -307,12 +307,8 @@ CREATE FUNCTION add_product_to_cart(Cart user_order, Product details)
 RETURNS user_order AS
 $$ BEGIN
     IF Cart.state = 'Shopping Cart' THEN
-        FOR cnt in 1..Product.quantity LOOP
-            IF check_product_stock(Product) = 1 THEN
-                INSERT INTO order_details VALUES (Cart.id, Product.id);
-                UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
-            END IF;
-        END LOOP;
+        INSERT INTO order_details VALUES (Cart.id, Product.id);
+        UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
         RETURN Cart;
     ELSE
         RAISE EXCEPTION 'Error adding product to cart';
@@ -326,10 +322,8 @@ CREATE FUNCTION remove_product_from_cart(Cart user_order, Product details)
 RETURNS user_order AS
 $$ BEGIN
     IF Cart.state = 'Shopping Cart' THEN
-        FOR cnt in 1..Product.quantity LOOP
-            DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
-            UPDATE details SET quantity = quantity + 1 WHERE id = Product.id;
-        END LOOP;
+        DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
+        UPDATE details SET quantity = quantity + 1 WHERE id = Product.id;
         RETURN Cart;
     ELSE
         RAISE EXCEPTION 'Error removing product from cart';
