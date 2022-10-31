@@ -1,4 +1,4 @@
-SET search_path TO <lbaw2251>;
+SET search_path TO lbaw2251;
 --DROP's
 DROP TYPE IF EXISTS admin_type CASCADE;
 DROP TYPE IF EXISTS order_state_type CASCADE;
@@ -48,7 +48,7 @@ DROP TRIGGER IF EXISTS product_search_update on product CASCADE;
 DROP INDEX IF EXISTS user_order_idx  CASCADE;
 DROP INDEX IF EXISTS product_stock_idx  CASCADE;
 DROP INDEX IF EXISTS final_date_promo_idx  CASCADE;
-DROP INDEX IF EXISTS user_first_name_idx  CASCADE; user_first_name_idx
+DROP INDEX IF EXISTS user_first_name_idx  CASCADE; 
 DROP INDEX IF EXISTS search_idx  CASCADE;
 
 
