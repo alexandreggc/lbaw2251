@@ -6,6 +6,8 @@ You can find here detailed information about the product, from a high-level visi
 
 * Requirements Specification
     * [ER Component](ER__Requirements_Specification_Component.md)
+* Database Specification
+    * [EBD Component](EBD_Database_Specification_Component.md)
 
 So far, contributions are exclusively made by the initial team, but we hope to open them to the community, in all areas and topics: requirements, technologies, development, experimentation, testing, etc.
 
