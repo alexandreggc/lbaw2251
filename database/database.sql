@@ -320,7 +320,6 @@ $$ BEGIN
     IF (Cart.state = 'Shopping Cart') THEN
         IF check_stock(Product) = 1 THEN
             INSERT INTO order_details VALUES (Cart.id, Product.id);
-            UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
     	ELSE
         	RAISE EXCEPTION 'Error adding product to cart';
 		END IF;
@@ -338,7 +337,6 @@ RETURNS user_order AS
 $$ BEGIN
     IF Cart.state = 'Shopping Cart' THEN
         DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
-        UPDATE details SET quantity = quantity + 1 WHERE id = Product.id;
         RETURN Cart;
     ELSE
         RAISE EXCEPTION 'Error removing product from cart';
@@ -346,7 +344,7 @@ $$ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
--- Retornar o preço de uma order já com as promoções aplicadas
+-- Aceder ao preço de um produto com a promoção aplicada
 
 CREATE FUNCTION product_price_with_promotion(Product product, Promotion promotion)
 RETURNS NUMERIC AS
