@@ -294,7 +294,7 @@ CREATE INDEX search_idx ON product USING GIN (tsvectors);
 CREATE FUNCTION check_stock(Product details)
 RETURNS INTEGER AS
 $$ BEGIN
-    IF details.quantity = 0 THEN
+    IF Product.quantity = 0 THEN
         RAISE EXCEPTION 'Product out of stock';
     END IF;
     RETURN 1;
@@ -307,8 +307,10 @@ CREATE FUNCTION add_product_to_cart(Cart user_order, Product details)
 RETURNS user_order AS
 $$ BEGIN
     IF Cart.state = 'Shopping Cart' THEN
-        INSERT INTO order_details VALUES (Cart.id, Product.id);
-        UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
+        IF check_stock(Product) = 1
+        THEN
+            INSERT INTO order_details VALUES (Cart.id, Product.id);
+            UPDATE details SET quantity = quantity - 1 WHERE id = Product.id;
         RETURN Cart;
     ELSE
         RAISE EXCEPTION 'Error adding product to cart';
