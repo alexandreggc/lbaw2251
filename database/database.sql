@@ -42,10 +42,12 @@ DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
 DROP TRIGGER IF EXISTS before_report_insert on report CASCADE;
 DROP FUNCTION IF EXISTS order_parameters CASCADE;
 DROP TRIGGER IF EXISTS check_order_parameters on user_order CASCADE;
+DROP FUNCTION IF EXISTS product_search CASCADE;
 DROP TRIGGER IF EXISTS product_search_update on product CASCADE;
 DROP INDEX IF EXISTS user_order_idx  CASCADE;
 DROP INDEX IF EXISTS product_stock_idx  CASCADE;
 DROP INDEX IF EXISTS final_date_promo_idx  CASCADE;
+DROP INDEX IF EXISTS user_first_name_idx  CASCADE; user_first_name_idx
 DROP INDEX IF EXISTS search_idx  CASCADE;
 
 
@@ -258,35 +260,39 @@ CREATE INDEX user_first_name_idx ON authenticated_user USING btree (first_name);
 
 --FULL-TEXT SEARCH INDICES 
 
--- Full-text search indice na tabela product dos parametros name e description
+-- Full-text search indice (e trigger para suporte) na tabela product nos atributos name e description
 
 ALTER TABLE product
 ADD COLUMN tsvectors TSVECTOR;
     
-CREATE FUNCTION product_search_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION product_search()
+RETURNS TRIGGER AS $$
 BEGIN
-  IF TG_OP = 'INSERT' THEN
-    NEW.tsvectors = (
-      setweight(to_tsvector('english', NEW.name), 'A') ||
-      setweight(to_tsvector('english', NEW.description), 'B')
-    );
-  END IF;
-  IF TG_OP = 'UPDATE' THEN
-      IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) THEN
+    IF TG_OP = 'INSERT' 
+    THEN
         NEW.tsvectors = (
-          setweight(to_tsvector('english', NEW.name), 'A') ||
-          setweight(to_tsvector('english', NEW.description), 'B')
+            setweight(to_tsvector('english', NEW.name), 'A') ||
+            setweight(to_tsvector('english', NEW.description), 'B')
         );
-      END IF;
-  END IF;
-  RETURN NEW;
-END $$
+    END IF;
+    IF TG_OP = 'UPDATE' 
+    THEN
+        IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) 
+        THEN
+            NEW.tsvectors = (
+                setweight(to_tsvector('english', NEW.name), 'A') ||
+                setweight(to_tsvector('english', NEW.description), 'B')
+            );
+        END IF;
+    END IF;
+    RETURN NEW;
+END; $$
 LANGUAGE plpgsql;
     
 CREATE TRIGGER product_search_update
-  BEFORE INSERT OR UPDATE ON product
-  FOR EACH ROW
-  EXECUTE PROCEDURE product_search_update();
+BEFORE INSERT OR UPDATE ON product
+FOR EACH ROW
+EXECUTE PROCEDURE product_search();
      
 CREATE INDEX search_idx ON product USING GIN (tsvectors);
 
