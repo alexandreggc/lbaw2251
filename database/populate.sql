@@ -1481,7 +1481,7 @@ insert into card (id, nickname, name, number, month, year, code, id_user) values
 
 --Category
 insert into category (id, name) values (1, 'Man');
-insert into category (id, name) values (2, 'Women');
+insert into category (id, name) values (2, 'Woman');
 insert into category (id, name, id_super_category) values (3, 'Clothing', 1);
 insert into category (id, name, id_super_category) values (4, 'Footwear', 1);
 insert into category (id, name, id_super_category) values (5, 'Accessories', 1);
