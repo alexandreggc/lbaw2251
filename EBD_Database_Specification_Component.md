@@ -432,12 +432,13 @@ CREATE FUNCTION check_review_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
     IF NOT EXISTS (SELECT *
-                   FROM (SELECT DISTINCT id_user, id_product, id_size, id_color
-                        FROM user_order, order_details, details
-                        WHERE user_order.id = order_details.id_order AND order_details.id_details = details.id
-                        ORDER BY id_user, id_product, id_size, id_color) AS user_purchases
-                   WHERE NEW.id_user = user_purchases.id_user AND NEW.id_product = user_purchases.id_product)
-                   -- se quisermos especificar o tamanho e cor podemos adicionar aqui
+            FROM (SELECT DISTINCT id_user, id_product, id_size, id_color
+            FROM user_order, order_details, details
+            WHERE user_order.id = order_details.id_order AND 
+            order_details.id_details = details.id
+            ORDER BY id_user, id_product, id_size, id_color) AS user_purchases
+            WHERE NEW.id_user = user_purchases.id_user 
+            AND NEW.id_product = user_purchases.id_product)
     THEN
         RAISE EXCEPTION 'An item can only be reviewed if it has been purchased';
     END IF;
