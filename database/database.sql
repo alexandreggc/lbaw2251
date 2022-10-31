@@ -459,3 +459,33 @@ CREATE TRIGGER check_order_parameters
 BEFORE UPDATE ON user_order
 FOR EACH ROW
 EXECUTE PROCEDURE order_parameters();
+
+-------------------------------------------------------------------------------------
+
+-- Transactions
+
+-- Checkout do carrinho
+
+BEGIN TRANSACTION;
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+INSERT INTO details(id, quantity, id_product, id_size, id_color)
+VALUES ($id_details, $quantity, $id_product, $id_size, $id_color);
+
+SELECT add_product_to_cart($id_order, $details);
+
+-- Remove products from the stock
+FROM (
+    SELECT id_order, id_product, quantity, color, size
+    FROM details INNER JOIN order_details
+    ON details.id = order_details.id_details
+    WHERE id_order = $id_order
+) AS order_products
+WHERE stock.id_product = order_products.id_product AND
+      stock.size = order_products.size AND
+      stock.color = order_products.color AND
+      stock.stock >= order_products.quantity;
+SET stock = stock - quantity;
+
+END TRANSACTION;
