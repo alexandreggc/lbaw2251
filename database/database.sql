@@ -338,7 +338,7 @@ RETURNS user_order AS
 $$ BEGIN
     IF Cart.state = 'Shopping Cart' THEN
         DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
-        UPDATE details SET quantity = quantity + Product.quantity WHERE id = Product.id;
+        UPDATE details SET quantity = quantity + 1 WHERE id = Product.id;
         RETURN Cart;
     ELSE
         RAISE EXCEPTION 'Error removing product from cart';
