@@ -258,26 +258,27 @@ CREATE INDEX final_date_promo_idx ON promotion USING btree (final_date);
 
 CREATE INDEX user_first_name_idx ON authenticated_user USING btree (first_name);
 
---FULL-TEXT SEARCH INDICES 
+--FULL-TEXT SEARCH INDICES
 
--- Full-text search indice (e trigger para suporte) na tabela product nos atributos name e description
+-- Full-text search indice (e trigger para suporte) na tabela product
+-- nos atributos name e description
 
 ALTER TABLE product
 ADD COLUMN tsvectors TSVECTOR;
-    
+
 CREATE FUNCTION product_search()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF TG_OP = 'INSERT' 
+    IF TG_OP = 'INSERT'
     THEN
         NEW.tsvectors = (
             setweight(to_tsvector('english', NEW.name), 'A') ||
             setweight(to_tsvector('english', NEW.description), 'B')
         );
     END IF;
-    IF TG_OP = 'UPDATE' 
+    IF TG_OP = 'UPDATE'
     THEN
-        IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) 
+        IF (NEW.name <> OLD.name OR NEW.description <> OLD.description)
         THEN
             NEW.tsvectors = (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
@@ -288,12 +289,12 @@ BEGIN
     RETURN NEW;
 END; $$
 LANGUAGE plpgsql;
-    
+
 CREATE TRIGGER product_search_update
 BEFORE INSERT OR UPDATE ON product
 FOR EACH ROW
 EXECUTE PROCEDURE product_search();
-     
+
 CREATE INDEX search_idx ON product USING GIN (tsvectors);
 
 
@@ -363,30 +364,30 @@ $$ BEGIN
     UPDATE review SET id_user = NULL WHERE id_user = OLD.id_user;
     UPDATE user_like SET id_user = NULL WHERE id_user = OLD.id_user;
     DELETE FROM wishlist WHERE id_user = OLD.id_user;
-    UPDATE user_order SET id_user = NULL, 
-                          id_address = NULL, 
-                          id_card = NULL 
+    UPDATE user_order SET id_user = NULL,
+                          id_address = NULL,
+                          id_card = NULL
                           WHERE id_user = OLD.id_user;
     RETURN OLD;
 END; $$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER delete_user_account 
+CREATE TRIGGER delete_user_account
 AFTER DELETE ON authenticated_user
 FOR EACH ROW
 EXECUTE PROCEDURE delete_user_information();
 
 -- Verificar se um utilizador já comprou o produto antes de fazer uma review
 
-CREATE FUNCTION check_review_privileges() 
+CREATE FUNCTION check_review_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
-    IF NOT EXISTS (SELECT * 
+    IF NOT EXISTS (SELECT *
                    FROM (SELECT DISTINCT id_user, id_product, id_size, id_color
-                        FROM user_order, order_details, details 
+                        FROM user_order, order_details, details
                         WHERE user_order.id = order_details.id_order AND order_details.id_details = details.id
                         ORDER BY id_user, id_product, id_size, id_color) AS user_purchases
-                   WHERE NEW.id_user = user_purchases.id_user AND NEW.id_product = user_purchases.id_product) 
+                   WHERE NEW.id_user = user_purchases.id_user AND NEW.id_product = user_purchases.id_product)
                    -- se quisermos especificar o tamanho e cor podemos adicionar aqui
     THEN
         RAISE EXCEPTION 'An item can only be reviewed if it has been purchased';
@@ -405,9 +406,9 @@ EXECUTE PROCEDURE check_review_privileges();
 CREATE FUNCTION check_like_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
-    IF EXISTS (SELECT id_user 
-               FROM review 
-               WHERE id_review = NEW.id_review AND id_user = NEW.id_user) 
+    IF EXISTS (SELECT id_user
+               FROM review
+               WHERE id_review = NEW.id_review AND id_user = NEW.id_user)
     THEN
         RAISE EXCEPTION 'A user cannot like his own review';
     END IF;
@@ -420,14 +421,14 @@ BEFORE INSERT ON user_like
 FOR EACH ROW
 EXECUTE PROCEDURE check_like_privileges();
 
--- Um utilizador não pode reportar a sua review 
+-- Um utilizador não pode reportar a sua review
 
 CREATE FUNCTION check_report_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
-    IF EXISTS (SELECT id_user 
-               FROM review 
-               WHERE id_review = NEW.id_review AND id_user = NEW.id_user) 
+    IF EXISTS (SELECT id_user
+               FROM review
+               WHERE id_review = NEW.id_review AND id_user = NEW.id_user)
     THEN
         RAISE EXCEPTION 'A user cannot report his own review';
     END IF;
@@ -437,7 +438,7 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER before_report_insert
 BEFORE INSERT ON report
-FOR EACH ROW 
+FOR EACH ROW
 EXECUTE PROCEDURE check_report_privileges();
 
 -- verificar se uma order com estado diferente de "Shopping Cart" tem todos os parametros preenchidos
@@ -447,30 +448,16 @@ RETURNS TRIGGER AS
 $$ BEGIN
     IF (OLD.state = 'Shopping Cart' AND NEW.state <> 'Shopping Cart')
     THEN
-        IF NEW.id_user IS NULL OR NEW.id_address IS NULL OR NEW.id_card IS NULL 
+        IF NEW.id_user IS NULL OR NEW.id_address IS NULL OR NEW.id_card IS NULL
         THEN
             RAISE EXCEPTION 'Order must have an user, an address and a card';
         END IF;
     END IF;
-    RETURN NEW;    
+    RETURN NEW;
 END; $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER check_order_parameters
 BEFORE UPDATE ON user_order
-FOR EACH ROW 
+FOR EACH ROW
 EXECUTE PROCEDURE order_parameters();
-
----------------------------------------------------------------------------------------------------------------------
---User-Defined Functions:
--- Adicionar um artigo ao carrinho: FEITO
--- Remover um artigo do carrinho: FEITO
--- Retornar o preço de uma order já com as promoções aplicadas FEITO
----------------------------------------------------------------------------------------------------------------------
---Triggers:
--- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida FEITO
--- Verificar se um utilizador já comprou o produto antes de fazer uma review FEITO
--- O utilizador não pode meter um like na própia review FEITO
--- Verificar o stock dos produtos no momento da adição ao carrinho FEITO
--- Um utilizador não pode reportar a sua review FEITO
--- verificar se uma order com estado diferente de "Shopping Cart" tem todos os parametros preenchidos FEITO
