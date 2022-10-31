@@ -239,18 +239,22 @@ CREATE TABLE order_details(
 
 --INDICES
 
--- Index na tabela user_order do parametro id_user
+-- Index na tabela user_order no atributo id_user
 
 CREATE INDEX user_order_idx ON user_order USING btree (id_user);
 CLUSTER user_order USING user_order_idx;
 
--- Index na tabela stock do parametro id_product
+-- Index na tabela stock no atributo id_product
 
 CREATE INDEX product_stock_idx ON stock USING hash (id_product);
 
--- Index na tabela promotion do parametro final_date
+-- Index na tabela promotion no atributo final_date
 
 CREATE INDEX final_date_promo_idx ON promotion USING btree (final_date);
+
+-- Index na tabela authenticated_user no atributo first_name
+
+CREATE INDEX user_first_name_idx ON authenticated_user USING btree (first_name);
 
 --FULL-TEXT SEARCH INDICES 
 
