@@ -9,6 +9,16 @@
             "username": "postgres",
             "password": "pg!password",
             "database": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "server": "db.fe.up.pt",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Produção",
+            "password": "xxJlDZqv",
+            "database": "lbaw2251",
+            "username": "lbaw2251"
         }
     ]
 }

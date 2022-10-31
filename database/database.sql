@@ -1,3 +1,4 @@
+SET search_path TO <lbaw2251>;
 --DROP's
 DROP TYPE IF EXISTS admin_type CASCADE;
 DROP TYPE IF EXISTS order_state_type CASCADE;
@@ -73,7 +74,6 @@ CREATE TYPE notification_type AS ENUM (
     'Other'
 );
 
---CREATE's
 CREATE TABLE image (
     id SERIAL PRIMARY KEY,
     file TEXT NOT NULL CONSTRAINT image_unique UNIQUE
@@ -87,7 +87,7 @@ CREATE TABLE authenticated_user (
     birth_date DATE,
     gender TEXT,
     blocked BOOLEAN NOT NULL DEFAULT FALSE,
-    id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE --VER TRIGGER
+    id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE
 );
 CREATE TABLE admin(
     id SERIAL PRIMARY KEY,
@@ -98,7 +98,6 @@ CREATE TABLE admin(
     birth_date DATE,
     gender TEXT,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE,
-    --VER TRIGGER
     role admin_type NOT NULL
 );
 CREATE TABLE notification(
@@ -238,8 +237,6 @@ CREATE TABLE order_details(
     PRIMARY KEY (id_order, id_details)
 );
 -----------------------------------------------------------------------------------------------
-
---INDICES
 
 -- Index na tabela user_order no atributo id_user
 
@@ -459,99 +456,3 @@ CREATE TRIGGER check_order_parameters
 BEFORE UPDATE ON user_order
 FOR EACH ROW
 EXECUTE PROCEDURE order_parameters();
-
--------------------------------------------------------------------------------------
-
--- Transactions
-
--- Checkout do carrinho
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-INSERT INTO details(id, quantity, id_product, id_size, id_color)
-VALUES ($id_details, $quantity, $id_product, $id_size, $id_color);
-
-SELECT add_product_to_cart($id_order, $details);
-
--- Remove products from the stock
-FROM (
-    SELECT id_order, id_product, quantity, color, size
-    FROM details INNER JOIN order_details
-    ON details.id = order_details.id_details
-    WHERE id_order = $id_order
-) AS order_products
-WHERE stock.id_product = order_products.id_product AND
-      stock.size = order_products.size AND
-      stock.color = order_products.color AND
-      stock.stock >= order_products.quantity;
-SET stock = stock - quantity;
-
-END TRANSACTION;
-
--- Cancelar uma encomenda
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
--- Delete order row
-UPDATE user_order
-SET status="Cancelled"
-WHERE id=$id_order;
-
--- Restore the products from the cancelled order
-UPDATE stock
-SET stock = stock + quantity
-FROM (
-    SELECT id_order, id_product, quantity, color, size
-    FROM details INNER JOIN order_details
-    ON details.id = order_details.id_details
-    WHERE id_order = $id_order
-) AS order_products(id_order, id_product, quantity, color, size)
-WHERE stock.id_product = order_products.id_product, stock.size = order_products.size, stock.color = order_products.color;
-
-SELECT remove_product_from_cart($id_order, $details);
-
-END TRANSACTION;
-
--- Adicionar um artigo
-
-BEGIN TRANSACTION;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
--- Insert product
-INSERT INTO product (id, name, description, price, id_category)
-VALUES ($id_product, $name, $description, $price, $id_category);
-
--- Insert image
-INSERT INTO image (id, file)
-VALUES ($id_image, $file);
-
--- Insert the product image
-INSERT INTO product_image(id_product, id_image)
-VALUES ($id_product, $id_image);
-
--- Insert product color if not exists
-IF NOT EXISTS (SELECT * FROM color WHERE name=$name_color)
-BEGIN
-    INSERT INTO color (id, name)
-    VALUES ($id, $name);
-END
-
--- Insert product size if not exists
-IF NOT EXISTS (SELECT * FROM size WHERE name=$name_size)
-BEGIN
-    INSERT INTO size (id, name)
-    VALUES ($id, $name_size);
-END
-
--- Insert the new product in stock
-INSERT INTO stock (stock, id_product, id_size, id_color)
-VALUES (1, $id_product, $id_size, $id_color)
-ON DUPLICATE KEY UPDATE
-  stock = stock + 1;
-
-END TRANSACTION;
