@@ -272,25 +272,25 @@ paths:
           description: Status of the order
           schema:
             type: string
-          required: true
+          required: false
         - in: query
           name: date
           description: Date of the order
           schema:
             type: date
-          required: true
+          required: false
         - in: query
           name: total
           description: Total price of the order
           schema:
             type: numeric
-          required: true
+          required: false
         - in: query
           name: products
           description: Products in the order
           schema:
             type: array
-          required: true
+          required: false
       
       responses:
         '200':
@@ -378,79 +378,79 @@ paths:
                                    (1, Lack of interior lining!, 1.5, 
                                     the interior lining is not the best I ever experienced.)]
                                   )]
-#    post:
-#      operationId: R302
-#      summary: 'R302: Create Order API'
-#      description: 'Creates a new order and returns the results as JSON. Access: USR'
-#      tags:
-#        - 'M03: Orders'
-#        
-#      requestBody:
-#        required: true
-#        content:
-#        application/x-www-form-urlencoded:
-#          schema:
-#          type: object
-#          properties:
-#            status:
-#              type: string
-#            date:
-#              type: date
-#            total:
-#              type: numeric
-#            products:
-#              type: array
-#              items:
-#                type: object
-#                properties:
-#                  id:
-#                    type: string
-#                  title:
-#                    type: string
-#                  category:
-#                    type: string
-#                  description:
-#                    type: string
-#                  likes:
-#                    type: integer
-#                  sizes:
-#                    type: array
-#                    items:
-#                      type: object
-#                      properties:
-#                      id:
-#                        type: string
-#                      name:
-#                        type: string
-#                  colors:
-#                    type: array
-#                    items: 
-#                      type: object
-#                      properties:
-#                      id:
-#                        type: string
-#                      name: 
-#                        type: string
-#                  reviews:
-#                    type: array
-#                    items:
-#                      type: object
-#                      properties:
-#                        id: 
-#                          type: string
-#                        title:
-#                          type: string
-#                        evaluation:
-#                          type: numeric
-#                        description:
-#                          type: string
-#      responses:
-#        '200':
-#          description: "Success creating a new order"
-#          headers:
-#            Location:
-#              schema:
-#                type: string
-#                format: uri
-#                description: URI of the newly created order
-#              example: /api/orders/1
+    post:
+      operationId: R302
+      summary: 'R302: Create Order API'
+      description: 'Creates a new order and returns the results as JSON. Access: USR'
+      tags:
+        - 'M03: Orders'
+        
+      requestBody:
+        required: true
+        content:
+        application/x-www-form-urlencoded:
+          schema:
+          type: object
+          properties:
+            status:
+              type: string
+            date:
+              type: date
+            total:
+              type: numeric
+            products:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  category:
+                    type: string
+                  description:
+                    type: string
+                  likes:
+                    type: integer
+                  sizes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                  colors:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                      id:
+                        type: string
+                      name: 
+                        type: string
+                  reviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: 
+                          type: string
+                        title:
+                          type: string
+                        evaluation:
+                          type: numeric
+                        description:
+                          type: string
+      responses:
+        '200':
+          description: "Success creating a new order"
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: URI of the newly created order
+              example: /api/orders/
