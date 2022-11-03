@@ -1,0 +1,261 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'LBAW About Fashion Web API'
+  description: 'Web Resources Specification (A7) for About Fashion'
+
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
+
+tags:
+  - name: 'M01: Authentication and Personal Profile'
+  - name: 'M02: Products'
+  - name: 'M03: Orders and Wishlist'
+  - name: 'M04: Reviews and Reports'
+  - name: 'M05: User Administration and Static pages'
+
+paths:
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+ 
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:       # <!--- form field name
+                  type: string
+                password:    # <!--- form field name
+                  type: string
+              required:
+                - email
+                - password
+ 
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+ 
+  /logout:
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated used. Access: USR, TEC' #tinha ADM em vez de TEC
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to login form.'
+                  value: '/login'
+
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Provide new user registration form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '200':
+          description: 'Ok. Show sign-up UI'
+
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password: 
+                  type: string
+              required:
+                - first_name
+                - second_name
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+
+  /users/{id}:
+    get:
+      operationId: R106
+      summary: 'R106: View user profile'
+      description: 'Show the personal user profile. Access: USR'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+ 
+
+  /api/works:
+    get:
+      operationId: R202
+      summary: 'R202: Search Products API'
+      description: 'Searches for products and returns the results as JSON. Access: PUB.'
+
+      tags: 
+        - 'M02: Products'
+
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: item
+          description: Category of the products
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: classification
+          description: Numeric corresponding to the product classification
+          schema:                   # resultado da média das avaliações atribuídas nas reviews
+            type: numeric
+          required: false
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    category:
+                      type: string # verificar se é a melhor forma de representar as categorias
+                    description:                      #sendo que cada uma tem uma categoria mãe
+                      type: string
+                    likes:
+                      type: integer # existe integer?
+                    sizes:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                        id:
+                          type: string
+                        name:
+                          type: string   # XS, S, M, L, XL
+                    colors:
+                      type: array
+                      items: 
+                        type: object
+                        properties:
+                        id:
+                          type: string
+                        name: 
+                          type: string
+                    reviews:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          title:
+                            type: string
+                          evaluation:
+                            type: numeric
+                          description:
+                            type: string
+                example:
+                  - id: 1
+                    title: Zip Up Bomber Jacket
+                    category: Woman / Clothing / Jackets
+                    description: description of the materials and tips/warnings for washing
+                    likes: 15
+                    sizes: [(0,XS), 
+                            (1,S), 
+                            (2,M), 
+                            (3,L)]
+                    colors: [(0,Black), 
+                             (1,Grey), 
+                             (2,Beige)]
+                    reviews: [(0, Good product!, 4.5, It is builded with very good materials.)
+                              (1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.)]
