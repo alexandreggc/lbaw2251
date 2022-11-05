@@ -189,7 +189,7 @@ paths:
           name: classification
           description: Numeric corresponding to the product classification
           schema:                   # resultado da média das avaliações atribuídas nas reviews
-            type: numeric
+            type: number
           required: false
 
       responses:
@@ -217,19 +217,19 @@ paths:
                       items:
                         type: object
                         properties:
-                        id:
-                          type: string
-                        name:
-                          type: string   # XS, S, M, L, XL
+                          id:
+                            type: string
+                          name:
+                            type: string   # XS, S, M, L, XL
                     colors:
                       type: array
                       items: 
                         type: object
                         properties:
-                        id:
-                          type: string
-                        name: 
-                          type: string
+                          id:
+                            type: string
+                          name: 
+                            type: string
                     reviews:
                       type: array
                       items:
@@ -240,7 +240,7 @@ paths:
                           title:
                             type: string
                           evaluation:
-                            type: numeric
+                            type: number
                           description:
                             type: string
                 example:
@@ -277,13 +277,13 @@ paths:
           name: date
           description: Date of the order
           schema:
-            type: date
+            type: string # para representar datas também é string
           required: false
         - in: query
           name: total
           description: Total price of the order
           schema:
-            type: numeric
+            type: number
           required: false
         - in: query
           name: products
@@ -307,9 +307,9 @@ paths:
                     status:
                       type: string
                     date:
-                      type: date
+                      type: string # para representar datas também é string
                     total:
-                      type: numeric
+                      type: number
                     products:
                       type: array
                       items:
@@ -330,19 +330,19 @@ paths:
                             items:
                               type: object
                               properties:
-                              id:
-                                type: string
-                              name:
-                                type: string
+                                id:
+                                  type: string
+                                name:
+                                  type: string
                           colors:
                             type: array
                             items: 
                               type: object
                               properties:
-                              id:
-                                type: string
-                              name: 
-                                type: string
+                                id:
+                                  type: string
+                                name: 
+                                  type: string
                           reviews:
                             type: array
                             items:
@@ -353,7 +353,7 @@ paths:
                                 title:
                                   type: string
                                 evaluation:
-                                  type: numeric
+                                  type: number
                                 description:
                                   type: string
                   example:
@@ -361,23 +361,22 @@ paths:
                       status: Pending
                       date: 2022-11-05
                       total: 100
-                      products: [(1, 
-                                  Zip Up Bomber Jacket,
-                                  Woman / Clothing / Jackets,
-                                  description of the materials and tips/warnings for washing,
-                                  15,
-                                  [(0,XS), 
-                                   (1,S), 
-                                   (2,M), 
-                                   (3,L)],
-                                  [(0,Black), 
-                                   (1,Grey), 
-                                   (2,Beige)],
-                                  [(0, Good product!, 4.5, 
-                                    It is builded with very good materials.)
-                                   (1, Lack of interior lining!, 1.5, 
-                                    the interior lining is not the best I ever experienced.)]
-                                  )]
+                      products: [1, 
+                                 Zip Up Bomber Jacket,
+                                 Woman / Clothing / Jackets,
+                                 description of the materials and tips/warnings for washing,
+                                 15,
+                                 [(0,XS), 
+                                  (1,S), 
+                                  (2,M), 
+                                  (3,L)],
+                                 [(0,Black), 
+                                  (1,Grey), 
+                                  (2,Beige)],
+                                 [(0, Good product!, 4.5, 
+                                   It is builded with very good materials.)
+                                  (1, Lack of interior lining!, 1.5, 
+                                   the interior lining is not the best I ever experienced.)]]
     post:
       operationId: R302
       summary: 'R302: Create Order API'
@@ -388,62 +387,62 @@ paths:
       requestBody:
         required: true
         content:
-        application/x-www-form-urlencoded:
-          schema:
-          type: object
-          properties:
-            status:
-              type: string
-            date:
-              type: date
-            total:
-              type: numeric
-            products:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  category:
-                    type: string
-                  description:
-                    type: string
-                  likes:
-                    type: integer
-                  sizes:
-                    type: array
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                date:
+                  type: string # para representar datas também é string
+                total:
+                  type: number
+                products:
+                  type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    category:
+                      type: string
+                    description:
+                      type: string
+                    likes:
+                      type: integer
+                    sizes:
+                      type: array
                     items:
                       type: object
                       properties:
-                      id:
-                        type: string
-                      name:
-                        type: string
-                  colors:
-                    type: array
-                    items: 
-                      type: object
-                      properties:
-                      id:
-                        type: string
-                      name: 
-                        type: string
-                  reviews:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id: 
+                        id:
                           type: string
-                        title:
+                        name:
                           type: string
-                        evaluation:
-                          type: numeric
-                        description:
-                          type: string
+                    colors:
+                      type: array
+                      items: 
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name: 
+                            type: string
+                    reviews:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          title:
+                            type: string
+                          evaluation:
+                            type: number
+                          description:
+                            type: string
       responses:
         '200':
           description: "Success creating a new order"
