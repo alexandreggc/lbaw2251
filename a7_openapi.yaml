@@ -258,13 +258,13 @@ paths:
                              (2,Beige)]
                     reviews: [(0, Good product!, 4.5, It is builded with very good materials.)
                               (1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.)]
-  /api/orders:
+  /api/orders_wishlist:
     get:
       operationId: R301
       summary: 'R301: Search Orders API'
       description: 'Searches for orders and returns the results as JSON. Access: USR' # colocar TEC também?
       tags:
-        - 'M03: Orders'
+        - 'M03: Orders and Wishlist'
 
       parameters:
         - in: query
@@ -382,7 +382,7 @@ paths:
       summary: 'R302: Create Order API'
       description: 'Creates a new order and returns the results as JSON. Access: USR'
       tags:
-        - 'M03: Orders'
+        - 'M03: Orders and Wishlist'
         
       requestBody:
         required: true
