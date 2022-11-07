@@ -258,7 +258,7 @@ paths:
                              (2,Beige)]
                     reviews: [(0, Good product!, 4.5, It is builded with very good materials.)
                               (1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.)]
-  /api/orders_wishlist:
+  /api/orders:
     get:
       operationId: R301
       summary: 'R301: Search Orders API'
@@ -453,3 +453,166 @@ paths:
                 format: uri
                 description: URI of the newly created order
               example: /api/orders/
+
+  /api/wishlist:  
+    get:
+      operationId: R303
+      summary: 'R303: Search Wishlist API'
+      description: 'Searches for wishlist and returns the results as JSON. Access: USR'
+      tags:
+        - 'M03: Orders and Wishlist'
+
+      parameters:
+        - in: query
+          name: products
+          description: Products in the wishlist
+          schema:
+            type: array
+          required: false
+      
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    products:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          title:
+                            type: string
+                          category:
+                            type: string
+                          description:
+                            type: string
+                          likes:
+                            type: integer
+                          sizes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                          colors:
+                            type: array
+                            items: 
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name: 
+                                  type: string
+                          reviews:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                id: 
+                                  type: string
+                                title:
+                                  type: string
+                                evaluation:
+                                  type: number
+                                description:
+                                  type: string
+                  example:
+                    - id: 1
+                      products: [1, 
+                                 Zip Up Bomber Jacket,
+                                 Woman / Clothing / Jackets,
+                                 description of the materials and tips/warnings for washing,
+                                 15,
+                                 [(0,XS), 
+                                  (1,S), 
+                                  (2,M), 
+                                  (3,L)],
+                                 [(0,Black), 
+                                  (1,Grey), 
+                                  (2,Beige)],
+                                 [(0, Good product!, 4.5, 
+                                   It is builded with very good materials.)
+                                  (1, Lack of interior lining!, 1.5, 
+                                   the interior lining is not the best I ever experienced.)]]
+    post:
+      operationId: R304
+      summary: 'R304: Create Wishlist API'
+      description: 'Creates a new wishlist and returns the results as JSON. Access: USR'
+      tags:
+        - 'M03: Orders and Wishlist'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    category:
+                      type: string
+                    description:
+                      type: string
+                    likes:
+                      type: integer
+                    sizes:
+                      type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                    colors:
+                      type: array
+                      items: 
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name: 
+                            type: string
+                    reviews:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id: 
+                            type: string
+                          title:
+                            type: string
+                          evaluation:
+                            type: number
+                          description:
+                            type: string
+      responses:
+        '200':
+          description: "Success creating a new wishlist"
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: URI of the newly created wishlist
+              example: /api/wishlist/
