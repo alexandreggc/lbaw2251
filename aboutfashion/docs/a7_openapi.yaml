@@ -162,6 +162,59 @@ paths:
       responses:
         '200':
           description: 'Ok. Show view profile UI'
+    
+    post: 
+      operationId: R107
+      summary: 'R107: Edit user profile'
+      description: 'Edit the personal user profile. Access: USR'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password: 
+                  type: string
+              required:
+                - first_name
+                - second_name
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
  
 
   /api/products:
@@ -249,15 +302,112 @@ paths:
                     category: Woman / Clothing / Jackets
                     description: description of the materials and tips/warnings for washing
                     likes: 15
-                    sizes: [(0,XS), 
-                            (1,S), 
-                            (2,M), 
-                            (3,L)]
-                    colors: [(0,Black), 
-                             (1,Grey), 
-                             (2,Beige)]
-                    reviews: [(0, Good product!, 4.5, It is builded with very good materials.)
-                              (1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.)]
+                    sizes: [XS, S, M, L]
+                    colors: [Black, Grey, Beige]
+                    reviews: [0, Good product!, 4.5, It is builded with very good materials.,
+                              1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.]
+    post: 
+      operationId: R203
+      summary: 'R203: Create Product API'
+      description: 'Creates a new product. Access: ADM'
+      tags: 
+        - 'M02: Products'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+                sizes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                colors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+              required:
+                - title
+                - category
+                - description
+                - sizes
+                - colors
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  category:
+                    type: string
+                  description:
+                    type: string
+                  likes:
+                    type: integer
+                  sizes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                  colors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                  reviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        evaluation:
+                          type: number
+                        description:
+                          type: string
+                example:
+                  id: 1
+                  title: Zip Up Bomber Jacket
+                  category: Woman Jackets
+                  description: description of the materials and tips/warnings for washing
+                  sizes: [XS, S, M, L]
+                  colors: [Black, Grey, Beige]
+  
   /api/orders:
     get:
       operationId: R301
@@ -366,17 +516,11 @@ paths:
                                  Woman / Clothing / Jackets,
                                  description of the materials and tips/warnings for washing,
                                  15,
-                                 [(0,XS), 
-                                  (1,S), 
-                                  (2,M), 
-                                  (3,L)],
-                                 [(0,Black), 
-                                  (1,Grey), 
-                                  (2,Beige)],
-                                 [(0, Good product!, 4.5, 
-                                   It is builded with very good materials.)
-                                  (1, Lack of interior lining!, 1.5, 
-                                   the interior lining is not the best I ever experienced.)]]
+                                 [XS, S, M, L],
+                                 [Black, Grey, Beige],
+                                 [0, Good product!, 4.5, It is builded with very good materials.,
+                                  1, Lack of interior lining!, 1.5, 
+                                  the interior lining is not the best I ever experienced.]]
     post:
       operationId: R302
       summary: 'R302: Create Order API'
@@ -535,17 +679,11 @@ paths:
                                  Woman / Clothing / Jackets,
                                  description of the materials and tips/warnings for washing,
                                  15,
-                                 [(0,XS), 
-                                  (1,S), 
-                                  (2,M), 
-                                  (3,L)],
-                                 [(0,Black), 
-                                  (1,Grey), 
-                                  (2,Beige)],
-                                 [(0, Good product!, 4.5, 
-                                   It is builded with very good materials.)
-                                  (1, Lack of interior lining!, 1.5, 
-                                   the interior lining is not the best I ever experienced.)]]
+                                 [XS, S, M, L],
+                                 [(Black, Grey, Beige],
+                                 [0, Good product!, 4.5, It is builded with very good materials.,
+                                  1, Lack of interior lining!, 1.5, 
+                                  the interior lining is not the best I ever experienced.]]
     post:
       operationId: R304
       summary: 'R304: Create Wishlist API'
