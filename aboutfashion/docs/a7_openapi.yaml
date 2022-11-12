@@ -6,12 +6,12 @@ info:
   description: 'Web Resources Specification (A7) for About Fashion'
 
 servers:
-- url: http://lbaw.fe.up.pt
+- url: http://lbaw.fe.up.pt. # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
   description: Production server
 
 externalDocs:
   description: Find more info here.
-  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
+  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07. # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
 
 tags:
   - name: 'M01: Authentication and Personal Profile'
@@ -41,7 +41,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -72,7 +72,7 @@ paths:
     post:
       operationId: R103
       summary: 'R103: Logout Action'
-      description: 'Logout the current authenticated used. Access: USR, TEC' #tinha ADM em vez de TEC
+      description: 'Logout the current authenticated used. Access: USR, TEC'
       tags:
         - 'M01: Authentication and Personal Profile'
       responses:
@@ -108,7 +108,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -148,7 +148,7 @@ paths:
     get:
       operationId: R106
       summary: 'R106: View user profile'
-      description: 'Show the personal user profile. Access: USR'
+      description: 'Show the personal user profile. Access: USR, TEC' # coloquei TEC para os técnicos poderem ver também
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -166,7 +166,7 @@ paths:
     post: 
       operationId: R107
       summary: 'R107: Edit user profile'
-      description: 'Edit the personal user profile. Access: USR'
+      description: 'Edit the personal user profile. Access: USR, TEC' # coloquei TEC para os técnicos poderem editar também
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -180,7 +180,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -221,7 +221,7 @@ paths:
     get:
       operationId: R202
       summary: 'R202: Search Products API'
-      description: 'Searches for products and returns the results as JSON. Access: PUB.'
+      description: 'Searches for products and returns the results as JSON. Access: PUB, COL' # Colaborador tmb precisa de acesso a isto
       tags: 
         - 'M02: Products'
 
@@ -264,7 +264,7 @@ paths:
                     description:                      #sendo que cada uma tem uma categoria mãe
                       type: string
                     likes:
-                      type: integer # existe integer?
+                      type: integer
                     sizes:
                       type: array
                       items:
@@ -273,7 +273,7 @@ paths:
                           id:
                             type: string
                           name:
-                            type: string   # XS, S, M, L, XL
+                            type: string
                     colors:
                       type: array
                       items: 
@@ -309,14 +309,14 @@ paths:
     post: 
       operationId: R203
       summary: 'R203: Create Product API'
-      description: 'Creates a new product. Access: ADM'
+      description: 'Creates a new product. Access: COL'
       tags: 
         - 'M02: Products'
 
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -412,7 +412,7 @@ paths:
     get:
       operationId: R301
       summary: 'R301: Search Orders API'
-      description: 'Searches for orders and returns the results as JSON. Access: USR' # colocar TEC também?
+      description: 'Searches for orders and returns the results as JSON. Access: USR, COL'
       tags:
         - 'M03: Orders and Wishlist'
 
@@ -524,14 +524,14 @@ paths:
     post:
       operationId: R302
       summary: 'R302: Create Order API'
-      description: 'Creates a new order and returns the results as JSON. Access: USR'
+      description: 'Creates a new order and returns the results as JSON. Access: USR, COL'
       tags:
         - 'M03: Orders and Wishlist'
         
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -602,7 +602,7 @@ paths:
     get:
       operationId: R303
       summary: 'R303: Search Wishlist API'
-      description: 'Searches for wishlist and returns the results as JSON. Access: USR'
+      description: 'Searches for wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
         - 'M03: Orders and Wishlist'
 
@@ -687,14 +687,14 @@ paths:
     post:
       operationId: R304
       summary: 'R304: Create Wishlist API'
-      description: 'Creates a new wishlist and returns the results as JSON. Access: USR'
+      description: 'Creates a new wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
         - 'M03: Orders and Wishlist'
         
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
