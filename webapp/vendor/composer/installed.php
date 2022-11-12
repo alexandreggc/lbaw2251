@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f092bac14d0427bd685da65615d6d2a4034c7dbc',
+        'reference' => '48da73711752e3a5abe627ac83b67454bc2fdc8f',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -325,7 +325,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f092bac14d0427bd685da65615d6d2a4034c7dbc',
+            'reference' => '48da73711752e3a5abe627ac83b67454bc2fdc8f',
             'dev_requirement' => false,
         ),
         'laravel/serializable-closure' => array(
@@ -493,8 +493,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(
