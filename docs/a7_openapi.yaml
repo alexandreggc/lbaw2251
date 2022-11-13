@@ -301,7 +301,7 @@ paths:
     get:
       operationId: R111
       summary: 'R111: View admin profile'
-      description: 'Show the personal user profile. Access: OWN, TEC'
+      description: 'Show the admin profile. Access: OWN, TEC'
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -322,7 +322,7 @@ paths:
     put:
       operationId: R112
       summary: 'R112: Edit admin profile'
-      description: 'Edit the admin profile. Access: OWN' 
+      description: 'Edit admin profile. Access: OWN' 
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -359,7 +359,7 @@ paths:
 
       responses:
         '302':
-          description: 'Redirect after processing the admin information.'
+          description: 'Redirect after processing the new information.'
           headers:
             Location:
               schema:
