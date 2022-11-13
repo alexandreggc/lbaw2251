@@ -6,12 +6,12 @@ info:
   description: 'Web Resources Specification (A7) for About Fashion'
 
 servers:
-- url: http://lbaw2251.fe.up.pt
-  description: Production server
+  - url: http://lbaw2251.fe.up.pt
+    description: Production server
 
 externalDocs:
   description: Find more info here.
-  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07. # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+  url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw2251/-/wikis/
 
 tags:
   - name: 'M01: Authentication and Personal Profile'
@@ -37,22 +37,22 @@ paths:
       description: 'Processes the login form submission. Access: PUB'
       tags:
         - 'M01: Authentication and Personal Profile'
- 
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded: 
             schema:
               type: object
               properties:
-                email:       # <!--- form field name
+                email: 
                   type: string
-                password:    # <!--- form field name
+                password: 
                   type: string
               required:
                 - email
                 - password
- 
+
       responses:
         '302':
           description: 'Redirect after processing the login credentials.'
@@ -62,17 +62,64 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
-                  value: '/users/{id}'
+                  description: 'Successful authentication. Redirect to home page.'
+                  value: '../'
                 302Error:
                   description: 'Failed authentication. Redirect to login form.'
                   value: '/login'
- 
+
+  /admin-panel/login:
+    get:
+      operationId: R103
+      summary: 'R103: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+    post:
+      operationId: R104
+      summary: 'R104: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to home page.'
+                  value: '../'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/admin-panel/login'
+
   /logout:
     post:
-      operationId: R103
-      summary: 'R103: Logout Action'
-      description: 'Logout the current authenticated used. Access: USR, TEC'
+      operationId: R105
+      summary: 'R105: Logout Action'
+      description: 'Logout the current authenticated used. Access: USR, TEC, COL'
       tags:
         - 'M01: Authentication and Personal Profile'
       responses:
@@ -84,13 +131,13 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful logout. Redirect to login form.'
-                  value: '/login'
+                  description: 'Successful logout. Redirect to home page.'
+                  value: '../'
 
   /register:
     get:
-      operationId: R104
-      summary: 'R104: Register Form'
+      operationId: R106
+      summary: 'R106: Register Form'
       description: 'Provide new user registration form. Access: PUB'
       tags:
         - 'M01: Authentication and Personal Profile'
@@ -98,9 +145,9 @@ paths:
         '200':
           description: 'Ok. Show sign-up UI'
 
-    post:
-      operationId: R105
-      summary: 'R105: Register Action'
+    put:
+      operationId: R107
+      summary: 'R107: Register Action'
       description: 'Processes the new user registration form submission. Access: PUB'
       tags:
         - 'M01: Authentication and Personal Profile'
@@ -108,7 +155,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -121,7 +168,7 @@ paths:
                 picture:
                   type: string
                   format: binary
-                password: 
+                password:
                   type: string
               required:
                 - first_name
@@ -141,14 +188,14 @@ paths:
                   description: 'Successful authentication. Redirect to user profile.'
                   value: '/users/{id}'
                 302Failure:
-                  description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
+                  description: 'Failed authentication. Redirect to register form.'
+                  value: '/register'
 
   /users/{id}:
     get:
-      operationId: R106
-      summary: 'R106: View user profile'
-      description: 'Show the personal user profile. Access: USR, TEC' # coloquei TEC para os técnicos poderem ver também
+      operationId: R108
+      summary: 'R108: View user profile'
+      description: 'Show the personal user profile. Access: OWN, TEC'
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -162,11 +209,14 @@ paths:
       responses:
         '200':
           description: 'Ok. Show view profile UI'
-    
-    post: 
-      operationId: R107
-      summary: 'R107: Edit user profile'
-      description: 'Edit the personal user profile. Access: USR, TEC' # coloquei TEC para os técnicos poderem editar também
+
+        '403':
+          description: 'You do not have permission to view this profile'
+
+    put:
+      operationId: R109
+      summary: 'R109: Edit user profile'
+      description: 'Edit the personal user profile. Access: OWN' 
       tags:
         - 'M01: Authentication and Personal Profile'
 
@@ -180,7 +230,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded: 
             schema:
               type: object
               properties:
@@ -193,7 +243,7 @@ paths:
                 picture:
                   type: string
                   format: binary
-                password: 
+                password:
                   type: string
               required:
                 - first_name
@@ -210,19 +260,243 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
+                  description: 'Successful edit. Redirect to user profile.'
                   value: '/users/{id}'
                 302Failure:
-                  description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
- 
+                  description: 'Failed edit. Redirect to user profile.'
+                  value: '/users/{id}'
+        '403':
+          description: 'You do not have permission to edit this profile.'
+
+    delete:
+      operationId: R110
+      summary: 'R110: Delete user account'
+      description: 'Delete user account. Access: OWN, TEC' 
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the request to delete the account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account deletion was successful. Redirect to home page.'
+                  value: '../../'
+                302Failure:
+                  description: 'Account deletion was not successful. Redirect to user profile.'
+                  value: '/users/{id}'
+        '403':
+          description: 'You do not have permission to delete this account' 
+
+  /admin-panel/admins/{id}:
+    get:
+      operationId: R111
+      summary: 'R111: View admin profile'
+      description: 'Show the personal user profile. Access: OWN, TEC'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+
+        '403':
+          description: 'You do not have permission to view this profile'
+
+    put:
+      operationId: R112
+      summary: 'R112: Edit admin profile'
+      description: 'Edit the admin profile. Access: OWN' 
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+              required:
+                - first_name
+                - second_name
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the admin information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful edit. Redirect to admin profile.'
+                  value: '/admin-profile/admins/{id}'
+                302Failure:
+                  description: 'Failed edit. Redirect to admin profile.'
+                  value: '/admin-profile/admins/{id}'
+        '403':
+          description: 'You do not have permission to edit this profile.'
+
+    delete:
+      operationId: R113
+      summary: 'R113: Delete admin account'
+      description: 'Delete admin account. Access: OWN, TEC' 
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the request to delete the account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account deletion was successful. Redirect to home page.'
+                  value: '../../../'
+                302Failure:
+                  description: 'Account deletion was not successful. Redirect to user profile.'
+                  value: '/admin-profile/admins/{id}'
+        '403':
+          description: 'You do not have permission to delete this account' 
+      
+  /forgot-password:
+    get:
+      operationId: R114
+      summary: 'R114: Show Forgot Password Form'
+      description: 'Provide forgot password form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+    post:
+      operationId: R115
+      summary: 'R115: Forgot Password Action'
+      description: 'Send an email with a token. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+              required:
+                - email
+
+      responses:
+        '302':
+          description: 'Redirect after processing the email.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Redirect to change password page'
+                  value: '/forgot-password/change-password'
+  
+  /forgot-password/change-password:
+    get:
+      operationId: R116
+      summary: 'R116: Show token and password form'
+      description: 'Provide forgot password form. Access: PUB'
+      tags:
+        - 'M01: Authentication and Personal Profile'
+      responses:
+        '200':
+          description: 'Ok. Show log-in UI'
+    post:
+        operationId: R117
+        summary: 'R117: Change password Action'
+        description: 'Change the password. Access: PUB'
+        tags:
+          - 'M01: Authentication and Personal Profile'
+
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded: 
+              schema:
+                type: object
+                properties:
+                  token: 
+                    type: string
+                  password:
+                    type: string
+                required:
+                  - token
+                  - password
+
+        responses:
+          '302':
+            description: 'Redirect after processing the change password form.'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Redirect to login page'
+                    value: '/login'
+                  302Failure:
+                    description: 'Redirect to change password page'
+                    value: '/forgot-password/change-password'
 
   /api/products:
     get:
       operationId: R202
       summary: 'R202: Search Products API'
       description: 'Searches for products and returns the results as JSON. Access: PUB, COL' # Colaborador tmb precisa de acesso a isto
-      tags: 
+      tags:
         - 'M02: Products'
 
       parameters:
@@ -241,7 +515,7 @@ paths:
         - in: query
           name: classification
           description: Numeric corresponding to the product classification
-          schema:                   # resultado da média das avaliações atribuídas nas reviews
+          schema: # resultado da média das avaliações atribuídas nas reviews
             type: number
           required: false
 
@@ -261,7 +535,7 @@ paths:
                       type: string
                     category:
                       type: string # verificar se é a melhor forma de representar as categorias
-                    description:                      #sendo que cada uma tem uma categoria mãe
+                    description: #sendo que cada uma tem uma categoria mãe
                       type: string
                     likes:
                       type: integer
@@ -276,19 +550,19 @@ paths:
                             type: string
                     colors:
                       type: array
-                      items: 
+                      items:
                         type: object
                         properties:
                           id:
                             type: string
-                          name: 
+                          name:
                             type: string
                     reviews:
                       type: array
                       items:
                         type: object
                         properties:
-                          id: 
+                          id:
                             type: string
                           title:
                             type: string
@@ -304,19 +578,28 @@ paths:
                     likes: 15
                     sizes: [XS, S, M, L]
                     colors: [Black, Grey, Beige]
-                    reviews: [0, Good product!, 4.5, It is builded with very good materials.,
-                              1, Lack of interior lining!, 1.5, the interior lining is not the best I ever experienced.]
-    post: 
+                    reviews:
+                      [
+                        0,
+                        Good product!,
+                        4.5,
+                        It is builded with very good materials.,
+                        1,
+                        Lack of interior lining!,
+                        1.5,
+                        the interior lining is not the best I ever experienced.,
+                      ]
+    post:
       operationId: R203
       summary: 'R203: Create Product API'
       description: 'Creates a new product. Access: COL'
-      tags: 
+      tags:
         - 'M02: Products'
 
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -407,7 +690,7 @@ paths:
                   description: description of the materials and tips/warnings for washing
                   sizes: [XS, S, M, L]
                   colors: [Black, Grey, Beige]
-  
+
   /api/orders:
     get:
       operationId: R301
@@ -441,7 +724,7 @@ paths:
           schema:
             type: array
           required: false
-      
+
       responses:
         '200':
           description: Success
@@ -486,19 +769,19 @@ paths:
                                   type: string
                           colors:
                             type: array
-                            items: 
+                            items:
                               type: object
                               properties:
                                 id:
                                   type: string
-                                name: 
+                                name:
                                   type: string
                           reviews:
                             type: array
                             items:
                               type: object
                               properties:
-                                id: 
+                                id:
                                   type: string
                                 title:
                                   type: string
@@ -511,27 +794,37 @@ paths:
                       status: Pending
                       date: 2022-11-05
                       total: 100
-                      products: [1, 
-                                 Zip Up Bomber Jacket,
-                                 Woman / Clothing / Jackets,
-                                 description of the materials and tips/warnings for washing,
-                                 15,
-                                 [XS, S, M, L],
-                                 [Black, Grey, Beige],
-                                 [0, Good product!, 4.5, It is builded with very good materials.,
-                                  1, Lack of interior lining!, 1.5, 
-                                  the interior lining is not the best I ever experienced.]]
+                      products:
+                        [
+                          1,
+                          Zip Up Bomber Jacket,
+                          Woman / Clothing / Jackets,
+                          description of the materials and tips/warnings for washing,
+                          15,
+                          [XS, S, M, L],
+                          [Black, Grey, Beige],
+                          [
+                            0,
+                            Good product!,
+                            4.5,
+                            It is builded with very good materials.,
+                            1,
+                            Lack of interior lining!,
+                            1.5,
+                            the interior lining is not the best I ever experienced.,
+                          ],
+                        ]
     post:
       operationId: R302
       summary: 'R302: Create Order API'
       description: 'Creates a new order and returns the results as JSON. Access: USR, COL'
       tags:
         - 'M03: Orders and Wishlist'
-        
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:  # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
             schema:
               type: object
               properties:
@@ -567,19 +860,19 @@ paths:
                           type: string
                     colors:
                       type: array
-                      items: 
+                      items:
                         type: object
                         properties:
                           id:
                             type: string
-                          name: 
+                          name:
                             type: string
                     reviews:
                       type: array
                       items:
                         type: object
                         properties:
-                          id: 
+                          id:
                             type: string
                           title:
                             type: string
@@ -589,7 +882,7 @@ paths:
                             type: string
       responses:
         '200':
-          description: "Success creating a new order"
+          description: 'Success creating a new order'
           headers:
             Location:
               schema:
@@ -598,7 +891,7 @@ paths:
                 description: URI of the newly created order
               example: /api/orders/
 
-  /api/wishlist:  
+  /api/wishlist:
     get:
       operationId: R303
       summary: 'R303: Search Wishlist API'
@@ -613,7 +906,7 @@ paths:
           schema:
             type: array
           required: false
-      
+
       responses:
         '200':
           description: Success
@@ -652,19 +945,19 @@ paths:
                                   type: string
                           colors:
                             type: array
-                            items: 
+                            items:
                               type: object
                               properties:
                                 id:
                                   type: string
-                                name: 
+                                name:
                                   type: string
                           reviews:
                             type: array
                             items:
                               type: object
                               properties:
-                                id: 
+                                id:
                                   type: string
                                 title:
                                   type: string
@@ -674,23 +967,33 @@ paths:
                                   type: string
                   example:
                     - id: 1
-                      products: [1, 
-                                 Zip Up Bomber Jacket,
-                                 Woman / Clothing / Jackets,
-                                 description of the materials and tips/warnings for washing,
-                                 15,
-                                 [XS, S, M, L],
-                                 [(Black, Grey, Beige],
-                                 [0, Good product!, 4.5, It is builded with very good materials.,
-                                  1, Lack of interior lining!, 1.5, 
-                                  the interior lining is not the best I ever experienced.]]
+                      products:
+                        [
+                          1,
+                          Zip Up Bomber Jacket,
+                          Woman / Clothing / Jackets,
+                          description of the materials and tips/warnings for washing,
+                          15,
+                          [XS, S, M, L],
+                          [(Black, Grey, Beige],
+                          [
+                            0,
+                            Good product!,
+                            4.5,
+                            It is builded with very good materials.,
+                            1,
+                            Lack of interior lining!,
+                            1.5,
+                            the interior lining is not the best I ever experienced.,
+                          ],
+                        ]
     post:
       operationId: R304
       summary: 'R304: Create Wishlist API'
       description: 'Creates a new wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
         - 'M03: Orders and Wishlist'
-        
+
       requestBody:
         required: true
         content:
@@ -724,19 +1027,19 @@ paths:
                           type: string
                     colors:
                       type: array
-                      items: 
+                      items:
                         type: object
                         properties:
                           id:
                             type: string
-                          name: 
+                          name:
                             type: string
                     reviews:
                       type: array
                       items:
                         type: object
                         properties:
-                          id: 
+                          id:
                             type: string
                           title:
                             type: string
@@ -746,7 +1049,7 @@ paths:
                             type: string
       responses:
         '200':
-          description: "Success creating a new wishlist"
+          description: 'Success creating a new wishlist'
           headers:
             Location:
               schema:
