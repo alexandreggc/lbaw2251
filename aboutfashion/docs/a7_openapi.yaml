@@ -493,30 +493,48 @@ paths:
 
   /api/products:
     get:
-      operationId: R202
-      summary: 'R202: Search Products API'
-      description: 'Searches for products and returns the results as JSON. Access: PUB, COL' # Colaborador tmb precisa de acesso a isto
+      operationId: R201
+      summary: 'R201: Search Products API'
+      description: 'Searches for products and returns the results as JSON. Access: PUB'
       tags:
         - 'M02: Products'
 
       parameters:
         - in: query
-          name: query
+          name: product_id
+          description: Product ID
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: product_name
           description: String to use for full-text search
           schema:
             type: string
           required: false
         - in: query
-          name: item
+          name: category_id
           description: Category of the products
           schema:
-            type: string
+            type: integer
           required: false
         - in: query
-          name: classification
+          name: min_classification
           description: Numeric corresponding to the product classification
-          schema: # resultado da média das avaliações atribuídas nas reviews
-            type: number
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: min_price
+          description: Numeric corresponding to the minimum price of a product
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: max_price
+          description: Numeric corresponding to the maximum price of a product
+          schema:
+            type: integer
           required: false
 
       responses:
@@ -530,22 +548,32 @@ paths:
                   type: object
                   properties:
                     id:
-                      type: string
-                    title:
-                      type: string
-                    category:
-                      type: string # verificar se é a melhor forma de representar as categorias
-                    description: #sendo que cada uma tem uma categoria mãe
-                      type: string
-                    likes:
                       type: integer
+                    name:
+                      type: string
+                    price:
+                      type: number
+                    description: 
+                      type: string
+                    image:
+                      type: array
+                      items: 
+                        type: string
+                    category:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
                     sizes:
                       type: array
                       items:
                         type: object
                         properties:
                           id:
-                            type: string
+                            type: integer
                           name:
                             type: string
                     colors:
@@ -554,143 +582,295 @@ paths:
                         type: object
                         properties:
                           id:
-                            type: string
+                            type: integer
                           name:
                             type: string
-                    reviews:
+                    stock:
                       type: array
                       items:
                         type: object
                         properties:
-                          id:
-                            type: string
-                          title:
-                            type: string
-                          evaluation:
-                            type: number
-                          description:
-                            type: string
+                          id_size:
+                            type: integer
+                          id_color:
+                            type: integer
+                          stock:
+                            type: integer
+                    avg_classification:
+                      type: integer
+                    promotion:
+                      type: object
+                      properties:
+                        id_promotion:
+                          type: integer
+                        discount:
+                          type: integer
+                             
                 example:
                   - id: 1
-                    title: Zip Up Bomber Jacket
-                    category: Woman / Clothing / Jackets
+                    name: Zip Up Bomber Jacket
                     description: description of the materials and tips/warnings for washing
-                    likes: 15
-                    sizes: [XS, S, M, L]
-                    colors: [Black, Grey, Beige]
-                    reviews:
-                      [
-                        0,
-                        Good product!,
-                        4.5,
-                        It is builded with very good materials.,
-                        1,
-                        Lack of interior lining!,
-                        1.5,
-                        the interior lining is not the best I ever experienced.,
-                      ]
-    post:
+                    price: 20
+                    image: [https://robohash.org/totamminussunt.png?size=50x50&set=set1, https://robohash.org/inventoreutnulla.png?size=50x50&set=set1]
+                    category: [{id: 1, name: Woman}, {id: 2, name: Jackets}]
+                    sizes: [{id: 1, name: XS}, {id: 2, name: S}, {id: 3, name: M}]
+                    colors: [{id: 1, name: Black}, {id: 2, name: Grey}, {id: 3, name: Red}]
+                    stock: [{id_size: 1, id_color: 1, stock: 10},{id_size: 2, id_color: 2, stock: 0},{id_size: 3, id_color: 3, stock: 20}]
+                    avg_classification: 3
+                    promotion: {id_promotion: 1, id_discount: 10}
+
+
+  /products:
+    get:
+      operationId: R202
+      summary: 'R202: List the products'
+      description: 'Shows the products that match the applied filters. Uses AJAX. Access: PUB'
+      tags:
+        - 'M02: Products'
+      
+      responses:
+        '200':
+          description: 'Ok. Show search products UI'
+  
+  /products/{id}:
+    get:
       operationId: R203
-      summary: 'R203: Create Product API'
-      description: 'Creates a new product. Access: COL'
+      summary: 'R203: Show Product'
+      description: 'Show the product with the index {id}'
+      tags:
+        - 'M02: Products'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show product UI'
+        '404':
+          description: "Error. There's not a product with the specified primary key"
+
+  /admin-panel/products:
+      get:
+        operationId: R204
+        summary: 'R204: List the products'
+        description: 'Shows the products that match the applied filters in the admin panel. Uses AJAX. Access: PUB'
+        tags:
+          - 'M02: Products'
+        responses:
+          '200':
+            description: 'Ok. Show search products UI'
+
+  /admin-panel/products/{id}:
+    get:
+      operationId: R205
+      summary: 'R205: Show Product'
+      description: 'Show the product with the index {id} in the admin panel'
+      tags:
+        - 'M02: Products'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show product UI'
+        '403':
+          description: "Error. You don't have permission to access this page"
+        '404':
+          description: "Error. There's not a product with the specified primary key"
+      
+    delete:
+        operationId: R206
+        summary: 'R206: Delete Product'
+        description: 'Delete a product with the index {id}'
+        tags:
+          - 'M02: Products'
+
+        parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+        responses:
+          '302':
+            description: 'Redirect after processing product deletion request'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Product deletion was successful. Redirect to home page.'
+                    value: '../../'
+                  302Failure:
+                    description: 'Product deletion was not successful. Redirect to user profile.'
+                    value: '/admin-panel/products/{id}'
+          '403':
+            description: 'Error! You do not have permission to delete this product' 
+          '404':
+            description: 'Error! Product not found'
+    
+    patch:
+      operationId: R207
+      summary: 'R207: Update Product'
+      description: 'Update a product with the index {id}'
       tags:
         - 'M02: Products'
 
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/json: 
             schema:
               type: object
               properties:
-                title:
+                name: 
                   type: string
-                category:
-                  type: string
+                price:
+                  type: number
                 description:
                   type: string
-                sizes:
+                category: 
+                  type: array
+                  items:
+                    type: string
+                image: 
+                  type: array
+                  items:
+                    type: string
+                promotion:
                   type: array
                   items:
                     type: object
                     properties:
-                      id:
+                      discount:
+                        type: integer
+                      start_date:
                         type: string
-                      name:
+                      final_date:
                         type: string
-                colors:
+                stock:
                   type: array
                   items:
                     type: object
                     properties:
-                      id:
+                      color:
                         type: string
-                      name:
+                      size:
                         type: string
-              required:
-                - title
-                - category
-                - description
-                - sizes
-                - colors
+
+      responses:
+          '302':
+            description: 'Redirect after processing product change request'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Product change was successful. Redirect to product page'
+                    value: '/admin-panel/products/{id}'
+                  302Failure:
+                    description: 'Product change was not successful. Redirect to product page.'
+                    value: '/admin-panel/products/{id}'
+          '403':
+            description: 'Error! You do not have permission to delete this product' 
+          '404':
+            description: 'Error! Product not found'
+
+  /admin-panel/products/create:
+    get:
+      operationId: R208
+      summary: 'R208: Create Product UI'
+      description: 'Show create product UI'
+      tags:
+        - 'M02: Products'
 
       responses:
         '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  category:
-                    type: string
-                  description:
-                    type: string
-                  likes:
-                    type: integer
-                  sizes:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        name:
-                          type: string
-                  colors:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        name:
-                          type: string
-                  reviews:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        title:
-                          type: string
-                        evaluation:
-                          type: number
-                        description:
-                          type: string
-                example:
-                  id: 1
-                  title: Zip Up Bomber Jacket
-                  category: Woman Jackets
-                  description: description of the materials and tips/warnings for washing
-                  sizes: [XS, S, M, L]
-                  colors: [Black, Grey, Beige]
+          description: 'Ok. Show create product UI'
+        '403':
+          description: "Error. You don't have permission to access this page"  
+    
+    put:
+      operationId: R209
+      summary: 'R209: Create Product'
+      description: 'Create product action'
+      tags:
+        - 'M02: Products'
 
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                category: 
+                  type: array
+                  items:
+                    type: string
+                promotion:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      discount:
+                        type: integer
+                      start_date:
+                        type: string
+                      final_date:
+                        type: string
+                stock:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      color:
+                        type: string
+                      size:
+                        type: string
+              required:
+                - name
+                - price
+                - description
+                - category
+                - stock
+
+      responses:
+          '302':
+            description: 'Redirect after processing product create request'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Product was been created. Redirect to product page'
+                    value: '/admin-panel/products/{id}'
+                  302Failure:
+                    description: 'Product change was not created. Redirect to create page.'
+                    value: '/admin-panel/products/create'
+          '403':
+            description: "Error! You don't have permission to create a product" 
+                          
+              
   /api/orders:
     get:
       operationId: R301
