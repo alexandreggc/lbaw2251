@@ -20,8 +20,7 @@ tags:
   - name: 'M04: Products and Promotions'
   - name: 'M05: Orders and Wishlist'
   - name: 'M06: Reviews and Reports'
-  - name: 'M07: Static pages'
-  - name: 'M08: Dynamic pages'
+  - name: 'M07: Pages'
 
 
 paths:
@@ -202,6 +201,7 @@ paths:
       description: 'Show the personal user profile. Access: OWN, TEC'
       tags:
         - 'M02: Personal Profile'
+        - 'M03: Administration'
 
       parameters:
         - in: path
@@ -271,35 +271,7 @@ paths:
                   value: '/users/{id}'
         '403':
           description: 'You do not have permission to edit this profile.'
-
-    delete:
-      operationId: R203
-      summary: 'R203: Delete user account'
-      description: 'Delete user account. Access: OWN, TEC' 
-      tags:
-        - 'M02: Personal Profile'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '302':
-          description: 'Redirect after processing the request to delete the account.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Account deletion was successful. Redirect to home page.'
-                  value: '../../'
-                302Failure:
-                  description: 'Account deletion was not successful. Redirect to user profile.'
-                  value: '/users/{id}'
-        '403':
-          description: 'You do not have permission to delete this account' 
+      
 
   /admin-panel/admins/{id}:
     get:
@@ -371,10 +343,10 @@ paths:
               examples:
                 302Success:
                   description: 'Successful edit. Redirect to admin profile.'
-                  value: '/admin-profile/admins/{id}'
+                  value: '/admin-panel/admins/{id}'
                 302Failure:
                   description: 'Failed edit. Redirect to admin profile.'
-                  value: '/admin-profile/admins/{id}'
+                  value: '/admin-panel/admins/{id}'
         '403':
           description: 'You do not have permission to edit this profile.'
 
@@ -403,7 +375,7 @@ paths:
                   value: '../../../'
                 302Failure:
                   description: 'Account deletion was not successful. Redirect to user profile.'
-                  value: '/admin-profile/admins/{id}'
+                  value: '/admin-panel/admins/{id}'
         '403':
           description: 'You do not have permission to delete this account' 
       
@@ -894,7 +866,7 @@ paths:
           name: date
           description: Date of the order
           schema:
-            type: string # para representar datas também é string
+            type: string 
           required: false
         - in: query
           name: total
@@ -924,7 +896,7 @@ paths:
                     status:
                       type: string
                     date:
-                      type: string # para representar datas também é string
+                      type: string 
                     total:
                       type: number
                     products:
@@ -1008,14 +980,14 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
                 status:
                   type: string
                 date:
-                  type: string # para representar datas também é string
+                  type: string
                 total:
                   type: number
                 products:
@@ -1181,7 +1153,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded: # <---- VER ESTE TIPO DE LINKS, ESTÁ CORRETO??
+          application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
@@ -1241,3 +1213,108 @@ paths:
                 format: uri
                 description: URI of the newly created wishlist
               example: /api/wishlist/
+    
+  /:
+    get:
+      operationId: R701
+      summary: 'R701: Home Page'
+      description: 'Show home page. Access: PUB'
+      tags:
+        - 'M07: Pages'
+      responses:
+        '200':
+          description: 'Ok. Show home page'
+
+  /api/users:
+    get:
+      operationId: R302
+      summary: 'R302: Search Users'
+      description: 'Searches for persons and returns the results as JSON. Access: TEC'
+      tags:
+        - 'M03: Administration'
+
+      parameters:
+        - in: query
+          name: id
+          description: User ID
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: name
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email: 
+                      type: string
+                    image: 
+                      type: string
+                    birth_date: 
+                      type: string
+                    gender:
+                      type: string
+                    blocked:
+                      type: string
+        '403':
+          description: "You don't have permission to use this API"
+
+  
+  /admin-panel/users/block:
+    patch:
+      operationId: R303
+      summary: 'R303: Block User'
+      description: 'Block or unblock a user. Access: TEC'
+      tags:
+        - 'M03: Administration'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                id: 
+                  type: number
+                blocked:
+                  type: number
+              required:
+                - id
+                - blocked
+
+      responses:
+          '302':
+            description: 'Redirect after blocking/unblocking a user'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'User change was successful. Redirect to product page'
+                    value: '/admin-panel/users'
+                  302Failure:
+                    description: 'User change was not successful. Redirect to product page.'
+                    value: '/admin-panel/users'
+          '403':
+            description: 'Error! You do not have permission to block/unblock this account' 
+          '404':
+            description: 'Error! User not found'
