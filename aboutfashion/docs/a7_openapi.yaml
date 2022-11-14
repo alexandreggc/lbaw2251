@@ -14,11 +14,15 @@ externalDocs:
   url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw2251/-/wikis/
 
 tags:
-  - name: 'M01: Authentication and Personal Profile'
-  - name: 'M02: Products'
-  - name: 'M03: Orders and Wishlist'
-  - name: 'M04: Reviews and Reports'
-  - name: 'M05: User Administration and Static pages'
+  - name: 'M01: Authentication'
+  - name: 'M02: Personal Profile'
+  - name: 'M03: Administration'
+  - name: 'M04: Products and Promotions'
+  - name: 'M05: Orders and Wishlist'
+  - name: 'M06: Reviews and Reports'
+  - name: 'M07: Static pages'
+  - name: 'M08: Dynamic pages'
+
 
 paths:
   /login:
@@ -27,7 +31,7 @@ paths:
       summary: 'R101: Login Form'
       description: 'Provide login form. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '200':
           description: 'Ok. Show log-in UI'
@@ -36,7 +40,7 @@ paths:
       summary: 'R102: Login Action'
       description: 'Processes the login form submission. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
 
       requestBody:
         required: true
@@ -74,7 +78,7 @@ paths:
       summary: 'R103: Login Form'
       description: 'Provide login form. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '200':
           description: 'Ok. Show log-in UI'
@@ -83,7 +87,7 @@ paths:
       summary: 'R104: Login Action'
       description: 'Processes the login form submission. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
 
       requestBody:
         required: true
@@ -121,7 +125,7 @@ paths:
       summary: 'R105: Logout Action'
       description: 'Logout the current authenticated used. Access: USR, TEC, COL'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '302':
           description: 'Redirect after processing logout.'
@@ -140,7 +144,7 @@ paths:
       summary: 'R106: Register Form'
       description: 'Provide new user registration form. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '200':
           description: 'Ok. Show sign-up UI'
@@ -150,7 +154,7 @@ paths:
       summary: 'R107: Register Action'
       description: 'Processes the new user registration form submission. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
 
       requestBody:
         required: true
@@ -193,11 +197,11 @@ paths:
 
   /users/{id}:
     get:
-      operationId: R108
-      summary: 'R108: View user profile'
+      operationId: R201
+      summary: 'R201: View user profile'
       description: 'Show the personal user profile. Access: OWN, TEC'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
 
       parameters:
         - in: path
@@ -214,11 +218,11 @@ paths:
           description: 'You do not have permission to view this profile'
 
     put:
-      operationId: R109
-      summary: 'R109: Edit user profile'
+      operationId: R202
+      summary: 'R202: Edit user profile'
       description: 'Edit the personal user profile. Access: OWN' 
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
 
       parameters:
         - in: path
@@ -269,11 +273,11 @@ paths:
           description: 'You do not have permission to edit this profile.'
 
     delete:
-      operationId: R110
-      summary: 'R110: Delete user account'
+      operationId: R203
+      summary: 'R203: Delete user account'
       description: 'Delete user account. Access: OWN, TEC' 
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
       parameters:
         - in: path
           name: id
@@ -299,11 +303,11 @@ paths:
 
   /admin-panel/admins/{id}:
     get:
-      operationId: R111
-      summary: 'R111: View admin profile'
+      operationId: R204
+      summary: 'R204: View admin profile'
       description: 'Show the admin profile. Access: OWN, TEC'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
 
       parameters:
         - in: path
@@ -320,11 +324,11 @@ paths:
           description: 'You do not have permission to view this profile'
 
     put:
-      operationId: R112
-      summary: 'R112: Edit admin profile'
+      operationId: R205
+      summary: 'R205: Edit admin profile'
       description: 'Edit admin profile. Access: OWN' 
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
 
       parameters:
         - in: path
@@ -375,11 +379,11 @@ paths:
           description: 'You do not have permission to edit this profile.'
 
     delete:
-      operationId: R113
-      summary: 'R113: Delete admin account'
+      operationId: R206
+      summary: 'R206: Delete admin account'
       description: 'Delete admin account. Access: OWN, TEC' 
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M02: Personal Profile'
       parameters:
         - in: path
           name: id
@@ -405,20 +409,20 @@ paths:
       
   /forgot-password:
     get:
-      operationId: R114
-      summary: 'R114: Show Forgot Password Form'
+      operationId: R108
+      summary: 'R108: Show Forgot Password Form'
       description: 'Provide forgot password form. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '200':
           description: 'Ok. Show log-in UI'
     post:
-      operationId: R115
-      summary: 'R115: Forgot Password Action'
+      operationId: R109
+      summary: 'R109: Forgot Password Action'
       description: 'Send an email with a token. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
 
       requestBody:
         required: true
@@ -446,20 +450,20 @@ paths:
   
   /forgot-password/change-password:
     get:
-      operationId: R116
-      summary: 'R116: Show token and password form'
+      operationId: R110
+      summary: 'R110: Show token and password form'
       description: 'Provide forgot password form. Access: PUB'
       tags:
-        - 'M01: Authentication and Personal Profile'
+        - 'M01: Authentication'
       responses:
         '200':
           description: 'Ok. Show log-in UI'
     post:
-        operationId: R117
-        summary: 'R117: Change password Action'
+        operationId: R111
+        summary: 'R111: Change password Action'
         description: 'Change the password. Access: PUB'
         tags:
-          - 'M01: Authentication and Personal Profile'
+          - 'M01: Authentication'
 
         requestBody:
           required: true
@@ -493,11 +497,11 @@ paths:
 
   /api/products:
     get:
-      operationId: R201
-      summary: 'R201: Search Products API'
+      operationId: R401
+      summary: 'R401: Search Products API'
       description: 'Searches for products and returns the results as JSON. Access: PUB'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       parameters:
         - in: query
@@ -622,11 +626,11 @@ paths:
 
   /products:
     get:
-      operationId: R202
-      summary: 'R202: List the products'
+      operationId: R402
+      summary: 'R402: List the products'
       description: 'Shows the products that match the applied filters. Uses AJAX. Access: PUB'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
       
       responses:
         '200':
@@ -634,11 +638,11 @@ paths:
   
   /products/{id}:
     get:
-      operationId: R203
-      summary: 'R203: Show Product'
-      description: 'Show the product with the index {id}'
+      operationId: R403
+      summary: 'R403: Show Product'
+      description: 'Show the product with the index {id}. Access: PUB'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       parameters:
         - in: path
@@ -655,22 +659,22 @@ paths:
 
   /admin-panel/products:
       get:
-        operationId: R204
-        summary: 'R204: List the products'
-        description: 'Shows the products that match the applied filters in the admin panel. Uses AJAX. Access: PUB'
+        operationId: R404
+        summary: 'R404: List the products'
+        description: 'Shows the products that match the applied filters in the admin panel. Uses AJAX. Access: COL'
         tags:
-          - 'M02: Products'
+          - 'M04: Products and Promotions'
         responses:
           '200':
             description: 'Ok. Show search products UI'
 
   /admin-panel/products/{id}:
     get:
-      operationId: R205
-      summary: 'R205: Show Product'
-      description: 'Show the product with the index {id} in the admin panel'
+      operationId: R405
+      summary: 'R405: Show Product'
+      description: 'Show the product with the index {id} in the admin panel. Access: COL'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       parameters:
         - in: path
@@ -688,11 +692,11 @@ paths:
           description: "Error. There's not a product with the specified primary key"
       
     delete:
-        operationId: R206
-        summary: 'R206: Delete Product'
-        description: 'Delete a product with the index {id}'
+        operationId: R406
+        summary: 'R406: Delete Product'
+        description: 'Delete a product with the index {id}. Access: COL'
         tags:
-          - 'M02: Products'
+          - 'M04: Products and Promotions'
 
         parameters:
         - in: path
@@ -721,11 +725,11 @@ paths:
             description: 'Error! Product not found'
     
     patch:
-      operationId: R207
-      summary: 'R207: Update Product'
-      description: 'Update a product with the index {id}'
+      operationId: R407
+      summary: 'R407: Update Product'
+      description: 'Update a product with the index {id}. Access: COL'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       requestBody:
         required: true
@@ -790,11 +794,11 @@ paths:
 
   /admin-panel/products/create:
     get:
-      operationId: R208
-      summary: 'R208: Create Product UI'
-      description: 'Show create product UI'
+      operationId: R408
+      summary: 'R408: Create Product UI'
+      description: 'Show create product UI. Access: COL'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       responses:
         '200':
@@ -803,11 +807,11 @@ paths:
           description: "Error. You don't have permission to access this page"  
     
     put:
-      operationId: R209
-      summary: 'R209: Create Product'
-      description: 'Create product action'
+      operationId: R409
+      summary: 'R409: Create Product'
+      description: 'Create product action. Access: COL'
       tags:
-        - 'M02: Products'
+        - 'M04: Products and Promotions'
 
       requestBody:
         required: true
@@ -873,11 +877,11 @@ paths:
               
   /api/orders:
     get:
-      operationId: R301
-      summary: 'R301: Search Orders API'
+      operationId: R501
+      summary: 'R501: Search Orders API'
       description: 'Searches for orders and returns the results as JSON. Access: USR, COL'
       tags:
-        - 'M03: Orders and Wishlist'
+        - 'M05: Orders and Wishlist'
 
       parameters:
         - in: query
@@ -995,11 +999,11 @@ paths:
                           ],
                         ]
     post:
-      operationId: R302
-      summary: 'R302: Create Order API'
+      operationId: R502
+      summary: 'R502: Create Order API'
       description: 'Creates a new order and returns the results as JSON. Access: USR, COL'
       tags:
-        - 'M03: Orders and Wishlist'
+        - 'M05: Orders and Wishlist'
 
       requestBody:
         required: true
@@ -1073,11 +1077,11 @@ paths:
 
   /api/wishlist:
     get:
-      operationId: R303
-      summary: 'R303: Search Wishlist API'
+      operationId: R503
+      summary: 'R503: Search Wishlist API'
       description: 'Searches for wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
-        - 'M03: Orders and Wishlist'
+        - 'M05: Orders and Wishlist'
 
       parameters:
         - in: query
@@ -1168,11 +1172,11 @@ paths:
                           ],
                         ]
     post:
-      operationId: R304
-      summary: 'R304: Create Wishlist API'
+      operationId: R504
+      summary: 'R504: Create Wishlist API'
       description: 'Creates a new wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
-        - 'M03: Orders and Wishlist'
+        - 'M05: Orders and Wishlist'
 
       requestBody:
         required: true
