@@ -18,12 +18,15 @@ tags:
   - name: 'M02: Personal Profile'
   - name: 'M03: Administration'
   - name: 'M04: Products and Promotions'
-  - name: 'M05: Orders and Wishlist'
+  - name: 'M05: Orders and Wishlists'
   - name: 'M06: Reviews and Reports'
   - name: 'M07: Pages'
 
 
 paths:
+
+  # Module 01: Authentication
+
   /login:
     get:
       operationId: R101
@@ -74,7 +77,7 @@ paths:
   /admin-panel/login:
     get:
       operationId: R103
-      summary: 'R103: Login Form'
+      summary: 'R103: Admin Login Form'
       description: 'Provide login form. Access: PUB'
       tags:
         - 'M01: Authentication'
@@ -83,7 +86,7 @@ paths:
           description: 'Ok. Show log-in UI'
     post:
       operationId: R104
-      summary: 'R104: Login Action'
+      summary: 'R104: Admin Login Action'
       description: 'Processes the login form submission. Access: PUB'
       tags:
         - 'M01: Authentication'
@@ -193,192 +196,7 @@ paths:
                 302Failure:
                   description: 'Failed authentication. Redirect to register form.'
                   value: '/register'
-
-  /users/{id}:
-    get:
-      operationId: R201
-      summary: 'R201: View user profile'
-      description: 'Show the personal user profile. Access: OWN, TEC'
-      tags:
-        - 'M02: Personal Profile'
-        - 'M03: Administration'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '200':
-          description: 'Ok. Show view profile UI'
-
-        '403':
-          description: 'You do not have permission to view this profile'
-
-    put:
-      operationId: R202
-      summary: 'R202: Edit user profile'
-      description: 'Edit the personal user profile. Access: OWN' 
-      tags:
-        - 'M02: Personal Profile'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded: 
-            schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                second_name:
-                  type: string
-                email:
-                  type: string
-                picture:
-                  type: string
-                  format: binary
-                password:
-                  type: string
-              required:
-                - first_name
-                - second_name
-                - email
-                - password
-
-      responses:
-        '302':
-          description: 'Redirect after processing the new user information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful edit. Redirect to user profile.'
-                  value: '/users/{id}'
-                302Failure:
-                  description: 'Failed edit. Redirect to user profile.'
-                  value: '/users/{id}'
-        '403':
-          description: 'You do not have permission to edit this profile.'
-      
-
-  /admin-panel/admins/{id}:
-    get:
-      operationId: R204
-      summary: 'R204: View admin profile'
-      description: 'Show the admin profile. Access: OWN, TEC'
-      tags:
-        - 'M02: Personal Profile'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '200':
-          description: 'Ok. Show view profile UI'
-
-        '403':
-          description: 'You do not have permission to view this profile'
-
-    put:
-      operationId: R205
-      summary: 'R205: Edit admin profile'
-      description: 'Edit admin profile. Access: OWN' 
-      tags:
-        - 'M02: Personal Profile'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded: 
-            schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                second_name:
-                  type: string
-                email:
-                  type: string
-                picture:
-                  type: string
-                  format: binary
-                password:
-                  type: string
-              required:
-                - first_name
-                - second_name
-                - email
-                - password
-
-      responses:
-        '302':
-          description: 'Redirect after processing the new information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful edit. Redirect to admin profile.'
-                  value: '/admin-panel/admins/{id}'
-                302Failure:
-                  description: 'Failed edit. Redirect to admin profile.'
-                  value: '/admin-panel/admins/{id}'
-        '403':
-          description: 'You do not have permission to edit this profile.'
-
-    delete:
-      operationId: R206
-      summary: 'R206: Delete admin account'
-      description: 'Delete admin account. Access: OWN, TEC' 
-      tags:
-        - 'M02: Personal Profile'
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '302':
-          description: 'Redirect after processing the request to delete the account.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Account deletion was successful. Redirect to home page.'
-                  value: '../../../'
-                302Failure:
-                  description: 'Account deletion was not successful. Redirect to user profile.'
-                  value: '/admin-panel/admins/{id}'
-        '403':
-          description: 'You do not have permission to delete this account' 
-      
+  
   /forgot-password:
     get:
       operationId: R108
@@ -466,6 +284,318 @@ paths:
                   302Failure:
                     description: 'Redirect to change password page'
                     value: '/forgot-password/change-password'
+
+  /users/{id}:
+    get:
+      operationId: R201
+      summary: 'R201: View user profile'
+      description: 'Show the personal user profile. Access: OWN, TEC'
+      tags:
+        - 'M02: Personal Profile'
+        - 'M03: Administration'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+
+        '403':
+          description: 'You do not have permission to view this profile'
+
+    patch:
+      operationId: R202
+      summary: 'R202: Edit user profile'
+      description: 'Edit the personal user profile. Access: OWN' 
+      tags:
+        - 'M02: Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+              required:
+                - first_name
+                - second_name
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful edit. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed edit. Redirect to user profile.'
+                  value: '/users/{id}'
+        '403':
+          description: 'You do not have permission to edit this profile.'
+
+    delete:
+      operationId: R203
+      summary: 'R203: Delete user account'
+      description: 'Delete user account. Access: OWN, TEC' 
+      tags:
+        - 'M02: Personal Profile'
+        - 'M03: Administration'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the request to delete the account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account deletion was successful. Redirect to home page.'
+                  value: '../../../'
+                302Failure:
+                  description: 'Account deletion was not successful. Redirect to user profile.'
+                  value: '/users/{id}'
+        '403':
+          description: 'You do not have permission to delete this account' 
+      
+
+  /admin-panel/admins/{id}:
+    get:
+      operationId: R204
+      summary: 'R203: View admin profile'
+      description: 'Show the admin profile. Access: OWN, TEC'
+      tags:
+        - 'M02: Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show view profile UI'
+
+        '403':
+          description: 'You do not have permission to view this profile'
+
+    patch:
+      operationId: R205
+      summary: 'R205: Edit admin profile'
+      description: 'Edit admin profile. Access: OWN' 
+      tags:
+        - 'M02: Personal Profile'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                second_name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+              required:
+                - first_name
+                - second_name
+                - email
+                - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful edit. Redirect to admin profile.'
+                  value: '/admin-panel/admins/{id}'
+                302Failure:
+                  description: 'Failed edit. Redirect to admin profile.'
+                  value: '/admin-panel/admins/{id}'
+        '403':
+          description: 'You do not have permission to edit this profile.'
+
+    delete:
+      operationId: R206
+      summary: 'R206: Delete admin account'
+      description: 'Delete admin account. Access: OWN, TEC' 
+      tags:
+        - 'M02: Personal Profile'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the request to delete the account.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Account deletion was successful. Redirect to home page.'
+                  value: '../../../'
+                302Failure:
+                  description: 'Account deletion was not successful. Redirect to user profile.'
+                  value: '/admin-panel/admins/{id}'
+        '403':
+          description: 'You do not have permission to delete this account' 
+
+  # Module 03: Administration
+
+  /api/users:
+    get:
+      operationId: R302
+      summary: 'R302: Search Users'
+      description: 'Searches for persons and returns the results as JSON. Access: TEC'
+      tags:
+        - 'M03: Administration'
+
+      parameters:
+        - in: query
+          name: id
+          description: User ID
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: name
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    email: 
+                      type: string
+                    image: 
+                      type: string
+                    birth_date: 
+                      type: string
+                    gender:
+                      type: string
+                    blocked:
+                      type: string
+        '403':
+          description: "You don't have permission to use this API"
+  
+  /admin-panel/users/block:
+    patch:
+      operationId: R303
+      summary: 'R303: Block User'
+      description: 'Block or unblock a user. Access: TEC'
+      tags:
+        - 'M03: Administration'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded: 
+            schema:
+              type: object
+              properties:
+                id: 
+                  type: number
+                blocked:
+                  type: number
+              required:
+                - id
+                - blocked
+
+      responses:
+          '302':
+            description: 'Redirect after blocking/unblocking a user'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'User change was successful. Redirect to product page'
+                    value: '/admin-panel/users'
+                  302Failure:
+                    description: 'User change was not successful. Redirect to product page.'
+                    value: '/admin-panel/users'
+          '403':
+            description: 'Error! You do not have permission to block/unblock this account' 
+          '404':
+            description: 'Error! User not found'
+
+  # Module 04: Products and Promotions
 
   /api/products:
     get:
@@ -845,15 +975,364 @@ paths:
                     value: '/admin-panel/products/create'
           '403':
             description: "Error! You don't have permission to create a product" 
+  
+  /promotions:
+    get:
+      operationId: R410
+      summary: 'R410: List the promotions'
+      description: 'Shows the promotions available at the moment. Access: PUB'
+      tags:
+        - 'M04: Products and Promotions'
+      
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    discount:
+                      type: integer
+                    start_date:
+                      type: string
+                    final_date:
+                      type: string
+                    products:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          price:
+                            type: number
+                          description:
+                            type: string
+                          category:
+                            type: array
+                            items:
+                              type: string
+                          image:
+                            type: array
+                            items:
+                              type: string
+                          promotion:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                discount:
+                                  type: integer
+                                start_date:
+                                  type: string
+                                final_date:
+                                  type: string
+                          stock:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                color:
+                                  type: string
+                                size:
+                                  type: string
+                required:
+                  - id
+                  - name
+                  - description
+                  - discount
+                  - start_date
+                  - final_date
+                  - products
+
+  /promotions/{id}:
+    get:
+      operationId: R411
+      summary: 'R411: Show promotion'
+      description: 'Show the promotion with the index {id}. Access: PUB'
+      tags:
+        - 'M04: Products and Promotions'
+
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  discount:
+                    type: integer
+                  start_date:
+                    type: string
+                  final_date:
+                    type: string
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        price:
+                          type: number
+                        description:
+                          type: string
+                        category:
+                          type: array
+                          items:
+                            type: string
+                        image:
+                          type: array
+                          items:
+                            type: string
+                        promotion:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              discount:
+                                type: integer
+                              start_date:
+                                type: string
+                              final_date:
+                                type: string
+                        stock:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              color:
+                                type: string
+                              size:
+                                type: string
+                required:
+                  - id
+                  - name
+                  - description
+                  - discount
+                  - start_date
+                  - final_date
+                  - products
+        '404':
+          description: Error! Promotion not found
+    
+  /admin_panel/promotions:
+    put:
+      operationId: R412
+      summary: 'R412: Create Promotion'
+      description: 'Create a promotion. Access: COL'
+      tags:
+        - 'M04: Products and Promotions'
+
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                description:
+                  type: string
+                discount:
+                  type: integer
+                start_date:
+                  type: string
+                final_date:
+                  type: string
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      category:
+                        type: array
+                        items:
+                          type: string
+                      image:
+                        type: array
+                      items:
+                        type: string
+                      promotion:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            discount:
+                              type: integer
+                            start_date:
+                              type: string
+                            final_date:
+                              type: string
+                      stock:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            color:
+                              type: string
+                            size:
+                              type: string
+                  
+              required:
+                - name
+                - description
+                - discount
+                - start_date
+                - final_date
+                - products
+
+      responses:
+          '302':
+            description: 'Redirect after processing promotion create request'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Promotion was been created. Redirect to promotion page'
+                    value: '/admin-panel/promotions/{id}'
+                  302Failure:
+                    description: 'Promotion change was not created. Redirect to create page.'
+                    value: '/admin-panel/promotions/create'
+          '403':
+            description: "Error! You don't have permission to create a promotion"
+    patch:
+      operationId: R413
+      summary: 'R413: Edit Promotion'
+      description: 'Edit a promotion. Access: COL'
+      tags:
+        - 'M04: Products and Promotions'
+
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                description:
+                  type: string
+                discount:
+                  type: integer
+                start_date:
+                  type: string
+                final_date:
+                  type: string
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      category:
+                        type: array
+                        items:
+                          type: string
+                      image:
+                        type: array
+                      items:
+                        type: string
+                      promotion:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            discount:
+                              type: integer
+                            start_date:
+                              type: string
+                            final_date:
+                              type: string
+                      stock:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            color:
+                              type: string
+                            size:
+                              type: string
+              required:
+                - name
+                - description
+                - discount
+                - start_date
+                - final_date
+                - products
+
+      responses:
+          '302':
+            description: 'Redirect after processing promotion edit request'
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Promotion was been edited. Redirect to promotion page'
+                    value: '/admin-panel/promotions/{id}'
+                  302Failure:
+                    description: 'Promotion change was not edited. Redirect to edit page.'
+                    value: '/admin-panel/promotions/{id}/edit'
+          '403':
+            description: "Error! You don't have permission to edit a promotion"
                           
-              
-  /api/orders:
+  # Module 05: Orders and Wishlists
+
+  /orders:
     get:
       operationId: R501
-      summary: 'R501: Search Orders API'
+      summary: 'R501: List Orders'
       description: 'Searches for orders and returns the results as JSON. Access: USR, COL'
       tags:
-        - 'M05: Orders and Wishlist'
+        - 'M05: Orders and Wishlists'
 
       parameters:
         - in: query
@@ -970,17 +1449,18 @@ paths:
                             the interior lining is not the best I ever experienced.,
                           ],
                         ]
+  /orders/{id}:  
     post:
       operationId: R502
-      summary: 'R502: Create Order API'
+      summary: 'R502: Create Order'
       description: 'Creates a new order and returns the results as JSON. Access: USR, COL'
       tags:
-        - 'M05: Orders and Wishlist'
+        - 'M05: Orders and Wishlists'
 
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
@@ -1045,15 +1525,91 @@ paths:
                 type: string
                 format: uri
                 description: URI of the newly created order
-              example: /api/orders/
-
-  /api/wishlist:
-    get:
+              example: /orders/{id}
+    patch:
       operationId: R503
-      summary: 'R503: Search Wishlist API'
-      description: 'Searches for wishlist and returns the results as JSON. Access: USR, TEC'
+      summary: 'R503: Edit Order'
+      description: 'Edits an existing order and returns the results as JSON. Access: USR, COL'
       tags:
-        - 'M05: Orders and Wishlist'
+        - 'M05: Orders and Wishlists'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                date:
+                  type: string
+                total:
+                  type: number
+                products:
+                  type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    category:
+                      type: string
+                    description:
+                      type: string
+                    likes:
+                      type: integer
+                    sizes:
+                      type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                    colors:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                    reviews:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          title:
+                            type: string
+                          evaluation:
+                            type: number
+                          description:
+                            type: string
+      responses:
+        '200':
+          description: 'Success editing an existing order'
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: URI of the edited order
+              example: /orders/{id}
+
+  /wishlists:
+    get:
+      operationId: R504
+      summary: 'R504: List Wishlists'
+      description: 'Searches for wishlists and returns the results as JSON. Access: USR, TEC'
+      tags:
+        - 'M05: Orders and Wishlists'
 
       parameters:
         - in: query
@@ -1143,17 +1699,19 @@ paths:
                             the interior lining is not the best I ever experienced.,
                           ],
                         ]
+
+  /wishlists/{id}:
     post:
       operationId: R504
-      summary: 'R504: Create Wishlist API'
+      summary: 'R504: Create Wishlist'
       description: 'Creates a new wishlist and returns the results as JSON. Access: USR, TEC'
       tags:
-        - 'M05: Orders and Wishlist'
+        - 'M05: Orders and Wishlists'
 
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
@@ -1212,8 +1770,83 @@ paths:
                 type: string
                 format: uri
                 description: URI of the newly created wishlist
-              example: /api/wishlist/
+              example: /wishlists/{id}
+
+    patch:
+      operationId: R505
+      summary: 'R505: Edit Wishlist'
+      description: 'Edits an existing wishlist and returns the results as JSON. Access: USR, TEC'
+      tags:
+        - 'M05: Orders and Wishlists'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    category:
+                      type: string
+                    description:
+                      type: string
+                    likes:
+                      type: integer
+                    sizes:
+                      type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                    colors:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                    reviews:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          title:
+                            type: string
+                          evaluation:
+                            type: number
+                          description:
+                            type: string
+      responses:
+        '200':
+          description: 'Success editing an existing wishlist'
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: URI of the edited wishlist
+              example: /wishlists/{id}
     
+  # Module 06: Reviews and Reports
+
+  # Module 07: Pages
+
   /:
     get:
       operationId: R701
@@ -1224,97 +1857,3 @@ paths:
       responses:
         '200':
           description: 'Ok. Show home page'
-
-  /api/users:
-    get:
-      operationId: R302
-      summary: 'R302: Search Users'
-      description: 'Searches for persons and returns the results as JSON. Access: TEC'
-      tags:
-        - 'M03: Administration'
-
-      parameters:
-        - in: query
-          name: id
-          description: User ID
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: name
-          description: String to use for full-text search
-          schema:
-            type: string
-          required: false
-
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    first_name:
-                      type: string
-                    last_name:
-                      type: string
-                    email: 
-                      type: string
-                    image: 
-                      type: string
-                    birth_date: 
-                      type: string
-                    gender:
-                      type: string
-                    blocked:
-                      type: string
-        '403':
-          description: "You don't have permission to use this API"
-
-  
-  /admin-panel/users/block:
-    patch:
-      operationId: R303
-      summary: 'R303: Block User'
-      description: 'Block or unblock a user. Access: TEC'
-      tags:
-        - 'M03: Administration'
-        
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded: 
-            schema:
-              type: object
-              properties:
-                id: 
-                  type: number
-                blocked:
-                  type: number
-              required:
-                - id
-                - blocked
-
-      responses:
-          '302':
-            description: 'Redirect after blocking/unblocking a user'
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'User change was successful. Redirect to product page'
-                    value: '/admin-panel/users'
-                  302Failure:
-                    description: 'User change was not successful. Redirect to product page.'
-                    value: '/admin-panel/users'
-          '403':
-            description: 'Error! You do not have permission to block/unblock this account' 
-          '404':
-            description: 'Error! User not found'
