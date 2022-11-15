@@ -400,12 +400,13 @@ EXECUTE PROCEDURE check_review_privileges();
 
 -- O utilizador não pode meter um like na própia review
 
+
 CREATE FUNCTION check_like_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
     IF EXISTS (SELECT id_user
                FROM review
-               WHERE id = NEW.id AND id_user = NEW.id_user)
+               WHERE id = NEW.id_review AND id_user = NEW.id_user)
     THEN
         RAISE EXCEPTION 'A user cannot like his own review';
     END IF;
@@ -418,7 +419,9 @@ BEFORE INSERT ON user_like
 FOR EACH ROW
 EXECUTE PROCEDURE check_like_privileges();
 
+
 -- Um utilizador não pode reportar a sua review
+
 
 CREATE FUNCTION check_report_privileges()
 RETURNS TRIGGER AS
@@ -437,6 +440,7 @@ CREATE TRIGGER before_report_insert
 BEFORE INSERT ON report
 FOR EACH ROW
 EXECUTE PROCEDURE check_report_privileges();
+
 
 -- verificar se uma order com estado diferente de "Shopping Cart" tem todos os parametros preenchidos
 
