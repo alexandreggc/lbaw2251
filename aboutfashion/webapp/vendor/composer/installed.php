@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '48da73711752e3a5abe627ac83b67454bc2fdc8f',
+        'reference' => '5f0bd02c5b57cc0e2e8d148837d582bce9fc606e',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -325,7 +325,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '48da73711752e3a5abe627ac83b67454bc2fdc8f',
+            'reference' => '5f0bd02c5b57cc0e2e8d148837d582bce9fc606e',
             'dev_requirement' => false,
         ),
         'laravel/serializable-closure' => array(
@@ -335,6 +335,15 @@
             'install_path' => __DIR__ . '/../laravel/serializable-closure',
             'aliases' => array(),
             'reference' => 'd78fd36ba031a1a695ea5a406f29996948d7011b',
+            'dev_requirement' => false,
+        ),
+        'laravel/tinker' => array(
+            'pretty_version' => 'v2.7.3',
+            'version' => '2.7.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laravel/tinker',
+            'aliases' => array(),
+            'reference' => '5062061b4924af3392225dd482ca7b4d85d8b8ef',
             'dev_requirement' => false,
         ),
         'laravel/ui' => array(
@@ -424,6 +433,15 @@
             'reference' => '0af4e3de4df9f1543534beab255ccf459e7a2c99',
             'dev_requirement' => false,
         ),
+        'nikic/php-parser' => array(
+            'pretty_version' => 'v4.15.2',
+            'version' => '4.15.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nikic/php-parser',
+            'aliases' => array(),
+            'reference' => 'f59bbe44bf7d96f24f3e2b4ddc21cd52c1d2adbc',
+            'dev_requirement' => false,
+        ),
         'nunomaduro/collision' => array(
             'pretty_version' => 'v6.3.0',
             'version' => '6.3.0.0',
@@ -511,6 +529,15 @@
             'provided' => array(
                 0 => '1.0|2.0|3.0',
             ),
+        ),
+        'psy/psysh' => array(
+            'pretty_version' => 'v0.11.9',
+            'version' => '0.11.9.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psy/psysh',
+            'aliases' => array(),
+            'reference' => '1acec99d6684a54ff92f8b548a4e41b566963778',
+            'dev_requirement' => false,
         ),
         'ramsey/collection' => array(
             'pretty_version' => '1.2.2',
