@@ -428,7 +428,7 @@ RETURNS TRIGGER AS
 $$ BEGIN
     IF EXISTS (SELECT id_user
                FROM review
-               WHERE id = NEW.id AND id_user = NEW.id_user)
+               WHERE id = NEW.id_review AND id_user = NEW.id_user)
     THEN
         RAISE EXCEPTION 'A user cannot report his own review';
     END IF;
@@ -1039,7 +1039,7 @@ insert into image (id, file) values (500, 'https://robohash.org/inventorereicien
 
 -- Authenticated User
 
-insert into authenticated_user (id, first_name, last_name, email, password, birth_date, gender, blocked, id_image) values (1, 'Daniel', 'Rodrigues', 'daniel-jose2002@live.com.pt', ' $2a$10$MCWLTYaEqxumaawJLd9k/uz4z8jgbFpodtEnnzqGVz8ozJgU9GWwa ', '2002-08-10', 'M', false, 1);
+insert into authenticated_user (id, first_name, last_name, email, password, birth_date, gender, blocked, id_image) values (1, 'Daniel', 'Rodrigues', 'daniel-jose2002@live.com.pt', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '2002-08-10', 'M', false, 1);
 insert into authenticated_user (id, first_name, last_name, email, password, birth_date, gender, blocked, id_image) values (2, 'Shela', 'Cianni', 'scianni1@myspace.com', 'f342b5c0363848a493d26604a856976e08d05d1929e5bead4fca60bc1399030e', '1997-02-13', 'F', false, 2);
 insert into authenticated_user (id, first_name, last_name, email, password, birth_date, gender, blocked, id_image) values (3, 'Cecelia', 'McIlraith', 'cmcilraith2@linkedin.com', '128492d8067feca7e762789222536cacb40e5f5c3576c9efe20c33f1eb32e1c6', null, null, false, 3);
 insert into authenticated_user (id, first_name, last_name, email, password, birth_date, gender, blocked, id_image) values (4, 'Ruby', 'Pick', 'rpick3@oaic.gov.au', '37d68c85a35f65540c311267d928a9c4ca96d037e21d6f4190881bbc9809ecca', null, null, false, 4);
@@ -1242,8 +1242,8 @@ insert into authenticated_user (id, first_name, last_name, email, password, birt
 
 -- Admin
 
-insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (1, 'Daniel', 'Rodrigues', 'up202006562@up.pt', '$2a$10$MCWLTYaEqxumaawJLd9k/uz4z8jgbFpodtEnnzqGVz8ozJgU9GWwa ', '2002-10-08', 'M', 200, 'Collaborator');
-insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (2, 'Daniel', 'Rodrigues', 'daniel-jose2002tec@live.com.pt', '$2a$10$MCWLTYaEqxumaawJLd9k/uz4z8jgbFpodtEnnzqGVz8ozJgU9GWwa ', '2002-10-08', 'M', 200, 'Technician');
+insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (1, 'Daniel', 'Rodrigues', 'up202006562@up.pt', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '2002-10-08', 'M', 200, 'Collaborator');
+insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (2, 'Daniel', 'Rodrigues', 'daniel-jose2002tec@live.com.pt', ''$2a$10$MCWLTYaEqxumaawJLd9k/uz4z8jgbFpodtEnnzqGVz8ozJgU9GWwa '', '2002-10-08', 'M', 200, 'Technician');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (3, 'Alberta', 'Doge', 'adoge2@wufoo.com', '301bb1ef786d799a5cefb7d52ffba574c0ad84317a0fe55153e6f9d5e62107fe', '1974-01-05', 'F', 202, 'Technician');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (4, 'Iorgo', 'Pontefract', 'ipontefract3@guardian.co.uk', '839dcf568639484014adfd41ddf8286bab6311c9f8b44f04cdc95fb9639b745c', '1970-10-21', 'F', 203, 'Collaborator');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (5, 'Guthry', 'Boddington', 'gboddington4@bigcartel.com', '5157f7f96500b50013a75869d01f0621ead29bbd9544dc738e632584463105b0', '1976-07-11', 'F', 204, 'Technician');
