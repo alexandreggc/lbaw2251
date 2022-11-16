@@ -18,7 +18,7 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password', 'birth_date', 'gender', 'role',
     ];
 
     /**
@@ -30,10 +30,12 @@ class Admin extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * The cards this user owns.
-     */
-     public function cards() {
-      return $this->hasMany('App\Models\Card');
+    public function notifications(){
+        return $this->belongsToMany('\App\Models\Notifications', 'admin_notification', 'id_admin', 'id_notification');
     }
+
+    public function image(){
+        return $this->belongsTo('\App\Models\Image', 'id_image');
+    }
+
 }

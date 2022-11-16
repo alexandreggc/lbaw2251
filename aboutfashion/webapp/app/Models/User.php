@@ -45,11 +45,23 @@ class User extends Authenticatable
     }
 
     public function notifications(){
-        return $this->belongsTo('\App\Models\Notification', 'user_notification', 'id_user', 'id_notification');
+        return $this->belongsToMany('\App\Models\Notification', 'user_notification', 'id_user', 'id_notification');
     }
 
-    /*public function reports(){
-        return $this->belongsTo('\App\Models\Report', '')
-    }*/
+    public function reports(){
+        return $this->hasMany('\App\Models\Report', 'id_user');
+    }
+
+    public function wishlist(){
+        return $this->belongsToMany('\App\Models\Product', 'wishlist', 'id_user', 'id_product');
+    }
+
+    public function likes(){
+        return $this->belongsToMany('\App\Models\Review', 'user_like', 'id_user', 'id_review');
+    }
+
+    public function reviews(){
+        return $this->hasMany('App\Model\Review', 'id_user');
+    }
     
 }
