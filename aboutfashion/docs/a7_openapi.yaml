@@ -392,6 +392,31 @@ paths:
                   value: '/users/{id}'
         '403':
           description: 'You do not have permission to delete this account' 
+
+
+  /users/{id}/edit:
+    get:
+      operationId: R207
+      summary: 'R207: View edit form'
+      description: 'Show edit informations form. Access: OWN'
+      tags:
+        - 'M02: Personal Profile'
+
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        '200':
+          description: 'Ok. Show form'
+
+        '403':
+          description: 'You do not have permission!'
+    
       
 
   /admin-panel/admins/{id}:
