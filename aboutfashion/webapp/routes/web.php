@@ -30,3 +30,14 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+
+// All routes for Products
+
+//index
+Route::get('/products', 'App\Http\Controllers\ProductController@index');
+
+// All products
+
+// /product/{id}
+Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show');
