@@ -10,14 +10,7 @@ class Promotion extends Model{
 
     protected $table = 'promotion';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['id', 'discount', 'start_date', 'end_date'];
-
     public function product(){
-        return $this->hasMany('App\Models\Product');
+        return $this->hasMany('App\Models\Product', 'id_promotion');
     }
 }

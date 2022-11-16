@@ -10,20 +10,11 @@ class Color extends Model{
 
     protected $table = 'stock';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['id', 'name'];
-
     public function stock(){
-        return $this->belongsToMany('App\Models\Stock');
+        return $this->belongsToMany('App\Models\Stock', 'id_color');
     }
 
-    /*para a tabela details necessária paa o shopping cart
-    ver se é necessário
     public function details(){
-        return $this->belongsToMany('App\Models\Details');
-    }*/
+        return $this->hasMany('App\Models\Detail', 'id_color');
+    }
 }

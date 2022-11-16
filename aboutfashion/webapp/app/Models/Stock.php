@@ -5,30 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model{
-    // Don't add create and update timestamps in database.
     public $timestamps = false;
 
     protected $table = 'stock';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['stock', 'id_product', 'id_size', 'id_color'];
  
     public function product(){
-        //id_product
-        return $this->belongsTo('App\Models\Product');
+        return $this->belongsTo('App\Models\Product', 'id_product');
     }
 
     public function size(){
-        //id_size
-        return $this->belongsTo('App\Models\Size');
+        return $this->belongsTo('App\Models\Size', 'id_size');
     }
 
     public function color(){
-        //id_color
-        return $this->belongsTo('App\Models\Color');
+        return $this->belongsTo('App\Models\Color', 'id_color');
     }
 }

@@ -10,37 +10,28 @@ class Product extends Model{
 
     protected $table = 'product';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['id', 'name', 'description', 'price'];
 
     public function category(){
-        return $this->belongsTo('App\Models\Category');
+        return $this->belongsTo('App\Models\Category', 'id_category');
     }
 
     public function images(){
-        return $this->hasMany('\App\Models\Image');
+        return $this->belongsToMany('\App\Models\Image', 'product_image', 'id_product', 'id_image');
     }
 
     public function reviews(){
-        return $this->hasMany('\App\Models\Review');
+        return $this->hasMany('\App\Models\Review', 'id_product');
     }
-
-    public function orders(){
-        return $this->hasMany('\App\Models\Order');
-    }
-
+    
     public function promotion(){
-        return $this->hasMany('\App\Models\Promotion');
+        return $this->belongsToMany('\App\Models\Promotion', 'promotion_product', 'id_product', 'id_promotion');
     }
 
     public function stocks(){
-        return $this->hasMany('\App\Models\Stock');
+        return $this->hasMany('\App\Models\Stock', 'id_product');
     }
 
-    // Sizes e Colors representados no STOCK
-    // VER SITUAÇÃO DA CLASSIFICAÇÃO
+    public function details(){
+        return $this->hasMany('App\Models\Detail', 'id_product');
+    }
 }
