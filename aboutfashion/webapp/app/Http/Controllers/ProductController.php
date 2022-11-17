@@ -27,12 +27,8 @@ class ProductController extends Controller{
      * @return Response //\Illuminate\Http\Response
      */
     public function create(Request $request){
-        $product = new Product();
-        $this->authorize('create', $product);
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->save();
-        return $product;
+        $product = store($request);
+        return view('products.create', compact('product'));
     }
 
     /**
@@ -42,7 +38,12 @@ class ProductController extends Controller{
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request){
-        
+        $product = new Product();
+        $this->authorize('create', $product);
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->save();
+        return $product;
     }
 
     /**
@@ -58,11 +59,12 @@ class ProductController extends Controller{
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product          $product
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product){
-        
+    public function edit(Request $request){
+        $product = update($request);
+        return view('products.edit', compact('product'));
     }
 
     //QUAL A DIFERENÇA ENTRE O EDIT E O UPDATE?
@@ -71,10 +73,9 @@ class ProductController extends Controller{
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product       $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product){
+    public function update(Request $request){
         $product = Product::find($product->id); //VERIFICAR SE É ISTO MESMO
         $this->authorize('update', $product);
         $product->name = $request->input('name');
@@ -93,6 +94,6 @@ class ProductController extends Controller{
         $product = Product::find($product->id); //VERIFICAR SE É ISTO MESMO
         $this->authorize('delete', $product);
         $product->delete();
-        return;
+        return view('products.delete');
     }
 }
