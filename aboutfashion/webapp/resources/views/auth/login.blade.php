@@ -56,6 +56,10 @@
                             Remember Me
                         </label>
                       </div>
+
+                      <div class="form-check mt-4 ">
+                      <a class="button button-outline  mt-4" href="{{ route('home') }}">Go back to user's homepage</a>
+                      </div>
                     
                     <hr class="my-4">
                     <button type="submit" class="btn btn-primary" >
