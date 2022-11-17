@@ -24,11 +24,15 @@ Route::get('/users/{id}/edit', 'ItemController@edit');
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
+Route::post('login', 'Auth\LoginController@login')->name('adminLogin');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
 
+
+
+Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin');
 
 // All routes for Products
 
