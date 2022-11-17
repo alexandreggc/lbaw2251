@@ -10,7 +10,7 @@ class Color extends Model{
 
     protected $table = 'stock';
 
-    public function stock(){
+    public function stocks(){
         return $this->belongsToMany('App\Models\Stock', 'id_color');
     }
 

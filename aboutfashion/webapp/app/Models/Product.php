@@ -23,7 +23,7 @@ class Product extends Model{
         return $this->hasMany('\App\Models\Review', 'id_product');
     }
     
-    public function promotion(){
+    public function promotions(){
         return $this->belongsToMany('\App\Models\Promotion', 'promotion_product', 'id_product', 'id_promotion');
     }
 

@@ -9,7 +9,7 @@ class Size extends Model{
 
     protected $table = 'size';
 
-    public function stock(){
+    public function stocks(){
         return $this->hasMany('App\Models\Stock', 'id_size');
     }
 
