@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Product: Show Blade</h1>
-    <p1>{{ $product->name }}</p1>
-    <p2>{{ $product->description }}</p2>
+    <h2>{{ $product->name }}</h2>
+    <h3>{{ $product->description }}</h3>
 </body>
 </html>

@@ -24,22 +24,24 @@ class ProductController extends Controller{
      * Show the form for creating a new resource.
      *
      * @param  Request  request containing the description
-     * @return Response //\Illuminate\Http\Response
+     * @return Response
      */
     public function create(Request $request){
-        $product = store($request);
-        return view('products.create', compact('product'));
+        $product = store($request, $id);
+        return view('products.create', ['product' => $product]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request     $request
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param  Request
+     * @return Response
      */
-    public function store(Request $request){
+    public function store(Request $request, $id){
         $product = new Product();
         $this->authorize('create', $product);
+        $product->id = $request->input('id');
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->save();
@@ -49,34 +51,34 @@ class ProductController extends Controller{
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product          $product
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return Response
      */
-    public function show(Product $product){
-        return view('products.show', compact('product'));
+    public function show($id){
+        $product = Product::find($id);
+        return view('products.show', ['product' => $product]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request equest containing the new state
+     * @return Response
      */
     public function edit(Request $request){
-        $product = update($request);
-        return view('products.edit', compact('product'));
+        $product = update($request, $id);
+        return view('products.edit', ['product' => $product]);
     }
-
-    //QUAL A DIFERENÇA ENTRE O EDIT E O UPDATE?
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @param  Request
+     * @return Response
      */
-    public function update(Request $request){
-        $product = Product::find($product->id); //VERIFICAR SE É ISTO MESMO
+    public function update(Request $request, $id){
+        $product = Product::find($id);
         $this->authorize('update', $product);
         $product->name = $request->input('name');
         $product->description = $request->input('description');
@@ -87,11 +89,11 @@ class ProductController extends Controller{
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product          $product
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return Response
      */
-    public function destroy(Product $product){
-        $product = Product::find($product->id); //VERIFICAR SE É ISTO MESMO
+    public function destroy(Request $request, $id){
+        $product = Product::find($id);
         $this->authorize('delete', $product);
         $product->delete();
         return view('products.delete');
