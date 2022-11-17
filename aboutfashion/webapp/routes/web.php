@@ -11,7 +11,24 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', 'Auth\LoginController@home')->name('home');
+
+//Admin Panel
+
+Route::get('/', 'Auth\LoginController@home')->name('home');
+
+//User 
+
+
+
+//Admin
+
+
+
+
+
+
+
 
 // User
 
