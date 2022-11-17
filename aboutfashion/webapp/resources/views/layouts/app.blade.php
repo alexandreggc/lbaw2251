@@ -189,7 +189,7 @@
                                 <div class="form-group">
                                     <div class=" me-auto"></div>
                                     <label for="gender" class="form-label mt-4">Gender</label>
-                                    <select class="form-select" id="gender">
+                                    <select class="form-select" name="gender">
                                         <option value="F">FEMALE</option>
                                         <option value="M">MALE</option>
                                         <option value="O">OTHER</option>
