@@ -29,7 +29,7 @@
 
                   <h3 class="mb-5 ">Sign in - Admin Panel</h3>
 
-                  <form method="POST" action="{{ route('login') }}">
+                  <form method="POST" action="{{ route('adminLogin') }}">
                     {{ csrf_field() }}
                     <div class="form-group text-start">
                       <label for="email" class="form-label mt-4 ">Email address</label>
@@ -55,10 +55,6 @@
                         <label class="form-check-label" for="flexCheckDefault_login_Admin">
                             Remember Me
                         </label>
-                      </div>
-
-                      <div class="form-check mt-4 ">
-                      <a class="button button-outline  mt-4" href="{{ route('register') }}">Go back to user's homepage</a>
                       </div>
                     
                     <hr class="my-4">
