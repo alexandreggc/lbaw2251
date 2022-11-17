@@ -11,28 +11,32 @@
 |
 */
 // Home
-Route::get('/', 'Auth\LoginController@home');
+Route::get('/', function(){
+    return view('pages.home');
+})->name('home');
 
-// User
+//Admin Panel
 
-Route::get('/users/{id}', 'ItemController@show');
-Route::patch('/users/{id}', 'ItemController@update');
-Route::delete('/users/{id}', 'ItemController@destroy');
-Route::get('/users/{id}/edit', 'ItemController@edit');
+Route::get('/admin-panel', function(){
+    return view('pages.admin.home');
+})->name('homeAdminPanel')->middleware('auth:admin');
 
-// API
+//User 
 
-// Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login')->name('adminLogin');
+Route::post('login', 'Auth\LoginController@login')->name('userLogin');
+Route::get('/users/{id}', 'UserController@show')->name('userView');
+Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
+Route::delete('/users/{id}', 'UserController@destroy')->name('userDelete');
+Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
+Route::post('login', 'Auth\LoginController@login')->name('userLogin');
+Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
 
+//Admin
 
-
-Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin');
+Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
+Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
 
 // All routes for Products
 
