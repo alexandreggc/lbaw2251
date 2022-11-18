@@ -27,7 +27,7 @@ class ReviewPolicy{
       return false;
     }
 
-    public function update(User $user, Review $review){
+    public function edit(User $user, Review $review){
       // Users can only update reviews they own
       if(Auth::check()){
         return $user->id == $review->id_user;

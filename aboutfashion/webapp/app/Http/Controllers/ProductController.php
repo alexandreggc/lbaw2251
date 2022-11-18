@@ -27,21 +27,24 @@ class ProductController extends Controller{
      * @return Response
      */
     public function create(Request $request){
-        $product = store($request, $id);
+        $product = store($request);
         return view('products.create', ['product' => $product]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param int $id
      * @param  Request
      * @return Response
      */
-    public function store(Request $request, $id){
+    public function store(Request $request){
+        //rever forma de chamar as policies
+        
         $product = new Product();
         $this->authorize('create', $product);
         //implementar esta policy update no ProductPolicy
+
+        //guardar os dados do novo produto
         $product->id = $request->input('id');
         $product->name = $request->input('name');
         $product->description = $request->input('description');
@@ -79,9 +82,13 @@ class ProductController extends Controller{
      * @return Response
      */
     public function update(Request $request, $id){
+        //rever forma de chamar as policies
+
         $product = Product::find($id);
         $this->authorize('update', $product);
         //implementar esta policy update no ProductPolicy
+
+        //atualizar os dados do produto
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->save();
@@ -95,9 +102,13 @@ class ProductController extends Controller{
      * @return Response
      */
     public function destroy(Request $request, $id){
+        //rever forma de chamar as policies
+
         $product = Product::find($id);
         $this->authorize('delete', $product);
         //implementar esta policy update no ProductPolicy
+
+        //eliminar o produto
         $product->delete();
         return view('products.delete');
     }
