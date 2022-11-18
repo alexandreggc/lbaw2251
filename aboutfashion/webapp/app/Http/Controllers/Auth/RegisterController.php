@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:authenticated_user,email',
             'password' => 'required|string|min:6|confirmed',
             'birth_date' => 'date',
-            'gender' => 'string|regex:/[MFO]/u',
+            'gender' => 'string|regex:/^[MFO]$/',
         ]);
     }
 
