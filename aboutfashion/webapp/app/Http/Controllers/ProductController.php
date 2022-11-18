@@ -9,7 +9,7 @@ class ProductController extends Controller{
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(){
         // $name = "jacket";
@@ -41,6 +41,7 @@ class ProductController extends Controller{
     public function store(Request $request, $id){
         $product = new Product();
         $this->authorize('create', $product);
+        //implementar esta policy update no ProductPolicy
         $product->id = $request->input('id');
         $product->name = $request->input('name');
         $product->description = $request->input('description');
@@ -80,6 +81,7 @@ class ProductController extends Controller{
     public function update(Request $request, $id){
         $product = Product::find($id);
         $this->authorize('update', $product);
+        //implementar esta policy update no ProductPolicy
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->save();
@@ -95,6 +97,7 @@ class ProductController extends Controller{
     public function destroy(Request $request, $id){
         $product = Product::find($id);
         $this->authorize('delete', $product);
+        //implementar esta policy update no ProductPolicy
         $product->delete();
         return view('products.delete');
     }
