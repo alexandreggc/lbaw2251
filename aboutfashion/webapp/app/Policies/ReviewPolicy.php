@@ -13,13 +13,15 @@ class ReviewPolicy{
 
     public function create(User $user, Product $product){
       // User can only create items in product they bought
-      $orders = $user->orders;
-      foreach($orders as $order){
-        $details = $order->details;
-        foreach($details as $detail){
-          if($detail->id_product == $product->id){
-            return true;
-          }
+      if(Auth::check()){
+        $orders = $user->orders;
+        foreach($orders as $order){
+            $details = $order->details;
+            foreach($details as $detail){
+                if($detail->id_product == $product->id){
+                    return true;
+                }
+            }
         }
       }
       return false;
@@ -27,11 +29,15 @@ class ReviewPolicy{
 
     public function update(User $user, Review $review){
       // Users can only update reviews they own
-      return $user->id == $review->id_user;
+      if(Auth::check()){
+        return $user->id == $review->id_user;
+      }
     }
 
     public function delete(User $user, Review $review){
       // Users can only delete reviews they own
-      return $user->id == $review->id_user;
+      if(Auth::check()){
+        return $user->id == $review->id_user;
+      }
     }
 }
