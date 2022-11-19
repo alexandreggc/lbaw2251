@@ -38,6 +38,22 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
 
+
+//Products
+Route::get('/api/products', 'ProductController@searchProductAPI');
+
+
+
+
+
+
+
+
+
+
+
+
+
 // All routes for Products
 
 //index
