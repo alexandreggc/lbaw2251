@@ -34,4 +34,19 @@ class Product extends Model{
     public function details(){
         return $this->hasMany('App\Models\Detail', 'id_product');
     }
+
+    public function scopeSearch($query, $search)
+    {
+
+
+        if (!$search) {
+            return $query;
+        }
+
+        return $query->whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$search])->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$search]);
+    }
+
+    public function avgEvaluationProduct($id){
+        return Review::where('id_product', $id)->avg('evaluation')->get();   
+    }
 }

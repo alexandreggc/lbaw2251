@@ -52,6 +52,7 @@ DROP INDEX IF EXISTS product_stock_idx  CASCADE;
 DROP INDEX IF EXISTS final_date_promo_idx  CASCADE;
 DROP INDEX IF EXISTS user_first_name_idx  CASCADE; 
 DROP INDEX IF EXISTS search_idx  CASCADE;
+DROP FUNCTION IF EXISTS classification_product CASCADE;
 
 
 --TYPE's
@@ -351,6 +352,7 @@ $$ BEGIN
     RETURN Product.price * (1 - Promotion.discount);
 END; $$
 LANGUAGE plpgsql;
+
 
 -- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida
 

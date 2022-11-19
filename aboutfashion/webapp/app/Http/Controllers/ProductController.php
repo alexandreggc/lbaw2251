@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use DB;
 
 class ProductController extends Controller{
     /**
@@ -111,5 +112,26 @@ class ProductController extends Controller{
         //eliminar o produto
         $product->delete();
         return view('products.delete');
+    }
+
+    public function searchAPI(Request $request){        
+        $filters = array();
+        if(!is_null($request['product_id'])){
+            array_push($filters, array('id','=',$request['product_id']));
+        }
+        if(!is_null($request['category_id'])){
+            array_push($filters, array('id_category','=',$request['category_id']));
+        }
+        if(!is_null($request['min_price'])){
+            array_push($filters, array('price','<=',$request['min_price']));
+        }
+        if(!is_null($request['max_price'])){
+            array_push($filters, array('price','>=',$request['max_price']));
+        } 
+
+
+        $products = Product::search($request['product_name'])->whereRaw('(SELECT avg(evaluation) FROM lbaw2251.review WHERE id_product = lbaw2251.product.id) >= ?', [$request['min_classification']])->where($filters)->get();    
+
+        return json_encode($products);
     }
 }

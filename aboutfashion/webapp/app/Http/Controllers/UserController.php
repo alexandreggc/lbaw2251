@@ -18,17 +18,6 @@ class UserController extends Controller{
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @param  Request  request containing the description
-     * @return Response
-     */
-    public function create(Request $request){
-        $user = store($request, $id);
-        return view('users.create', ['user' => $user]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param int $id
