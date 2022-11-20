@@ -25,7 +25,8 @@ class ReviewController extends Controller{
     public function listByUser($id_user){
         //lista de reviews de um user
         //verificar nome da view
-        return view('reviews.list_by_user', ['reviews' => Review::where('id_user', $id_user)->get()]);
+        return view('reviews.list_by_user', 
+        ['reviews' => Review::where('id_user', $id_user)->get()]);
     }
 
     /**
@@ -36,7 +37,8 @@ class ReviewController extends Controller{
     public function listByProduct($id_product){
         //lista de reviews de um user
         //verificar nome da view
-        return view('reviews.list_by_product', ['reviews' => Review::where('id_product', $id_product)->get()]);
+        return view('reviews.list_by_product', 
+        ['reviews' => Review::where('id_product', $id_product)->get()]);
     }
 
     /**
@@ -63,7 +65,7 @@ class ReviewController extends Controller{
         $review = new Review();
         $user = User::find($request->input('id_user'));
         $product = Product::find($request->input('id_product'));
-        $this->authorize('create', $user, $product);
+        $this->authorize('store', $user, $product);
 
         //guardar os dados da nova review
         $review->id_user = $request->input('id_user');
@@ -109,7 +111,7 @@ class ReviewController extends Controller{
         //de acordo com as business rules definidas
         $user = User::find($request->input('id_user'));
         $review = Review::find($request->input('id'));
-        $this->authorize('edit', $user, $review);
+        $this->authorize('update', $user, $review);
 
         //atualizar os dados da review editada
         $review->rating = $request->input('rating');
