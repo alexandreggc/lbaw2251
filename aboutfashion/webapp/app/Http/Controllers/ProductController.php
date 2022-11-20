@@ -19,7 +19,7 @@ class ProductController extends Controller{
         // return view('products.index', compact('name', 'descriptiom'));
         // com isto conseguimos mandar parâmetros do product para a view é só usar {{ title }} e {{ description }} no html
 
-        return view('products.index');
+        return view('pages.products.index');
     }
 
     /**
@@ -30,7 +30,7 @@ class ProductController extends Controller{
      */
     public function create(Request $request){
         $product = store($request);
-        return view('products.create', ['product' => $product]);
+        return view('pages.products.create', ['product' => $product]);
     }
 
     /**
@@ -64,7 +64,7 @@ class ProductController extends Controller{
      */
     public function show($id){
         $product = Product::find($id);
-        return view('products.show', ['product' => $product]);
+        return view('pages.products.show', ['product' => $product]);
     }
 
     /**
@@ -75,7 +75,7 @@ class ProductController extends Controller{
      */
     public function edit(Request $request){
         $product = update($request, $id);
-        return view('products.edit', ['product' => $product]);
+        return view('pages.products.edit', ['product' => $product]);
     }
 
     /**
@@ -114,7 +114,7 @@ class ProductController extends Controller{
 
         //eliminar o produto
         $product->delete();
-        return view('products.delete');
+        return view('pages.products.delete');
     }  
 
     public function searchAPI(Request $request){        

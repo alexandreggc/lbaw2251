@@ -72,9 +72,9 @@ class CategoryController extends Controller{
         return $category;
     }
 
-    public function getAllSuperCategories(Request $request){
+    public function getAllSuperCategories($id){
         $categories = array();
-        $superCategory = Category::findOrFail($request['id'])->superCategory()->get();
+        $superCategory = Category::findOrFail($id)->superCategory()->get();
         while(count($superCategory) != 0){
             array_push($categories, $superCategory);
             $superCategory = Category::findOrFail($superCategory[0]['id'])->superCategory()->get();
@@ -83,10 +83,9 @@ class CategoryController extends Controller{
         return $categories;
     }
 
-    public function getAllSubCategories(Request $request){
+    public function getAllSubCategories($id){
         $categories = array();
         $unexploredCategories = array();
-        $id = $request['id'];
 
         do{
             $categoriesDB = Category::findOrFail($id)->subCategories()->get();

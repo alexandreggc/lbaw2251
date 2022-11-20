@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<header>
+<head>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/products">Woman</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/products">Clothing</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/products">Jackets</a></li>
+        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Woman</a></li>
+        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Clothing</a></li>
+        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Jackets</a></li>
         <li class="breadcrumb-item active">{{ $product->name }}</li>
     </ol>
-</header>
+</head>
 <body>
     <div class="row" >
         <div class="col-md-5"> <img src=img alt="product image"></img></div>
