@@ -45,3 +45,5 @@ Route::get('/products', function(){
     return view('pages.searchProduct');
 })->name('listProducts');
 Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show');
+
+Route::get('teste/{id}', 'CategoryController@getAllSubCategories');

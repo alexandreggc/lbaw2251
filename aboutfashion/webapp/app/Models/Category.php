@@ -10,11 +10,11 @@ class Category extends Model{
     protected $table = 'category';
 
 
-    public function super_category(){
+    public function superCategory(){
         return $this->belongsTo('App\Models\Category', 'id_super_category');
     }
 
-    public function sub_categories(){
+    public function subCategory(){
         return $this->hasMany('App\Models\Category', 'id_super_category');
     }
 
