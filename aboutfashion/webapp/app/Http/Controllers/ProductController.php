@@ -124,7 +124,9 @@ class ProductController extends Controller{
            'min_price' => 'numeric',
            'max_price' => 'numeric',
            'min_classification' => 'numeric',
-           'product_name' => 'string'
+           'product_name' => 'string',
+           'product_name' => 'integer',
+           'product_name' => 'integer'
         ]);
         
 
