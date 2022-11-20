@@ -23,7 +23,7 @@ class Product extends Model{
         return $this->hasMany('\App\Models\Review', 'id_product');
     }
     
-    public function promotion(){
+    public function promotions(){
         return $this->belongsToMany('\App\Models\Promotion', 'promotion_product', 'id_product', 'id_promotion');
     }
 
@@ -31,8 +31,16 @@ class Product extends Model{
         return $this->hasMany('\App\Models\Stock', 'id_product');
     }
 
+    public function sizes(){
+        return $this->belongsToMany('App\Models\Size', 'stock', 'id_product', 'id_size');
+    }
+    
+    public function colors(){
+        return $this->belongsToMany('App\Models\Color', 'stock', 'id_product', 'id_color');
+    }
+
     public function details(){
-        return $this->hasMany('App\Models\Detail', 'id_product');
+        return $this->hasMany('App\Models\Detail','stock', 'id_product');
     }
 
     public function scopeSearch($query, $search)
@@ -44,9 +52,5 @@ class Product extends Model{
         }
 
         return $query->whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$search])->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$search]);
-    }
-
-    public function avgEvaluationProduct($id){
-        return Review::where('id_product', $id)->avg('evaluation')->get();   
     }
 }
