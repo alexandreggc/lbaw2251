@@ -50,6 +50,8 @@ class ProductController extends Controller{
         $product->id = $request->input('id');
         $product->name = $request->input('name');
         $product->description = $request->input('description');
+        //atribuir images e categories
+
         $product->save();
         return $product;
     }
