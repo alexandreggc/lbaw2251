@@ -20,7 +20,19 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'first_name', 'last_name', 'email', 'password', 'birth_date', 'gender', 'blocked'
+        'first_name', 'last_name', 'email', 'password', 'birth_date', 'gender', 'blocked', 'id_image'
+    ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'first_name' => 'string',
+        'last_name' => 'string',
+        'email' => 'string',
+        'password' => 'string',
+        'birth_date' => 'date',
+        'gender' => 'string',
+        'blocked' => 'boolean',
+        'id_image' => 'integer',
     ];
 
     /**
@@ -54,6 +66,10 @@ class User extends Authenticatable
 
     public function wishlist(){
         return $this->belongsToMany('\App\Models\Product', 'wishlist', 'id_user', 'id_product');
+    }
+
+    public function orders(){
+        return $this->hasMany('\App\Models\Order', 'id_user');
     }
 
     public function likes(){

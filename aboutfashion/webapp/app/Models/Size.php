@@ -9,11 +9,16 @@ class Size extends Model{
 
     protected $table = 'size';
 
+<<<<<<< aboutfashion/webapp/app/Models/Size.php
     public function stocks(){
         return $this->hasMany('App\Models\Stock', 'id_size');
     }
 
     public function details(){
         return $this->hasMany('App\Models\Detail', 'id_size');
+    }
+
+    public function products(){
+        return $this->belongsToMany('App\Models\Product', 'stock', 'id_size', 'id_product');
     }
 }

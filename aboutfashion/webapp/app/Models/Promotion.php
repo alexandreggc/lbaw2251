@@ -10,7 +10,7 @@ class Promotion extends Model{
 
     protected $table = 'promotion';
 
-    public function product(){
-        return $this->hasMany('App\Models\Product', 'id_promotion');
+    public function products(){
+        return $this->belongsToMany('App\Models\Product', 'promotion_product', 'id_promotion', 'id_product');
     }
 }

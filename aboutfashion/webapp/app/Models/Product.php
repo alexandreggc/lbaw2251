@@ -31,7 +31,23 @@ class Product extends Model{
         return $this->hasMany('\App\Models\Stock', 'id_product');
     }
 
+    public function sizes(){
+        return $this->belongsToMany('App\Models\Size', 'stock', 'id_product', 'id_size');
+    }
+    
+    public function colors(){
+        return $this->belongsToMany('App\Models\Color', 'stock', 'id_product', 'id_color');
+    }
+
     public function details(){
-        return $this->hasMany('App\Models\Detail', 'id_product');
+        return $this->hasMany('App\Models\Detail','stock', 'id_product');
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        if (!$search) {
+            return $query;
+        }
+        return $query->whereRaw('tsvectors @@ plainto_tsquery(\'english\', ?)', [$search])->orderByRaw('ts_rank(tsvectors, to_tsquery(\'english\', ?)) DESC', [$search]);
     }
 }
