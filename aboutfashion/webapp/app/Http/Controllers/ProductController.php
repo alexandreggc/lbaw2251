@@ -184,7 +184,6 @@ class ProductController extends Controller{
             }
             
             $colorsDB = Product::find($product['id'])->colors()->distinct()->get();
-            dump($colorsDB);
             $colors = array();
             foreach($colorsDB as $color){
                 $colors[] = array("id"=>$color['id'], "name"=>$color['name']);
