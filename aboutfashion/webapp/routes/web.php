@@ -40,7 +40,6 @@ Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('admi
 
 
 //Products
-Route::get('/api/products', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
-Route::get('/products', 'PageController@showSearchPage')->name('searchProduct');
+Route::get('/products/{category}', 'PageController@showSearchPage')->name('searchProduct');
 Route::get('/api/products/{id}', 'App\Http\Controllers\ProductController@show');

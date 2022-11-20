@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Size;
-use App\Models\Category;
 
 class PageController extends Controller
 {
-    public function showSearchPage(){
-        $categories = Category::all()->orderBy('id')->get();
+    public function showSearchPage(Request $request){
+        $this->validate($request, [
+            'category' => 'integer|required'
+        ]);
         $sizes = Size::all()->orderBy('id')->get();
-        return view('pages.',['categories'=>$categories, 'sizes'=>$sizes]);
+        return view('pages.searchProduct',['category'=>$request['category'], 'sizes'=>$sizes]);
     }
 }
