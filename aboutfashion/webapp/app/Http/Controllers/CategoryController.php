@@ -85,20 +85,26 @@ class CategoryController extends Controller{
 
     public function getAllSubCategories(Request $request){
         $categories = array();
-        $unexploredCategories = new Stack();
-        for($category as Category::findOrFail($request['id'])->subCategory()->get()){
-            $unexploredCategories
-        }
-        $subCategory = Category::findOrFail($request['id'])->subCategory()->get();
-        
-        while(!empty($unexploredCategories)){
+        $unexploredCategories = array();
+        $id = $request['id'];
+
+        do{
+            $categoriesDB = Category::findOrFail($id)->subCategory()->get();
+            if(count($categoriesDB) != 0){
+                foreach($categoriesDB as $category){
+                    array_push($unexploredCategories,$category['id']);
+                    array_push($categories, $category);
+                }   
+            }
             
-        }
-        /*while(count($subCategory) != 0){
-            array_push($categories, array("id"=> $subCategory[0]['id'], "name" => $subCategory[0]['name']));
-            $subCategory = Category::findOrFail($subCategory[0]['id'])->subCategory()->get();
-        }*/
-        
+            if(count($unexploredCategories) == 0){
+                break;
+            }else{
+                $id = $unexploredCategories[0];
+                array_splice($unexploredCategories, 0, 1);
+            }
+            
+        }while(true);    
         return $categories;
     }
 }
