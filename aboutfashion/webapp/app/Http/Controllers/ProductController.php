@@ -43,8 +43,8 @@ class ProductController extends Controller{
         //rever forma de chamar as policies
         
         $product = new Product();
-        $this->authorize('create', $product);
-        //implementar esta policy update no ProductPolicy
+        $this->authorize('store', $product);
+        //implementar esta policy store no ProductPolicy
 
         //guardar os dados do novo produto
         $product->id = $request->input('id');
@@ -70,7 +70,7 @@ class ProductController extends Controller{
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Request equest containing the new state
+     * @param  Request request containing the new state
      * @return Response
      */
     public function edit(Request $request){

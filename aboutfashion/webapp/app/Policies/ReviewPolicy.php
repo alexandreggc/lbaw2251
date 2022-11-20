@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ReviewPolicy{
     use HandlesAuthorization;
 
-    public function create(User $user, Product $product){
+    public function store(User $user, Product $product){
       // User can only create items in product they bought
       if(Auth::check()){
         $orders = $user->orders;
@@ -27,7 +27,7 @@ class ReviewPolicy{
       return false;
     }
 
-    public function edit(User $user, Review $review){
+    public function update(User $user, Review $review){
       // Users can only update reviews they own
       if(Auth::check()){
         return $user->id == $review->id_user;
