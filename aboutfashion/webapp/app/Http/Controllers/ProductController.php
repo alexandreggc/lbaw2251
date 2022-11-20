@@ -146,11 +146,19 @@ class ProductController extends Controller{
         
         
         if(!is_null($request['product_name'])){
-            $query = $query->search($request['product_name']);
+            $query->search($request['product_name']);
         }
         if(!is_null($request['min_classification'])){
-            $query = $query->whereRaw('(SELECT avg(evaluation) FROM lbaw2251.review WHERE id_product = lbaw2251.product.id) >= ?', [$request['min_classification']])->where($filters);
-        }        
+            $query->whereRaw('(SELECT avg(evaluation) FROM lbaw2251.review WHERE id_product = lbaw2251.product.id) >= ?', [$request['min_classification']])->where($filters);
+        }
+        if(!is_null($request['id_size'])){
+            $query->whereRelation('stocks', 'id_size', $request['id_size']);
+        }
+        if(!is_null($request['id_color'])){
+            $query->whereRelation('stocks', 'id_color', $request['id_color']);
+        }
+       
+        
         $products = $query->get();
 
         $productsJSON = array();
@@ -179,7 +187,7 @@ class ProductController extends Controller{
                 $stocks[] = array("id_size"=> $stock['id_size'], "id_color"=>$stock['id_color'], "stock"=>$stock['stock']);
             }
 
-            $sizesDB = Product::find($product['id'])->sizes()->get();
+            $sizesDB = Product::find($product['id'])->sizes()->distinct()->get();
             $sizes = array();
             foreach($sizesDB as $size){
                 $sizes[] = array("id"=>$size['id'], "name"=>$size['name']);
