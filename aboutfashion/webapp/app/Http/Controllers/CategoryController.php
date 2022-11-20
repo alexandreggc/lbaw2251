@@ -89,7 +89,7 @@ class CategoryController extends Controller{
         $id = $request['id'];
 
         do{
-            $categoriesDB = Category::findOrFail($id)->subCategory()->get();
+            $categoriesDB = Category::findOrFail($id)->subCategories()->get();
             if(count($categoriesDB) != 0){
                 foreach($categoriesDB as $category){
                     array_push($unexploredCategories,$category['id']);

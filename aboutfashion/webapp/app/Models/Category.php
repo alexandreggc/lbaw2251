@@ -14,7 +14,7 @@ class Category extends Model{
         return $this->belongsTo('App\Models\Category', 'id_super_category');
     }
 
-    public function subCategory(){
+    public function subCategories(){
         return $this->hasMany('App\Models\Category', 'id_super_category');
     }
 
