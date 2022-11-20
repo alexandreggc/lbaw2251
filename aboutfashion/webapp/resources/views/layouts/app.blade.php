@@ -23,7 +23,7 @@
 <body>
     <main>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3 fixed-top">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3>
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" style="border: none;"
