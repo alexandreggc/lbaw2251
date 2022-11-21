@@ -181,7 +181,7 @@ class ProductController extends Controller{
             $promotions = Product::find($product['id'])->promotions()->where('start_date','<=',$localTime)->where('final_date','>=',$localTime)->orderBy('discount', 'DESC')->get();
             $promotion = array();
             if(count($promotions) != 0){
-                array_push($promotion, array($promotions[0]));
+                $promotion = array("id"=>$promotions[0]['id'],"discount"=>$promotions[0]['discount'],"start_date"=>$promotions[0]['start_date'], "final_date"=>$promotions[0]['final_date']);
             }
 
             $stocksDB = Product::find($product['id'])->stocks()->distinct()->get();
@@ -202,7 +202,7 @@ class ProductController extends Controller{
                 $colors[] = array("id"=>$color['id'], "name"=>$color['name']);
             }
 
-            $productsJSON[] = array("id"=> $product['id'], "name"=>$product['name'], "description"=>$product['description'], "price"=>$product['price'], "avg_classification"=> $evaluation, "images"=>$images, "categories"=>$category, "promotion"=>$promotion, "stocks"=>$stocks, "sizes"=>$sizes, "colors" => $colors);
+            $productsJSON[] = array("id"=> $product['id'], "name"=>$product['name'], "description"=>$product['description'], "price"=>$product['price'], "avg_classification"=> $evaluation, "images"=>$images, "category"=>$category, "promotion"=>$promotion, "stocks"=>$stocks, "sizes"=>$sizes, "colors" => $colors);
         } 
 
         return json_encode($productsJSON);
