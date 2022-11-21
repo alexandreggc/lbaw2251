@@ -32,35 +32,34 @@
                             <i class="ic fa fa-bars"></i>
                         </button>
                     </div>
-                    <a class="navbar-brand mx-4" href="#">ABOUT FASHION</a>
+                    <a class="navbar-brand mx-4" href="/">ABOUT FASHION</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <div class=" collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#"><i class="fa-solid fa-magnifying-glass"
-                                        style="font-size:24px;"></i></a>
+                                <a class="nav-link mx-2" href="#">
+                                    <i class="fa-solid fa-magnifying-glass" style="font-size:26px;"></i>
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
-                                        style="font-size:24px;"></i></a>
+                                <a class="nav-link mx-2" href="#">
+                                    <i class="fa-regular fa-bell" style="font-size:26px;"></i>
+                                </a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
+                                    <i class="fa-regular fa-user" style="font-size:26px;"></i>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     @if (Auth::check())
                                         <li><span class="mx-3">{{ Auth::user()->name }}</span></li>
-                                        <li><a class="button dropdown-item" href="{{ url('/profile') }}"> See Profile
-                                            </a> </li>
-                                        <li><a class="button dropdown-item" href="{{ url('/logout') }}"> Logout </a>
-                                        </li>
+                                        <li><a class="button dropdown-item" href="{{ url('/profile') }}"> See Profile </a></li>
+                                        <li><a class="button dropdown-item" href="{{ url('/logout') }}"> Logout </a></li>
                                     @endif
                                     @if (!Auth::check())
                                         <li><a class="button dropdown-item" href="{{ url('/login') }}"
@@ -70,19 +69,19 @@
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
                                         </li>
                                     @endif
-
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
-                                        style="font-size:24px;"></i></a>
+                                <a class="nav-link mx-2" href="#">
+                                    <i class="fa-regular fa-heart" style="font-size:26px;"></i>
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="#">
-                                    <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
+                                    <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
+                                    <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
                                 </a>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -94,7 +93,8 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Sign In</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                                aria-label="Close">
+                            </button>
                         </div>
                         <div class="modal-body">
                             <form method="POST" action="{{ route('userLogin') }}">
@@ -119,7 +119,6 @@
                                         </span>
                                     @endif
                                 </div>
-
                                 <div class="form-check mt-4">
                                     <input class="form-check-input" type="checkbox" value=""
                                         id="flexCheckDefault" name="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -131,10 +130,12 @@
                                     <a class="button button-outline me-auto"
                                         href="{{ route('userRegister') }}">Forgot password</a> <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
-                                    <button type="button" class="btn btn-primary"><a
-                                            class="button button-outline nav-link" href="{{ route('userRegister') }}"
-                                            data-bs-dismiss="modal" data-bs-toggle="modal"
-                                            data-bs-target="#staticBackdrop2">Register</a></button>
+                                    <button type="button" class="btn btn-primary">
+                                        <a class="button button-outline nav-link" href="{{ route('userRegister') }}"
+                                            data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                                            Register
+                                        </a>
+                                    </button>
                                     <!-- meter 'home' -->
                                 </div>
                             </form>
@@ -142,7 +143,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -209,20 +209,16 @@
                     </div>
                 </div>
             </div>
-
         </header>
-
         <section id="content">
             @yield('content')
         </section>
-
-        <footer
-            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
+        <footer class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href=""
-                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">About
-                        Us</a></li>
+                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">About Us</a>
+                </li>
                 <li class="nav-item"> <a href=""
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Contacts</a>
                 </li>
@@ -230,11 +226,10 @@
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Help</a>
                 </li>
                 <li class="nav-item"> <a href=""
-                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Follow
-                        Us</a></li>
+                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Follow Us</a>
+                </li>
             </ul>
         </footer>
-
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
@@ -245,5 +240,4 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
-
 </html>

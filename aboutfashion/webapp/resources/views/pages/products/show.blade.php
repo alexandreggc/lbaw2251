@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('content')
-
 <head>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
@@ -14,15 +12,13 @@
 <body>
     <div class="row">
         <div class="col-md-5">
-            <div id="demo" class="carousel slide" data-ride="carousel">
-
+            <div id="product_carousel" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ul class="carousel-indicators">
                     <li data-target="#demo" data-slide-to="0" class="active"></li>
                     <li data-target="#demo" data-slide-to="1"></li>
                     <li data-target="#demo" data-slide-to="2"></li>
                 </ul>
-
                 <!-- The slideshow -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -35,23 +31,23 @@
                         <img src="https://www.lolitamoda.pt/uploads/photo/image/97253/gallery_M128722_1.JPG" alt="New York">
                     </div>
                 </div>
-
                 <!-- Left and right controls -->
-                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                <a class="carousel-control-prev" data-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </a>
-                <a class="carousel-control-next" href="#demo" data-slide="next">
+                <a class="carousel-control-next" data-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </a>
-
             </div>
         </div>
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-11"><h1>{{ $product->name }}</h1></div>
                 <div class="col-md-1">
-                    <!-- Ver como colocar coração com link; com href no <i> não funciona --> 
-                    <i class="fa fa-heart-o" style="font-size:24px" href="http://127.00.1:8000/wishlist/{user_id}"></i>
+                    <!-- Ver como colocar coração com link mas alterar a cor-->
+                    <a class="product_details_wishlist" href="http://127.00.1:8000/wishlist/{user_id}">
+                        <i class="fa fa-heart-o" style="font-size:24px"></i>
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -125,7 +121,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 1</p> <!-- título da review -->
+                        <p>Review 1</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -146,7 +142,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 3</p> <!-- título da review -->
+                        <p>Review 3</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -167,7 +163,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 5</p> <!-- título da review -->
+                        <p>Review 5</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -190,7 +186,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 2</p> <!-- título da review -->
+                        <p>Review 2</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -211,7 +207,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 4</p> <!-- título da review -->
+                        <p>Review 4</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -232,7 +228,7 @@
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 6</p> <!-- título da review -->
+                        <p>Review 6</p> <!-- título da review -->
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -241,6 +237,5 @@
             </div>
         </div>
     </div>
-</body>    
-
+</body>
 @endsection
