@@ -1,0 +1,30 @@
+#content {
+    width: auto;
+    margin: 0 auto;
+}
+
+div#myTabContent.tab-content {
+    padding: 2em;
+}
+
+.list-group {
+    flex-basis: auto;
+    justify-content:space-around;
+    padding-bottom: 1em;
+}
+#profile-tab {
+    padding: 1em 2em 0em 2em;
+}
+
+#personalInfo{
+    display: flex;
+    justify-content:space-between;
+    flex-flow: row
+}
+#personalInfo ul.list-group{
+    margin: auto 0;
+    flex-grow: 1;
+}
+#personalInfo div.card.mb-3{
+    margin-left: 1em;
+}
