@@ -96,7 +96,7 @@
   <h2>My Orders</h2>
   
     <?php foreach ($user->orders as $order){?>
-      {{$order}}
+      {{$order->details}}
     <?php } ?>
     
   </div>
