@@ -195,7 +195,7 @@ paths:
                   value: '/users/{id}'
                 302Failure:
                   description: 'Failed authentication. Redirect to register form.'
-                  value: '/register'
+                  value: '/'
   
   /forgot-password:
     get:
@@ -386,7 +386,7 @@ paths:
               examples:
                 302Success:
                   description: 'Account deletion was successful. Redirect to home page.'
-                  value: '../../../'
+                  value: '/'
                 302Failure:
                   description: 'Account deletion was not successful. Redirect to user profile.'
                   value: '/users/{id}'
@@ -743,7 +743,7 @@ paths:
                     description: description of the materials and tips/warnings for washing
                     price: 20
                     image: [https://robohash.org/totamminussunt.png?size=50x50&set=set1, https://robohash.org/inventoreutnulla.png?size=50x50&set=set1]
-                    category: [{id: 1, name: Woman}, {id: 2, name: Jackets}]
+                    category: {id: 2, name: Jacket}
                     sizes: [{id: 1, name: XS}, {id: 2, name: S}, {id: 3, name: M}]
                     colors: [{id: 1, name: Black}, {id: 2, name: Grey}, {id: 3, name: Red}]
                     stock: [{id_size: 1, id_color: 1, stock: 10},{id_size: 2, id_color: 2, stock: 0},{id_size: 3, id_color: 3, stock: 20}]
@@ -1001,11 +1001,11 @@ paths:
           '403':
             description: "Error! You don't have permission to create a product" 
   
-  /promotions:
+  /admin-panel/promotions:
     get:
       operationId: R410
       summary: 'R410: List the promotions'
-      description: 'Shows the promotions available at the moment. Access: PUB'
+      description: 'Shows the promotions available at the moment. Access: COL'
       tags:
         - 'M04: Products and Promotions'
       
@@ -1081,11 +1081,11 @@ paths:
                   - final_date
                   - products
 
-  /promotions/{id}:
+  /admin-panel/promotions/{id}:
     get:
       operationId: R411
       summary: 'R411: Show promotion'
-      description: 'Show the promotion with the index {id}. Access: PUB'
+      description: 'Show the promotion with the index {id}. Access: COL'
       tags:
         - 'M04: Products and Promotions'
 
@@ -1168,7 +1168,7 @@ paths:
         '404':
           description: Error! Promotion not found
     
-  /admin_panel/promotions:
+  /admin_panel/promotions/create:
     put:
       operationId: R412
       summary: 'R412: Create Promotion'
@@ -1283,54 +1283,11 @@ paths:
                   type: string
                 final_date:
                   type: string
-                products:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                      price:
-                        type: number
-                      description:
-                        type: string
-                      category:
-                        type: array
-                        items:
-                          type: string
-                      image:
-                        type: array
-                      items:
-                        type: string
-                      promotion:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            discount:
-                              type: integer
-                            start_date:
-                              type: string
-                            final_date:
-                              type: string
-                      stock:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            color:
-                              type: string
-                            size:
-                              type: string
+                
               required:
-                - name
-                - description
                 - discount
                 - start_date
                 - final_date
-                - products
 
       responses:
           '302':
