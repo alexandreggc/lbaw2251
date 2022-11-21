@@ -93,12 +93,43 @@
     <?php } ?>
   </div>
   <div class="tab-pane fade" id="orders" role="tabpanel">
-  <h2>My Orders</h2>
-  
-    <?php foreach ($user->orders as $order){?>
-      {{$order->details}}
-    <?php } ?>
-    
+    <h2>My Orders</h2>
+    <div id="orders_info">
+      <?php foreach ($user->orders as $order){?>
+        <div class="card border-primary mb-3" style="max-width: 23rem;">
+          <div class="card-header">Order #{{$order['id']}}</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Date
+                <span >{{substr($order['date'],0,10)}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Status
+                <span class="badge bg-primary">{{$order['status']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Address Name
+                <span>{{$order['address']['name']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Card Number
+                <span>{{$order['card']['number']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Products
+                <span>
+                <?php foreach ($order->details as $detail){?>
+                  {{$detail->product['name']}} <br>
+                <?php } ?>
+                </span>
+              </li>
+            </ul>
+            <a href="#" class="card-link">More Details</a>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
   </div>
   <div class="tab-pane fade" id="wishlist" role="tabpanel">
     <p>This is the wishlist page.</p>

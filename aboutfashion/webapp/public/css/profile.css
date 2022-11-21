@@ -28,3 +28,12 @@ div#myTabContent.tab-content {
 #personalInfo div.card.mb-3{
     margin-left: 1em;
 }
+
+#orders_info{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#orders_info div.card.border-primary.mb-3{
+    margin-right: 2em;
+}
