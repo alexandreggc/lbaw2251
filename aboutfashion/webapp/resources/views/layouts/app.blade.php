@@ -41,17 +41,28 @@
                     <div class=" collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
+                                <a class="nav-link mx-2" href="">
                                     <i class="fa-solid fa-magnifying-glass" style="font-size:26px;"></i>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
+                                <a class="nav-link mx-2" href="">
+                                    <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
+                                    <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-2" href="">
                                     <i class="fa-regular fa-bell" style="font-size:26px;"></i>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-2" href="">
+                                    <i class="fa-regular fa-heart" style="font-size:26px;"></i>
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                <a class="nav-link mx-2 dropdown-toggle" href="" id="navbarDropdownMenuLink"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-regular fa-user" style="font-size:26px;"></i>
                                 </a>
@@ -70,17 +81,6 @@
                                         </li>
                                     @endif
                                 </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
-                                    <i class="fa-regular fa-heart" style="font-size:26px;"></i>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
-                                    <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
-                                    <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
-                                </a>
                             </li>
                         </ul>
                     </div>

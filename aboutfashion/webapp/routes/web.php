@@ -12,6 +12,7 @@
 */
 // Home
 Route::get('/', function(){
+    //pensar em enviar aqui várias promotions e colocar a parte da prmomoção no carousel
     return view('pages.home');
 })->name('home');
 
