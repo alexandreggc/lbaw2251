@@ -57,7 +57,8 @@
     </div>
   </div>
   <div class="tab-pane fade" id="addresses" role="tabpanel">
-    <h2>My Addresses</h2> 
+    <h2>My Addresses</h2>
+    
     <?php foreach ($user->addresses as $address){?>
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -93,11 +94,11 @@
   </div>
   <div class="tab-pane fade" id="orders" role="tabpanel">
   <h2>My Orders</h2>
-  {{--
+  
     <?php foreach ($user->orders as $order){?>
-      
+      {{$order}}
     <?php } ?>
-    --}}
+    
   </div>
   <div class="tab-pane fade" id="wishlist" role="tabpanel">
     <p>This is the wishlist page.</p>

@@ -10,10 +10,10 @@ class Address extends Model
     protected $table = 'address';
 
     public function user(){
-        return $this->belongsTo('App\Models\User', 'id_user');
+        return $this->belongsTo('\App\Models\User', 'id_user');
     }
 
     public function country(){
-        return $this->belongsTo('App\Models\Country', 'id_user');
+        return $this->belongsTo('\App\Models\Country', 'id_user');
     }
 }
