@@ -1,7 +1,7 @@
 <?php
 
 // Static Pages
-Route::get('/', 'PageController@home')->name('home');
+Route::get('/', 'PageController@homePage')->name('home');
 Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
 
 //User 
