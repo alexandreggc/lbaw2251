@@ -18,6 +18,9 @@
   <li class="nav-item" role="presentation">
     <a class="nav-link" data-bs-toggle="tab" href="#reviews" aria-selected="true" role="tab">Reviews</a>
   </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" data-bs-toggle="tab" href="#cards" aria-selected="true" role="tab">Cards</a>
+  </li>
 </ul>
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade show active" id="information" role="tabpanel">
@@ -45,19 +48,12 @@
           <span>{{$user['birth_date']}}</span>
         </li>
       </ul>
-
-
-
       <div class="card mb-3">
         <div class="card-header">
           <h5 class="card-title">Profile Picture</h5>
         </div>
         <img src={{$user->photo['file']}} id="profilePic" width="300px" height="300px"/>
       </div>
-
-
-
-      
     </div>
   </div>
   <div class="tab-pane fade" id="addresses" role="tabpanel">
@@ -108,6 +104,9 @@
   </div>
   <div class="tab-pane fade" id="reviews" role="tabpanel">
     <p>This is the reviews page.</p>
+  </div>
+  <div class="tab-pane fade" id="cards" role="tabpanel">
+    <p>This is the cards page.</p>
   </div>
 </div>
 
