@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Size;
+use App\Models\Color;
+
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -205,5 +209,12 @@ class ProductController extends Controller{
         } 
 
         return json_encode($productsJSON);
+    }
+
+    public function showSearchPage(){
+        $categories = Category::all();
+        $sizes = Size::all();
+        $colors = Color::all();
+        return view('pages.searchProduct',['categories'=>$categories, 'sizes'=>$sizes, 'colors'=>$colors]);
     }
 }
