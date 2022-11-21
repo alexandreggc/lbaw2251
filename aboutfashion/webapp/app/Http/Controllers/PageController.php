@@ -7,9 +7,9 @@ use App\Models\Size;
 
 class PageController extends Controller
 {
-    public function showSearchPage($id){
-        $category = Category::findOrFail($id);
+    public function showSearchPage(){
+        $categories = Category::all();
         $sizes = Size::all();
-        return view('pages.searchProduct',['category'=>$category, 'sizes'=>$sizes]);
+        return view('pages.searchProduct',['category'=>$categories, 'sizes'=>$sizes]);
     }
 }
