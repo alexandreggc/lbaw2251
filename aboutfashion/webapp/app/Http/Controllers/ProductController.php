@@ -7,6 +7,7 @@ use App\Models\Product;
 
 
 
+
 class ProductController extends Controller{
     /**
      * Display a listing of the resource.
@@ -125,8 +126,6 @@ class ProductController extends Controller{
            'max_price' => 'numeric',
            'min_classification' => 'numeric',
            'product_name' => 'string',
-           'product_name' => 'integer',
-           'product_name' => 'integer'
         ]);
         
 

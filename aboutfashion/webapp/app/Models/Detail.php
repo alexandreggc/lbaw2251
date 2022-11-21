@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Details extends Model
+class Detail extends Model
 {
     public $timestamps = false;
     protected $table = 'details';
@@ -19,5 +19,9 @@ class Details extends Model
 
     public function size(){
         return $this->belongsTo('\App\Models\Size','id_size');
+    }
+
+    public function orders(){
+        return $this->belongsTo('\App\Models\Order', 'order_details', 'id_details', 'id_order');
     }
 }

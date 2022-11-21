@@ -72,7 +72,7 @@ class CategoryController extends Controller{
         return $category;
     }
 
-    public function getAllSuperCategories($id){
+    public function getAllSuperCategories(Request $request){
         $categories = array();
         $superCategory = Category::findOrFail($id)->superCategory()->get();
         while(count($superCategory) != 0){

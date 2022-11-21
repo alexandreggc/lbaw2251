@@ -12,4 +12,12 @@ class PageController extends Controller
         $sizes = Size::all();
         return view('pages.searchProduct',['category'=>$categories, 'sizes'=>$sizes]);
     }
+
+    public function homePage(){
+        return view('pages.home');
+    }
+
+    public function homePageAdmin(){
+        return view('pages.admin.home');
+    }
 }
