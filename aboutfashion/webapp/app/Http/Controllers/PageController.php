@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Size;
 use App\Models\Category;
+use App\Models\Size;
 
 class PageController extends Controller
 {
-    public function showSearchPage(){
-        $categories = Category::all()->orderBy('id')->get();
-        $sizes = Size::all()->orderBy('id')->get();
-        return view('pages.',['categories'=>$categories, 'sizes'=>$sizes]);
+    public function showSearchPage($id){
+        $category = Category::findOrFail($id);
+        $sizes = Size::all();
+        return view('pages.searchProduct',['category'=>$category, 'sizes'=>$sizes]);
     }
 }
