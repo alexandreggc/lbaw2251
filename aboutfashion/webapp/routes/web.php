@@ -38,12 +38,8 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
 
-// All routes for Products
 
-//index
-Route::get('/products', 'App\Http\Controllers\ProductController@index');
-
-// All products
-
-// /product/{id}
+//Products
+Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
+Route::get('/products', 'PageController@showSearchPage')->name('searchProduct');
 Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show');

@@ -25,15 +25,6 @@ tags:
 
 paths:
   /login:
-    get:
-      operationId: R101
-      summary: 'R101: Login Form'
-      description: 'Provide login form. Access: PUB'
-      tags:
-        - 'M01: Authentication'
-      responses:
-        '200':
-          description: 'Ok. Show log-in UI'
     post:
       operationId: R102
       summary: 'R102: Login Action'
@@ -66,10 +57,10 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to home page.'
-                  value: '../'
+                  value: '/'
                 302Error:
                   description: 'Failed authentication. Redirect to login form.'
-                  value: '/login'
+                  value: '/'
 
   /admin-panel/login:
     get:
@@ -113,7 +104,7 @@ paths:
               examples:
                 302Success:
                   description: 'Successful authentication. Redirect to home page.'
-                  value: '../'
+                  value: '/admin-panel'
                 302Error:
                   description: 'Failed authentication. Redirect to login form.'
                   value: '/admin-panel/login'
@@ -138,16 +129,6 @@ paths:
                   value: '../'
 
   /register:
-    get:
-      operationId: R106
-      summary: 'R106: Register Form'
-      description: 'Provide new user registration form. Access: PUB'
-      tags:
-        - 'M01: Authentication'
-      responses:
-        '200':
-          description: 'Ok. Show sign-up UI'
-
     put:
       operationId: R107
       summary: 'R107: Register Action'
@@ -173,6 +154,8 @@ paths:
                   format: binary
                 password:
                   type: string
+                gender:
+                  type: string
               required:
                 - first_name
                 - second_name
@@ -192,7 +175,7 @@ paths:
                   value: '/users/{id}'
                 302Failure:
                   description: 'Failed authentication. Redirect to register form.'
-                  value: '/register'
+                  value: '/'
 
   /users/{id}:
     get:
@@ -477,7 +460,7 @@ paths:
 
       parameters:
         - in: query
-          name: product_id
+          name: id_product
           description: Product ID
           schema:
             type: integer
@@ -489,7 +472,7 @@ paths:
             type: string
           required: false
         - in: query
-          name: category_id
+          name: id_category
           description: Category of the products
           schema:
             type: integer

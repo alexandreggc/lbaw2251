@@ -17,7 +17,7 @@
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/be2806c733.js" crossorigin="anonymous"></script>
-    <script type="text/javascript" src={{ asset('js/sidebar.js') }} defer></script>
+    <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
@@ -65,10 +65,11 @@
                                     @endif
                                     @if (!Auth::check())
                                         <li><a class="button dropdown-item" href="{{ url('/login') }}"
-                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop"> Sign In </a>
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop1"> Sign In </a>
                                         </li>
-                                        <li><a class="button dropdown-item" href="{{ url('/register') }}"> Register
-                                            </a></li>
+                                        <li><a class="button dropdown-item" href="{{ url('/register') }}"
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
+                                        </li>
                                     @endif
 
                                 </ul>
@@ -87,12 +88,12 @@
                     </div>
                 </div>
             </nav>
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Sign in</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">Sign In</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -129,13 +130,80 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="button button-outline me-auto"
-                                        href="{{ route('userRegister') }}">Forgot
-                                        password</a>
-                                    <button type="submit" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Login</button>
+                                        href="{{ route('userRegister') }}">Forgot password</a> <!-- meter 'home' -->
+                                    <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary"><a
-                                            class="button button-outline nav-link"
-                                            href="{{ route('userRegister') }}">Register</a></button>
+                                            class="button button-outline nav-link" href="{{ route('userRegister') }}"
+                                            data-bs-dismiss="modal" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop2">Register</a></button>
+                                    <!-- meter 'home' -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('userRegister') }}">
+                                {{ csrf_field() }}
+                                <div class="form-group">
+                                    <label for="first_name" class="form-label mt-4">First Name</label>
+                                    <input type="text" class="form-control" id="first_name"
+                                        placeholder="First Name" name="first_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name" class="form-label mt-4">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name"
+                                        placeholder="Last Name" name="last_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email1" class="form-label mt-4">Email address</label>
+                                    <input id="email1" type="text" name="email" required autofocus
+                                        class="form-control" placeholder="Enter email">
+                                    @if ($errors->has('email'))
+                                        <span class="error">
+                                            {{ $errors->first('email') }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="form-label mt-4">Password</label>
+                                    <input type="password" class="form-control" id="password1"
+                                        placeholder="Password" name="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="form-label mt-4">Confirm Password</label>
+                                    <input type="password" class="form-control" id="password2"
+                                        placeholder="Password" name="password" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class=" me-auto"></div>
+                                    <label for="gender" class="form-label mt-4">Gender</label>
+                                    <select class="form-select" name="gender">
+                                        <option value="F">FEMALE</option>
+                                        <option value="M">MALE</option>
+                                        <option value="O">OTHER</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <div class=" me-auto"></div>
+                                    <label for="birthdate" class="form-label mt-4">Birthdate</label>
+                                    <input type="date" class="form-control" id="birthdate" name="birthdate">
+                                </div>
+                                <div class="modal-footer">
+                                    <span class="error-text me-auto" style="color:red"> </span>
+                                    <button type="submit" class="btn btn-primary reg">Register</button>
                                 </div>
                             </form>
                         </div>
