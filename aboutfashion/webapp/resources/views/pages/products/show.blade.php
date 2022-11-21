@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('content')
-
 <head>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
@@ -14,15 +12,13 @@
 <body>
     <div class="row">
         <div class="col-md-5">
-            <div id="demo" class="carousel slide" data-ride="carousel">
-
+            <div id="product_carousel" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ul class="carousel-indicators">
                     <li data-target="#demo" data-slide-to="0" class="active"></li>
                     <li data-target="#demo" data-slide-to="1"></li>
                     <li data-target="#demo" data-slide-to="2"></li>
                 </ul>
-
                 <!-- The slideshow -->
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -35,23 +31,23 @@
                         <img src="https://www.lolitamoda.pt/uploads/photo/image/97253/gallery_M128722_1.JPG" alt="New York">
                     </div>
                 </div>
-
                 <!-- Left and right controls -->
-                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                <a class="carousel-control-prev" data-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </a>
-                <a class="carousel-control-next" href="#demo" data-slide="next">
+                <a class="carousel-control-next" data-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </a>
-
             </div>
         </div>
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-11"><h1>{{ $product->name }}</h1></div>
                 <div class="col-md-1">
-                    <!-- Ver como colocar coração com link; com href no <i> não funciona --> 
-                    <i class="fa fa-heart-o" style="font-size:24px" href="http://127.00.1:8000/wishlist/{user_id}"></i>
+                    <!-- Ver como colocar coração com link mas alterar a cor-->
+                    <a class="product_details_wishlist" href="http://127.00.1:8000/wishlist/{user_id}">
+                        <i class="fa fa-heart-o" style="font-size:24px"></i>
+                    </a>
                 </div>
             </div>
             <div class="row">
@@ -113,19 +109,27 @@
         <div class="col"> <!-- primeira coluna de reviews -->
             <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-10">
                             <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col">
                             <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -134,19 +138,27 @@
             </div>
             <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
-                            <h5>Nome do utilizador 3</h5> <!-- nome do utilizador que fez a review -->
+                        <div class="col-md-10">
+                            <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 3</p> <!-- título da review -->
+                        <div class="col">
+                            <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -155,19 +167,27 @@
             </div>
             <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
-                            <h5>Nome do utilizador 5</h5> <!-- nome do utilizador que fez a review -->
+                        <div class="col-md-10">
+                            <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 5</p> <!-- título da review -->
+                        <div class="col">
+                            <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -176,63 +196,87 @@
             </div>
         </div>
         <div class="col"> <!-- segunda coluna de reviews -->
-            <div class="row"> <!-- elemento da segunda coluna -->
+            <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
-                            <h5>Nome do utilizador 2</h5> <!-- nome do utilizador que fez a review -->
+                        <div class="col-md-10">
+                            <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 2</p> <!-- título da review -->
+                        <div class="col">
+                            <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
                     </div>
                 </div>
             </div>
-            <div class="row"> <!-- elemento da segunda coluna -->
+            <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
-                            <h5>Nome do utilizador 4</h5> <!-- nome do utilizador que fez a review -->
+                        <div class="col-md-10">
+                            <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 4</p> <!-- título da review -->
+                        <div class="col">
+                            <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
                     </div>
                 </div>
             </div>
-            <div class="row"> <!-- elemento da segunda coluna -->
+            <div class="row"> <!-- elemento da primeira coluna -->
                 <div class="col-md-2">
-                        <img src="/resources/defaultProfilePicture.png" alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-md-10">
                     <div class="row">
-                        <div class="col">
-                            <h5>Nome do utilizador 6</h5> <!-- nome do utilizador que fez a review -->
+                        <div class="col-md-10">
+                            <h5>Nome do utilizador 1</h5> <!-- nome do utilizador que fez a review -->
                         </div>
-                        <div class="col">
+                        <div class="col-md-1">
                             <h6>5</h6> <!-- classificação da review -->
+                        </div>
+                        <div class="col-md-1">
+                            <i class="fa-regular fa-star"></i>
                         </div>
                     </div>
                     <div class="row">
-                            <p>Review 6</p> <!-- título da review -->
+                        <div class="col">
+                            <p>Review 1</p> <!-- título da review -->
+                        </div>    
+                        <div class="col-md-2">
+                            <h6>10/10/2020</h6> <!-- data da review -->
+                        </div>
                     </div>
                     <div class="row">
                         <p>O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p> <!-- texto da review -->
@@ -241,6 +285,5 @@
             </div>
         </div>
     </div>
-</body>    
-
+</body>
 @endsection
