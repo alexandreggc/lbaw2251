@@ -28,8 +28,7 @@ class ShoppingCartController extends Controller{
                 }
             }
         }
-        $q = 4;
-        return view('pages.user.shopping_cart', ['user' => $user, 'cart' => $cart, 'total' => $total, 'q' => $q]);
+        return view('pages.user.shopping_cart', ['user' => $user, 'cart' => $cart, 'total' => $total]);
     }
 
     public function addProductCart(Request $request){
