@@ -70,8 +70,10 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     @if (Auth::check())
                                         <li><span class="mx-3">{{ Auth::user()->name }}</span></li>
-                                        <li><a class="button dropdown-item" href="{{ url('/profile') }}"> See Profile </a></li>
-                                        <li><a class="button dropdown-item" href="{{ url('/logout') }}"> Logout </a></li>
+                                        <li><a class="button dropdown-item" href="{{ url('/profile') }}"> See Profile
+                                            </a></li>
+                                        <li><a class="button dropdown-item" href="{{ url('/logout') }}"> Logout </a>
+                                        </li>
                                     @endif
                                     @if (!Auth::check())
                                         <li><a class="button dropdown-item" href="{{ url('/login') }}"
@@ -93,8 +95,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Sign In</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                             </button>
                         </div>
                         <div class="modal-body">
@@ -133,7 +134,8 @@
                                     <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary">
                                         <a class="button button-outline nav-link" href="{{ route('userRegister') }}"
-                                            data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                                            data-bs-dismiss="modal" data-bs-toggle="modal"
+                                            data-bs-target="#staticBackdrop2">
                                             Register
                                         </a>
                                     </button>
@@ -191,9 +193,10 @@
                                     <div class=" me-auto"></div>
                                     <label for="gender" class="form-label mt-4">Gender</label>
                                     <select class="form-select" name="gender">
-                                        <option value="F">FEMALE</option>
-                                        <option value="M">MALE</option>
-                                        <option value="O">OTHER</option>
+                                        <option>Blank</option>
+                                        <option value="F">Female</option>
+                                        <option value="M">Male</option>
+                                        <option value="O">Other</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -214,11 +217,13 @@
         <section id="content">
             @yield('content')
         </section>
-        <footer class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
+        <footer
+            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href=""
-                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">About Us</a>
+                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">About
+                        Us</a>
                 </li>
                 <li class="nav-item"> <a href=""
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Contacts</a>
@@ -227,7 +232,8 @@
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Help</a>
                 </li>
                 <li class="nav-item"> <a href=""
-                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Follow Us</a>
+                        class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Follow
+                        Us</a>
                 </li>
             </ul>
         </footer>
@@ -241,4 +247,5 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
+
 </html>

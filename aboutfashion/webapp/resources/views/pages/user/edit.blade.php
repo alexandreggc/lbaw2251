@@ -37,9 +37,10 @@
                 <div class=" me-auto"></div>
                 <label for="gender" class="form-label mt-4">Gender</label>
                 <select class="form-select" name="gender">
-                    <option value="F">FEMALE</option>
-                    <option value="M">MALE</option>
-                    <option value="O">OTHER</option>
+                    <option>Blank</option>
+                    <option value="F">Female</option>
+                    <option value="M">Male</option>
+                    <option value="O">Other</option>
                 </select>
             </div>
             <div class="form-group">
