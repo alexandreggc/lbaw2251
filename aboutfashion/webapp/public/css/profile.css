@@ -36,7 +36,7 @@ div#myTabContent.tab-content {
 
 #orders_info div.card.border-primary.mb-3{
     width: 25em;
-    margin-right: 2em;
+    margin-right: 1em;
 }
 
 #top_title{
@@ -57,5 +57,21 @@ div#myTabContent.tab-content {
 
 #card_info div.card.border-primary.mb-3{
     width: 25em;
-    margin-right: 2em;
+    margin-right: 1em;
+}
+
+#order_details{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em 2em 0em 2em;
+}
+
+#order_details div.card.mb-3{
+    width: 25em;
+    margin-right: 1em;
+}
+
+#order_page h2{
+    padding-top: 0.5em;
+    padding-left: 0.8em;
 }
