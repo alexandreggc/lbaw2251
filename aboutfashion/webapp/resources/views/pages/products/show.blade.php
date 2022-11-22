@@ -2,10 +2,10 @@
 @section('content')
 <head>
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000">Home</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Woman</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Clothing</a></li>
-        <li class="breadcrumb-item"><a href="http://127.0.0.1:8000/api/products">Jackets</a></li>
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/products">Woman</a></li>
+        <li class="breadcrumb-item"><a href="/products">Clothing</a></li>
+        <li class="breadcrumb-item"><a href="/products">Jackets</a></li>
         <li class="breadcrumb-item active">{{ $product->name }}</li>
     </ol>
 </head>

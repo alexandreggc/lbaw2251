@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Detail;
 use Illuminate\Http\Request;
 
@@ -10,8 +11,27 @@ use \App\Http\Controllers\StockController;
 use \App\Http\Controllers\DetailController;
 use Auth;
 
-class ShoppingCartController extends Controller
-{
+class ShoppingCartController extends Controller{
+
+    public function show(Request $request){
+        $user = User::find($request['id_user']);
+        //VER COMO RECEBER O ARRAY DE DETAILS PARA SEREM DEMONSTRADOS NA VIEW
+        $cart = [];
+        $total = 0;
+        if(Auth::check()){
+            $orders = $user->orders;
+            foreach($orders as $order){
+                $details = $order->details;
+                foreach($details as $detail){
+                    $total += $detail->price;
+                    $cart->add($detail);
+                }
+            }
+        }
+        $q = 4;
+        return view('pages.user.shopping_cart', ['user' => $user, 'cart' => $cart, 'total' => $total, 'q' => $q]);
+    }
+
     public function addProductCart(Request $request){
         $this->validate($request, [
             'id_product' => 'required|integer',

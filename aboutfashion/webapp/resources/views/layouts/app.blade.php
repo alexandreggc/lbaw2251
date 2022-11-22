@@ -47,10 +47,18 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="">
-                                    <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
-                                    <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
-                                </a>
+                                @if (Auth::check())
+                                    <a class="nav-link mx-2" href="/users/{{ Auth::user()->id }}/shopping_cart"> <!-- PROVISÓRIO!!! -->
+                                        <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
+                                        <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
+                                    </a>
+                                @endif
+                                @if (!Auth::check())
+                                    <a class="nav-link mx-2" href="/"> <!-- PROVISÓRIO!!! -->
+                                        <i class="fa-regular fa-cart-shopping" style="font-size:26px;"></i>
+                                        <!--<ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>-->
+                                    </a>
+                                @endif
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="">
@@ -58,9 +66,16 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="">
-                                    <i class="fa-regular fa-heart" style="font-size:26px;"></i>
-                                </a>
+                                @if (Auth::check())
+                                    <a class="nav-link mx-2" href="/users/{{ Auth::user()->id }}/wishlist"> <!-- PROVISÓRIO!!! -->
+                                        <i class="fa-regular fa-heart" style="font-size:26px;"></i>
+                                    </a>
+                                @endif
+                                @if (!Auth::check())
+                                    <a class="nav-link mx-2" href="/">
+                                        <i class="fa-regular fa-heart" style="font-size:26px;"></i>
+                                    </a>
+                                @endif
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link mx-2 dropdown-toggle" href="" id="navbarDropdownMenuLink"
