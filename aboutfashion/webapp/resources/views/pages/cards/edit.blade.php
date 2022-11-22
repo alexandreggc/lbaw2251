@@ -20,10 +20,6 @@
             <input type="text" class="form-control" id="number" placeholder="Number" name="number" required>
         </div>
         <div class="form-group">
-            <label for="month" class="form-label mt-4">Month</label>
-            <input type="number" class="form-control" id="month" placeholder="Month" name="month" required>
-        </div>
-        <div class="form-group">
             <div class=" me-auto"></div>
             <label for="month_year" class="form-label mt-4">Month/Year:</label>
             <input type="month" id="month_year" class="form-control" name="month_year" min="2022-11" value="2022-11">
