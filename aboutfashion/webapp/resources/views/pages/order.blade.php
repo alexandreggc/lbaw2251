@@ -4,6 +4,7 @@
 <div id="order_page">
     <h2>Products of the Order #{{$order['id']}}</h2>
     <div id="order_details">
+    
     @foreach ($order->details as $detail)
         <div class="card mb-3">
             <h3 class="card-header">{{$detail->product['name']}}</h3>
@@ -31,8 +32,14 @@
             </li>
             </div>
         </div>
-        
     @endforeach
+    </div>
+    <div id="total">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            Total price:<span>{{$order->totalPrice($order['id'])}}</span>
+            </li>
+        </ul>
     </div>
 </div>
 @endsection

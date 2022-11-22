@@ -75,3 +75,8 @@ div#myTabContent.tab-content {
     padding-top: 0.5em;
     padding-left: 0.8em;
 }
+
+#total{
+    padding: 1em 2em 0em 2em;
+    max-width: 29em;
+}
