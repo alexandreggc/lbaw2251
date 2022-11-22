@@ -15,6 +15,8 @@ Route::post('login', 'Auth\LoginController@login')->name('userLogin');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
+
 //Admin
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');

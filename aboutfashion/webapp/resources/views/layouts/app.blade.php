@@ -15,6 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/be2806c733.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
@@ -23,7 +24,7 @@
 <body>
     <main>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" style="border: none;"

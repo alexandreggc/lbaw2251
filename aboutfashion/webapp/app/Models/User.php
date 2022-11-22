@@ -45,27 +45,27 @@ class User extends Authenticatable
     ];
 
     public function photo(){
-        return $this->belongsTo('App\Models\Image', 'id_image');
+        return $this->belongsTo('\App\Models\Image', 'id_image');
     }
 
     public function addresses(){
-        return $this->hasMany('\App\Models\Address', 'id_address');
+        return $this->hasMany('App\Models\Address', 'id_user');
     }
 
     public function cards(){
-        return $this->hasMany('\App\Models\Card', 'id_card');
+        return $this->hasMany('App\Models\Card', 'id_user');
     }
 
     public function notifications(){
-        return $this->belongsToMany('\App\Models\Notification', 'user_notification', 'id_user', 'id_notification');
+        return $this->belongsToMany('App\Models\Notification', 'user_notification', 'id_user', 'id_notification');
     }
 
     public function reports(){
-        return $this->hasMany('\App\Models\Report', 'id_user');
+        return $this->hasMany('App\Models\Report', 'id_user');
     }
 
     public function wishlist(){
-        return $this->belongsToMany('\App\Models\Product', 'wishlist', 'id_user', 'id_product');
+        return $this->belongsToMany('App\Models\Product', 'wishlist', 'id_user', 'id_product');
     }
 
     public function orders(){
@@ -73,7 +73,7 @@ class User extends Authenticatable
     }
 
     public function likes(){
-        return $this->belongsToMany('\App\Models\Review', 'user_like', 'id_user', 'id_review');
+        return $this->belongsToMany('App\Models\Review', 'user_like', 'id_user', 'id_review');
     }
 
     public function reviews(){
