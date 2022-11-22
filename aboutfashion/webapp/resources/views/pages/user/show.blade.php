@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<script>
-  $('#exampleModal').on('shown.bs.modal', function () {
-    $('#myInput').trigger('focus')
-  })
-</script>
 
 <ul id="profile-tab" class="nav nav-tabs" role="tablist">
   <li class="nav-item" role="presentation">
@@ -197,6 +192,7 @@
             </div>
           </div>
         </div>
+      @endforeach
     </div>
   </div>
 </div>
