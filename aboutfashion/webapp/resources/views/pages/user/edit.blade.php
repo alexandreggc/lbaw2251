@@ -4,8 +4,9 @@
     <div id="edit_form">
         <legend>Edit Profile</legend>
 
-        <form method="PATCH" action="{{ route('userUpdate', ['id' => $user['id']]) }}">
+        <form method="POST" action="{{ route('userUpdate', ['id' => $user['id']]) }}">
             {{ csrf_field() }}
+            @method('PATCH')
             <div class="form-group">
                 <label for="first_name" class="form-label mt-4">First Name</label>
                 <input type="text" class="form-control" id="first_name" placeholder="First Name" name="first_name">
@@ -37,7 +38,8 @@
                 <div class=" me-auto"></div>
                 <label for="gender" class="form-label mt-4">Gender</label>
                 <select class="form-select" name="gender">
-                    <option>Blank</option>
+                    <option value="P">Option in my profile - {{ $user->gender }}</option>
+                    <option value="B">Blank</option>
                     <option value="F">Female</option>
                     <option value="M">Male</option>
                     <option value="O">Other</option>

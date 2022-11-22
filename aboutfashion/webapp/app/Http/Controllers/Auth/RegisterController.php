@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:authenticated_user,email',
             'password' => 'required|string|min:6|confirmed',
             'birth_date' => 'date',
-            'gender' => 'string|regex:/^[MFO]$/',
+            'gender' => 'string|regex:/^[ BMFO]$/',
         ]);
     }
 
@@ -66,12 +66,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if($data['gender'] == ''){
+            $gender = null;
+        }else{
+            $gender = $data['gender'];
+        }
+            
+        
         return User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'gender' => $data['gender'],
+            'gender' => $gender,
             'birth_date' => $data['birth_date'],
             'id_image' => 1,
             'blocked' => false,

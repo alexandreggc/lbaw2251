@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
@@ -39,18 +40,19 @@ class UserController extends Controller{
         $this->authorize('update', $user);
         
         $validator = Validator::make($request->all(),[
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
-            'email' => 'string|email|max:255|unique:authenticated_user,email',
-            'password' => 'string|min:6|confirmed',
-            'birth_date' => 'date',
-            'gender' => 'string|regex:/^[MFO]$/',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255|unique:authenticated_user,email',
+            'password' => 'nullable|string|min:6|confirmed',
+            'birth_date' => 'nullable|date',
+            'gender' => 'string|regex:/^[PBMFO]$/',
         ]);
 
         if($validator->fails()){
             return redirect()->back(); // Adicionar as mensagens de erro
         }
-
+ 
+        
         if(!is_null($request['first_name'])){
             $user->first_name = $request['first_name'];
         }
@@ -66,12 +68,15 @@ class UserController extends Controller{
         if(!is_null($request['birth_date'])){
             $user->birth_date = $request['birth_date'];
         }
-        if(!is_null($request['gender'])){
-            $user->birth_date = $request['gender'];
+        if($request['gender'] == 'B'){
+            $user->gender = null;
+        }else if($request['gender'] == 'P'){
+        }else{
+            $user->gender = $request['gender'];
         }
         
         $user->save();
-        return redirect(route('userView', ['user', $user]));
+        return Redirect::route('userView', array('id' => $user->id));
     }
 
     public function delete(Request $request, int $id){
