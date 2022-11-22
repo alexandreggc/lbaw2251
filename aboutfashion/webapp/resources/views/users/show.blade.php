@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+  $('#exampleModal').on('shown.bs.modal', function () {
+    $('#myInput').trigger('focus')
+  })
+</script>
 
 <ul id="profile-tab" class="nav nav-tabs" role="tablist">
   <li class="nav-item" role="presentation">
@@ -24,10 +29,7 @@
 </ul>
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade show active" id="information" role="tabpanel">
-    <div id="top_title">
-      <h2>Personal Information</h2>
-      <a class="btn btn-primary" href="{{url('/users/1/edit')}}" role="button"> Edit profile </a>
-    </div>
+    <h2>Personal Information</h2>
     <div id="personalInfo">
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -41,6 +43,10 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
           Second name
           <span>{{$user['last_name']}}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          Gender
+          <span>{{$user['gender']}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           Email
@@ -58,45 +64,56 @@
         <img src={{$user->photo['file']}} id="profilePic" width="300px" height="300px"/>
       </div>
     </div>
+    <div class="bottom_buttons">
+      <a class="btn btn-primary" href="{{url('/users/1/edit')}}" role="button"> Edit profile </a>
+      <form action="{{ url('/users', ['id' => $user['id']])}}" method="post">
+          <input class="btn btn-danger" type="submit" value="Delete Profile"/>
+          @method('delete')
+          @csrf
+      </form>
+    </div>
   </div>
   <div class="tab-pane fade" id="addresses" role="tabpanel">
     <h2>My Addresses</h2>
-    @foreach ($user->addresses as $address)
-      <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Name
-          <span>{{isset($address['name']) ? $address['name'] : "Not Defined"}} </span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Company
-          <span>{{isset($address['company']) ? $address['company'] : "Not Defined"}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          NIF
-          <span>{{isset($address['nif']) ? $address['nif'] : "Not Defined"}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Street
-          <span>{{isset($address['street']) ? $address['street'] : "Not Defined"}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Number
-          <span>{{isset($address['number']) ? $address['number'] : "Not Defined"}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Apartment
-          <span>{{isset($address['apartment']) ? $address['apartment'] : "Not Defined"}}</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Note
-          <span>{{isset($address['note']) ? $address['note'] : "Not Defined"}}</span>
-        </li>
-      </ul>
-    @endforeach
+      <div class="cards_flex">
+        @foreach ($user->addresses as $address)
+        <div class="card border-primary mb-3" style="max-width: 23rem;">
+          <div class="card-header">Name: {{isset($address['name']) ? $address['name'] : "Not Defined"}}</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Company
+                <span >{{isset($address['company']) ? $address['company'] : "Not Defined"}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                NIF
+                <span>{{isset($address['nif']) ? $address['nif'] : "Not Defined"}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Street
+                <span>{{isset($address['street']) ? $address['street'] : "Not Defined"}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Number
+                <span>{{isset($address['number']) ? $address['number'] : "Not Defined"}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Apartment
+                <span>{{isset($address['apartment']) ? $address['apartment'] : "Not Defined"}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Note
+                <span>{{isset($address['note']) ? $address['note'] : "Not Defined"}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        @endforeach
+      </div>
   </div>
   <div class="tab-pane fade" id="orders" role="tabpanel">
     <h2>My Orders</h2>
-    <div id="orders_info">
+    <div class="cards_flex">
       @foreach ($user->orders as $order)
         <div class="card border-primary mb-3" style="max-width: 23rem;">
           <div class="card-header">Order #{{$order['id']}}</div>
@@ -145,7 +162,7 @@
   </div>
   <div class="tab-pane fade" id="cards" role="tabpanel">
     <h2>My Cards</h2>
-    <div id="card_info">
+    <div class="cards_flex">
       @foreach ($user->cards as $card)
         <div class="card border-primary mb-3" style="max-width: 23rem;">
           <div class="card-header">Card #{{$card['number']}}</div>
@@ -170,13 +187,19 @@
 
         
             </ul>
-            
+            <div class="bottom_buttons">
+              <a class="btn btn-primary" href="/cards/{{$card['id']}}/edit" role="button"> Edit Card </a>
+              <form action="{{ url('/cards', ['id' => $card['id']])}}" method="post">
+                  <input class="btn btn-danger" type="submit" value="Delete Card"/>
+                  @method('delete')
+                  @csrf
+              </form>
+            </div>
           </div>
         </div>
       @endforeach
     </div>
   </div>
 </div>
-
 
 @endsection

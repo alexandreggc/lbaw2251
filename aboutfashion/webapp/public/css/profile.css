@@ -29,35 +29,19 @@ div#myTabContent.tab-content {
     margin-left: 1em;
 }
 
-#orders_info {
+.cards_flex{
     display: flex;
     flex-wrap: wrap;
 }
 
-#orders_info div.card.border-primary.mb-3{
+.cards_flex div.card.border-primary.mb-3{
     width: 25em;
     margin-right: 1em;
-}
-
-#top_title{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 #edit_form{
     padding: 2em;
     max-width: 50em;
-}
-
-#card_info {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#card_info div.card.border-primary.mb-3{
-    width: 25em;
-    margin-right: 1em;
 }
 
 #order_details{
@@ -79,4 +63,10 @@ div#myTabContent.tab-content {
 #total{
     padding: 1em 2em 0em 2em;
     max-width: 29em;
+}
+
+.bottom_buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
