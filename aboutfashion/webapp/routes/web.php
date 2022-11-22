@@ -8,7 +8,7 @@ Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel'
 Route::post('login', 'Auth\LoginController@login')->name('userLogin');
 Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
-Route::delete('/users/{id}', 'UserController@destroy')->name('userDelete');
+Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
 Route::post('login', 'Auth\LoginController@login')->name('userLogin');

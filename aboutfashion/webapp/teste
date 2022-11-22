@@ -1,4 +1,12 @@
-create schema if not exists lbaw2251;
+
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near "UPDATE"
+LINE 113: ...OT NULL REFERENCES admin(id) ON UPDATE CASCADE ON UPDATE CAS...
+                                                               ^ (SQL: create schema if not exists lbaw2251;
 --DROP's
 SET search_path TO lbaw2251;
 --DROP's
@@ -110,7 +118,7 @@ CREATE TABLE notification(
     date TIMESTAMP NOT NULL
 );
 CREATE TABLE admin_notification(
-    id_admin INTEGER NOT NULL REFERENCES admin(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_admin INTEGER NOT NULL REFERENCES admin(id) ON UPDATE CASCADE ON UPDATE CASCADE ON DELETE CASCADE,
     id_notification INTEGER NOT NULL REFERENCES notification(id) ON UPDATE CASCADE ON DELETE CASCADE,
     PRIMARY KEY (id_admin, id_notification)
 );
@@ -179,8 +187,8 @@ CREATE TABLE review(
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE user_like(
-    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_review INTEGER NOT NULL REFERENCES review(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    id_review INTEGER NOT NULL REFERENCES review(id) ON UPDATE CASCADE,
     PRIMARY KEY (id_user, id_review)
 );
 CREATE TABLE report(
@@ -359,14 +367,14 @@ LANGUAGE plpgsql;
 CREATE FUNCTION delete_user_information()
 RETURNS TRIGGER AS
 $$ BEGIN
-    UPDATE report SET id_user = NULL WHERE id_user = OLD.id;
-    UPDATE review SET id_user = NULL WHERE id_user = OLD.id;
-    UPDATE user_like SET id_user = NULL WHERE id_user = OLD.id;
-    DELETE FROM wishlist WHERE id_user = OLD.id;
+    UPDATE report SET id_user = NULL WHERE id_user = OLD.id_user;
+    UPDATE review SET id_user = NULL WHERE id_user = OLD.id_user;
+    UPDATE user_like SET id_user = NULL WHERE id_user = OLD.id_user;
+    DELETE FROM wishlist WHERE id_user = OLD.id_user;
     UPDATE user_order SET id_user = NULL,
                           id_address = NULL,
                           id_card = NULL
-                          WHERE id_user = OLD.id;
+                          WHERE id_user = OLD.id_user;
     RETURN OLD;
 END; $$
 LANGUAGE plpgsql;
@@ -449,7 +457,7 @@ EXECUTE PROCEDURE check_report_privileges();
 CREATE FUNCTION order_parameters()
 RETURNS TRIGGER AS
 $$ BEGIN
-    IF (OLD.status = 'Shopping Cart' AND NEW.status <> 'Shopping Cart')
+    IF (OLD.state = 'Shopping Cart' AND NEW.state <> 'Shopping Cart')
     THEN
         IF NEW.id_user IS NULL OR NEW.id_address IS NULL OR NEW.id_card IS NULL
         THEN
@@ -12485,3 +12493,23 @@ insert into report (id, description, resolved, report_date, id_review, id_user) 
 insert into report (id, description, resolved, report_date, id_review, id_user) values (198, 'risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti', false, '2022-11-06 07:03:20', null, 117);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (199, 'eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan', true, '2022-11-08 22:53:20', 14, 154);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (200, 'curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum', false, '2022-11-04 08:43:02', null, 95);
+)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:759
+    755▕         // If an exception occurs when attempting to run a query, we'll format the error
+    756▕         // message to include the bindings with SQL, which will make this exception a
+    757▕         // lot more helpful to the developer instead of just the database's errors.
+    758▕         catch (Exception $e) {
+  ➜ 759▕             throw new QueryException(
+    760▕                 $query, $this->prepareBindings($bindings), $e
+    761▕             );
+    762▕         }
+    763▕     }
+
+      [2m+7 vendor frames [22m
+  8   database/seeders/DatabaseSeeder.php:18
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+23 vendor frames [22m
+  32  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
