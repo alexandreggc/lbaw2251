@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class PageController extends Controller
-{
+class PageController extends Controller{
 
     public function homePage(){
         return view('pages.home');

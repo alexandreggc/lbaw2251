@@ -155,8 +155,3 @@ input[type=email]:focus,
 input[type=password]:focus {
   border-color: #9b4dca;
 }
-/* Slider for product details page*/
-.carousel-inner img {
-  width: 100%;
-  height: 100%;
-}
