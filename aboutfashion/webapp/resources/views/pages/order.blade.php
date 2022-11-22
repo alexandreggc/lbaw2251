@@ -40,5 +40,12 @@
             </li>
         </ul>
     </div>
+    <div id="total">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            Total price:<span>{{$order->totalPrice($order['id'])}}</span>
+            </li>
+        </ul>
+    </div>
 </div>
 @endsection
