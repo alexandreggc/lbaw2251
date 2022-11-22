@@ -25,23 +25,6 @@ class Order extends Model
         return $this->belongsToMany('\App\Models\Detail', 'order_details', 'id_order', 'id_details');
     }
 
-    public function totalPrice($id)
-    {
-        $order = Order::find($id);
-        $total = 0;
-        foreach($order->details as $detail){
-            $total += $detail->product['price'] * $detail['quantity'];
-        }
-        return $total;
-    }
+    
 
-    public function totalPrice($id)
-    {
-        $order = Order::find($id);
-        $total = 0;
-        foreach($order->details as $detail){
-            $total += $detail->product['price'] * $detail['quantity'];
-        }
-        return $total;
-    }
 }
