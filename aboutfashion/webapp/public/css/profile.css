@@ -29,7 +29,7 @@ div#myTabContent.tab-content {
     margin-left: 1em;
 }
 
-#orders_info{
+#orders_info {
     display: flex;
     flex-wrap: wrap;
 }
@@ -48,4 +48,14 @@ div#myTabContent.tab-content {
 #edit_form{
     padding: 2em;
     max-width: 50em;
+}
+
+#card_info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#card_info div.card.border-primary.mb-3{
+    width: 25em;
+    margin-right: 2em;
 }

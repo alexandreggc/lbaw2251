@@ -140,7 +140,35 @@
     <p>This is the reviews page.</p>
   </div>
   <div class="tab-pane fade" id="cards" role="tabpanel">
-    <p>This is the cards page.</p>
+    <h2>My Cards</h2>
+    <div id="card_info">
+      @foreach ($user->cards as $card)
+        <div class="card border-primary mb-3" style="max-width: 23rem;">
+          <div class="card-header">Card #{{$card['number']}}</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Nick name
+                <span >{{$card['nickname']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Name
+                <span>{{$card['name']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Month/Year
+                <span>{{$card['month']}}/{{$card['year']}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Code
+                <span>{{$card['code']}}</span>
+              </li>
+            </ul>
+            <a href="#" class="card-link">Edit card</a>
+          </div>
+        </div>
+      @endforeach
+    </div>
   </div>
 </div>
 

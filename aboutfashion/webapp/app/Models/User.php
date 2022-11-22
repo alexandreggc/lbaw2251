@@ -53,7 +53,7 @@ class User extends Authenticatable
     }
 
     public function cards(){
-        return $this->hasMany('App\Models\Card', 'id_card');
+        return $this->hasMany('App\Models\Card', 'id_user');
     }
 
     public function notifications(){
