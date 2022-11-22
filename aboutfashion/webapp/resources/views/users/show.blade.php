@@ -24,7 +24,10 @@
 </ul>
 <div id="myTabContent" class="tab-content">
   <div class="tab-pane fade show active" id="information" role="tabpanel">
-    <h2>Personal Information</h2>
+    <div id="top_title">
+      <h2>Personal Information</h2>
+      <a class="btn btn-primary" href="{{url('/users/1/edit')}}" role="button"> Edit profile </a>
+    </div>
     <div id="personalInfo">
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -45,7 +48,7 @@
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           Birth Date
-          <span>{{$user['birth_date']}}</span>
+          <span>{{substr($user['birth_date'],0,10)}}</span>
         </li>
       </ul>
       <div class="card mb-3">
@@ -58,8 +61,7 @@
   </div>
   <div class="tab-pane fade" id="addresses" role="tabpanel">
     <h2>My Addresses</h2>
-    
-    <?php foreach ($user->addresses as $address){?>
+    @foreach ($user->addresses as $address)
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center">
           Name
@@ -90,12 +92,12 @@
           <span>{{isset($address['note']) ? $address['note'] : "Not Defined"}}</span>
         </li>
       </ul>
-    <?php } ?>
+    @endforeach
   </div>
   <div class="tab-pane fade" id="orders" role="tabpanel">
     <h2>My Orders</h2>
     <div id="orders_info">
-      <?php foreach ($user->orders as $order){?>
+      @foreach ($user->orders as $order)
         <div class="card border-primary mb-3" style="max-width: 23rem;">
           <div class="card-header">Order #{{$order['id']}}</div>
           <div class="card-body">
@@ -119,16 +121,16 @@
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Products
                 <span>
-                <?php foreach ($order->details as $detail){?>
+                @foreach ($order->details as $detail)
                   {{$detail->product['name']}} <br>
-                <?php } ?>
+                @endforeach
                 </span>
               </li>
             </ul>
             <a href="#" class="card-link">More Details</a>
           </div>
         </div>
-      <?php } ?>
+      @endforeach
     </div>
   </div>
   <div class="tab-pane fade" id="wishlist" role="tabpanel">

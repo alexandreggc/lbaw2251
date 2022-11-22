@@ -35,5 +35,17 @@ div#myTabContent.tab-content {
 }
 
 #orders_info div.card.border-primary.mb-3{
+    width: 25em;
     margin-right: 2em;
+}
+
+#top_title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#edit_form{
+    padding: 2em;
+    max-width: 50em;
 }

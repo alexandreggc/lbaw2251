@@ -63,10 +63,14 @@ class UserController extends Controller{
      * @return Response
      */
     public function edit($id){
-        $user = update($request, $id);
+        //$user = update($request, $id);
+        $user = User::find($id);
+        /*
         if(Auth::check()){
             return view('users.edit', ['user' => $user]);
-        }
+        }*/
+        return view('users.edit', ['user' => $user]);
+
     }
 
     /**
