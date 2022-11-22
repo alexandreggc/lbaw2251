@@ -4,103 +4,87 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
     public function index(){
-        //lista de users útil para o admin panel
-        //verificar nome da view
         return view('users.index', ['users' => User::all()]); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param int $id
-     * @param  Request
-     * @return Response
-     */
-    public function store(Request $request, $id){
-        $user = new User();
-        //$this->authorize('create', $user);
-        //não é necessária policy para registo
-        $user->id = $request->input('id');
-        $user->first_name = $request->input('first_name');
-        $user->first_name = $request->input('last_name');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->birth_date = $request->input('birth_date');
-        $user->gender = $request->input('gender');
-        $user->blocked = false;
-        $id_image = $request->input('id_image');
-        //colocar a imagem default
-        $user->save();
-        return $user;
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
     public function show($id){
-        //perfil do utilizador
-        //ver se é preferivel mandar id
-        //talvez a mandar o user seja mais fácil apra aceder na view
         $user = User::find($id);
-        return view('users.show', ['user' => $user]);
+        if(is_null($user)){
+            return abort('404');
+        }
+        $this->authorize('view', $user);
+        return view('pages.user.show', ['user' => $user]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
     public function edit($id){
-        //$user = update($request, $id);
         $user = User::find($id);
-        /*
-        if(Auth::check()){
-            return view('users.edit', ['user' => $user]);
-        }*/
-        return view('users.edit', ['user' => $user]);
+        if(is_null($user)){
+            return abort('404');
+        }
+        $this->authorize('update', $user);
+        return view('pages.user.edit', ['user' => $user]);
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @param  Request  $request
-     * @return Response
-     */
     public function update(Request $request, $id){
         $user = User::find($id);
+        if(is_null($user)){
+            return abort('404');
+        }
         $this->authorize('update', $user);
-        //implementar esta policy update no UserPolicy
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        
+        $validator = Validator::make($request->all(),[
+            'first_name' => 'string|max:255',
+            'last_name' => 'string|max:255',
+            'email' => 'string|email|max:255|unique:authenticated_user,email',
+            'password' => 'string|min:6|confirmed',
+            'birth_date' => 'date',
+            'gender' => 'string|regex:/^[MFO]$/',
+        ]);
+
+        if($validator->fails()){
+            return redirect()->back(); // Adicionar as mensagens de erro
+        }
+
+        if(!is_null($request['first_name'])){
+            $user->first_name = $request['first_name'];
+        }
+        if(!is_null($request['last_name'])){
+            $user->last_name = $request['last_name'];
+        }
+        if(!is_null($request['email'])){
+            $user->email = $request['email'];
+        }
+        if(!is_null($request['password'])){
+            $user->password = bcrypt($request['password']);
+        }
+        if(!is_null($request['birth_date'])){
+            $user->birth_date = $request['birth_date'];
+        }
+        if(!is_null($request['gender'])){
+            $user->birth_date = $request['gender'];
+        }
+        
         $user->save();
-        return $user;
+        return redirect(route('userView', ['user', $user]));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id){
-        $user = User::find($id);
+    public function delete(Request $request, int $id){
+        $user = User::find($request['id']);
+        if(is_null($user)){
+            return abort('404');
+        }
+
         $this->authorize('delete', $user);
-        //implementar esta policy delete no UserPolicy
-        $user->delete();
-        return view('users.delete');
+        $deleted = $user->delete();
+        if($deleted)
+            return redirect('/');
+        else
+            return redirect()->back(); // Adicionar mensagens de erro
     }
 }
