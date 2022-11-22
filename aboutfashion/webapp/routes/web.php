@@ -35,6 +35,9 @@ Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 
+//Cards
+Route::get('/cards/{id}/edit', 'CardController@edit')->name('cardEditForm');
+
 //Admin
 
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');

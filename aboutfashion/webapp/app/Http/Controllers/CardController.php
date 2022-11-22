@@ -63,4 +63,11 @@ class CardController extends Controller
 
       return $card;
     }
+
+    public function edit($id){
+      $card = Card::find($id);
+      
+      return view('pages.cards.edit', ['card' => $card]);
+
+  }
 }
