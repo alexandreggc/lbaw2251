@@ -12,12 +12,4 @@ class PageController extends Controller
     public function homePageAdmin(){
         return view('pages.admin.home');
     }
-
-    public function homePage(){
-        return view('pages.home');
-    }
-
-    public function homePageAdmin(){
-        return view('pages.admin.home');
-    }
 }
