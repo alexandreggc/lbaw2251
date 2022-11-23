@@ -56,7 +56,7 @@
                 <div class="col-10"><h1 class="p-3 pt-0">{{ $product->name }}</h1></div>
                 <div class="col-2">
                     <!-- Ver como colocar coração com link mas alterar a cor-->
-                    <a class="pe-2 ps-5" href="http://127.00.1:8000/wishlist/{user_id}">
+                    <a class="pe-2 ps-5" href="#notimplemented">
                         <i class="fa fa-heart-o" style="font-size:24px"></i>
                     </a>
                 </div>
@@ -69,7 +69,7 @@
                 <div class="col-2"><h6>Classification:</h6></div>
                 <div class="col-2"><p>5</p></div>
             <div class="row">
-                <div class="col-4 p-5 pt-3">
+                <div class="col-4 p-5 pt-3 text-left">
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Size
@@ -82,7 +82,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-4 p-5 pt-3">
+                <div class="col-4 p-5 pt-3 text-left">
                     <div class="dropdown">
                         <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Color
@@ -94,12 +94,12 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-4 text-center">
                     <br>
                     <div class="row"><h4>Price: {{ $product->price }}€</h4></div>
                     <br>
                     <div class="row">
-                        <button type="button" class="btn btn-lg btn-primary">Add to cart</button>
+                        <button type="button" class="btn btn-lg btn-primary" onclick="addProductCart()">Add to cart</button>
                     </div>
                 </div>
             </div>

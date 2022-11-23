@@ -35,11 +35,11 @@
         Daniel Rodrigues - <abbr title="Email"></abbr> <a href="mailto:up202006562@edu.fe.up.pt">up202006562@edu.fe.up.pt</a>
         </p>
         <p><i class="fa fa-envelope"></i>
-        Diogo Fonte - <abbr title="Email"></abbr> <a href="mailto: up202004175@edu.fc.up.pt"> up202004175@edu.fc.up.pt</a>
+        Diogo Fonte - <abbr title="Email"></abbr> <a href="mailto:up202004175@edu.fc.up.pt"> up202004175@edu.fc.up.pt</a>
         </p>
         <p><i class="fa fa-clock"></i>
-          <abbr title="Hours"></abbr> Monday - Sunday: 24h</p>
-
+          <abbr title="Hours"></abbr> Monday - Sunday: 24h
+        </p>
       </div>
     </div>
   </div>

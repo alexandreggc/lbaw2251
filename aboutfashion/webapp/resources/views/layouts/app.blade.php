@@ -79,7 +79,6 @@
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
                                         </li>
                                     @endif
-
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -91,7 +90,6 @@
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -230,10 +228,10 @@
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
-                <li class="nav-item"> <a href=""
+                <li class="nav-item"> <a href="/about"
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">About
                         Us</a></li>
-                <li class="nav-item"> <a href=""
+                <li class="nav-item"> <a href="/contacts"
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Contacts</a>
                 </li>
                 <li class="nav-item"> <a href=""

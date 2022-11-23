@@ -14,7 +14,7 @@
                         <h1 class="p-3">Promotion</h1>
                         <h3 class="ps-3">Up to 70% in all products</h3>
                         <p class="p-3">O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p>
-                        <div class="row align-items-center">
+                        <div class="row text-center">
                             <div class="col">
                                 <a href="" class="btn btn-primary btn-lg m-5">Man</a>
                             </div>
@@ -34,7 +34,7 @@
                         <h1 class="p-3">Promotion</h1>
                         <h3 class="ps-3">Up to 70% in all products</h3>
                         <p class="p-3">O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p>
-                        <div class="row align-items-center">
+                        <div class="row text-center">
                             <div class="col">
                                 <a href="" class="btn btn-primary btn-lg m-5">Man</a>
                             </div>
@@ -54,7 +54,7 @@
                         <h1 class="p-3">Promotion</h1>
                         <h3 class="ps-3">Up to 70% in all products</h3>
                         <p class="p-3">O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro.</p>
-                        <div class="row align-items-center">
+                        <div class="row text-center">
                             <div class="col">
                                 <a href="" class="btn btn-primary btn-lg m-5">Man</a>
                             </div>

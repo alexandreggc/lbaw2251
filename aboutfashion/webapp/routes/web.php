@@ -3,6 +3,9 @@
 // Static Pages
 Route::get('/', 'PageController@homePage')->name('home');
 Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
+Route::get('/about', 'PageController@aboutPage')->name('aboutUs');
+Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
+
 
 //User 
 Route::post('login', 'Auth\LoginController@login')->name('userLogin');
@@ -40,7 +43,7 @@ Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('admi
 //Products
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
-Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show')->name('productView');
+Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
 //Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
 Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
