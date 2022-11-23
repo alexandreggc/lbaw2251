@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -14,16 +13,6 @@ class CardController extends Controller
 {
     public function __construct(){
       $this->middleware('auth:web');
-    }
-
-    public function show($id)
-    {
-      $card = Card::find($id);
-      if(is_null($card)){
-        return abort('404');
-      }
-      $this->authorize('show', $card);
-      return view('pages.card', ['card' => $card]);
     }
 
     public function list()
@@ -94,6 +83,7 @@ class CardController extends Controller
 
     public function edit($id){
       $card = Card::find($id);
+      $this->authorize('update', $card);
       if(is_null($card)){
         return abort('404');
       }
@@ -106,6 +96,7 @@ class CardController extends Controller
         if(is_null($card)){
           return abort('404');
         }
+        $this->authorize('update', $card);
         
         if(!is_null($request['number'])){
           if(strlen($request['number']) != 16){
