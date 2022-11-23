@@ -78,9 +78,9 @@
                                 <div class="accordion-body">
                                     <strong>E-mail:</strong> {{$user['email']}}
                                     <br>
-                                    <strong>Birth date:</strong> {{$user['birth_date']}}
+                                    <strong>Birth date:</strong> {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined'}}
                                     <br>
-                                    <strong>Gender:</strong> {{$user['gender']}}
+                                    <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
                                 </div>
                             </div>
                         </div>
@@ -115,7 +115,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" href="">Yes</button>
+                    <button type="button" class="btn btn-primary" href="">
+                        <a href="">Yes</a>
+                        <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
+                            @method('patch')
+                            @csrf
+                        </form>
+                    </button>
                 </div>
             </div>
         </div>
@@ -133,7 +139,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" href="">Yes</button>
+                    <button type="button" class="btn btn-primary" href="">
+                        <a href="">Yes</a>
+                        <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
+                            @method('patch')
+                            @csrf
+                        </form>
+                    </button>
                 </div>
             </div>
         </div>
@@ -151,7 +163,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" href="">Yes</button>
+                    <button type="button" class="btn btn-primary" href="">
+                        <a href="">Yes</a>
+                        <form action="{{ route('deleteUserAdmin', array('id'=>$user['id'])) }}" method="post">
+                            @method('delete')
+                            @csrf
+                        </form>
+                    </button>
                 </div>
             </div>
         </div>
