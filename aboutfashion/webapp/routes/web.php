@@ -2,7 +2,7 @@
 
 // Static Pages
 Route::get('/', 'PageController@homePage')->name('home');
-Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
+Route::get('/admin-panel/home','PageController@homePageAdmin')->name('homeAdminPanel');//->middleware('auth:admin');
 Route::get('/about', 'PageController@aboutPage')->name('aboutUs');
 Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+
 class PageController extends Controller{
 
     public function homePage(){
@@ -9,7 +11,8 @@ class PageController extends Controller{
     }
 
     public function homePageAdmin(){
-        return view('pages.admin.home');
+        $users = User::all();
+        return view('pages.admin.home', ['users'=>$users]);
     }
 
     public function aboutPage(){

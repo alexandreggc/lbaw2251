@@ -196,8 +196,6 @@
                                     Code
                                     <span>{{ $card['code'] }}</span>
                                 </li>
-
-
                             </ul>
                             <div class="bottom_buttons">
                                 <a class="btn btn-primary" href={{ route('cardEditForm', ['id' => $card['id']]) }}
