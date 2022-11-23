@@ -2,7 +2,7 @@
 
 // Static Pages
 Route::get('/', 'PageController@homePage')->name('home');
-Route::get('/admin-panel/home','PageController@homePageAdmin')->name('homeAdminPanel');//->middleware('auth:admin');
+Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel');//->middleware('auth:admin');
 Route::get('/about', 'PageController@aboutPage')->name('aboutUs');
 Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 
@@ -38,6 +38,8 @@ Route::put('/address/create', 'AddressController@store')->name('addressCreate');
 //Admin
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
+Route::delete('/admin-panel/users/{id}', 'AdminController@deleteUser')->name('deleteUserAdmin');
+Route::patch('/admin-panel/users/{id}/block', 'AdminController@blockUser')->name('blockUser');
 
 
 //Products
