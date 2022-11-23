@@ -71,6 +71,7 @@
         </div>
         <div class="tab-pane fade" id="addresses" role="tabpanel">
             <h2>My Addresses</h2>
+            <a class="btn btn-primary add_item" href="{{route('addressCreateForm')}}" role="button" >Add Address</a>
             <div class="cards_flex">
                 @foreach ($user->addresses as $address)
                     <div class="card border-primary mb-3" style="max-width: 23rem;">
@@ -85,6 +86,10 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     NIF
                                     <span>{{ isset($address['nif']) ? $address['nif'] : 'Not Defined' }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Country
+                                    <span>{{ isset($address->country['name']) ? $address->country['name'] : 'Not Defined' }}</span>
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     Street
@@ -103,6 +108,14 @@
                                     <span>{{ isset($address['note']) ? $address['note'] : 'Not Defined' }}</span>
                                 </li>
                             </ul>
+                            <div class="bottom_buttons">
+                                <a class="btn btn-primary" href={{ route('addressEditForm', ['id' => $address['id']]) }} role="button"> Edit Address</a>
+                                <form action="{{ route('addressDelete', ['id' => $address['id']]) }}" method="post">
+                                    <input class="btn btn-danger" type="submit" value="Delete Address" />
+                                    @method('delete')
+                                    @csrf
+                                </form>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -159,6 +172,7 @@
         </div>
         <div class="tab-pane fade" id="cards" role="tabpanel">
             <h2>My Cards</h2>
+            <a class="btn btn-primary add_item" href="{{route('cardCreateForm')}}" role="button" >Add Card</a>
             <div class="cards_flex">
                 @foreach ($user->cards as $card)
                     <div class="card border-primary mb-3" style="max-width: 23rem;">

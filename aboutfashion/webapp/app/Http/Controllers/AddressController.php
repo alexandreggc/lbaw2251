@@ -17,7 +17,8 @@ class AddressController extends Controller
 
   
       public function create(){
-        return view('pages.address.create');
+        $countries = Country::all();
+        return view('pages.addresses.create', compact('countries'));
       }
   
       public function store(Request $request)
@@ -82,8 +83,8 @@ class AddressController extends Controller
         if(is_null($address)){
           return abort('404');
         }
-        
-        return view('pages.address.edit', ['address' => $address]);
+        $countries = Country::all();
+        return view('pages.addresses.edit', ['address' => $address, 'countries' => $countries]);
       }
   
       public function update(Request $request, $id){
@@ -119,7 +120,7 @@ class AddressController extends Controller
             $address->company = $request['company'];
           }
           if(!is_null($request['nif'])){
-            $address->nif = $request['mif'];
+            $address->nif = $request['nif'];
           }
           if(!is_null($request['street'])){
             $address->street = $request['street'];
@@ -128,13 +129,13 @@ class AddressController extends Controller
             $address->number = $request['number'];
           }
           if(!is_null($request['apartment'])){
-            $address->number = $request['apartment'];
+            $address->apartment = $request['apartment'];
           }
           if(!is_null($request['note'])){
-            $address->number = $request['note'];
+            $address->note = $request['note'];
           }
           if(!is_null($request['id_country'])){
-            $address->number = $request['id_country'];
+            $address->id_country = $request['id_country'];
           }
                 
   

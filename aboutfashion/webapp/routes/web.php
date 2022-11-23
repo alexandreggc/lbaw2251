@@ -24,6 +24,12 @@ Route::patch('/cards/{id}', 'CardController@update')->name('cardUpdate');
 Route::get('/cards/create', 'CardController@create')->name('cardCreateForm');
 Route::put('/cards/create', 'CardController@store')->name('cardCreate');
 
+//Addresses
+Route::get('/address/{id}/edit', 'AddressController@edit')->name('addressEditForm');
+Route::delete('/address/{id}', 'AddressController@delete')->name('addressDelete');
+Route::patch('/address/{id}', 'AddressController@update')->name('addressUpdate');
+Route::get('/address/create', 'AddressController@create')->name('addressCreateForm');
+Route::put('/address/create', 'AddressController@store')->name('addressCreate');
 
 
 //Admin
