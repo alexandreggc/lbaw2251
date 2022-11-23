@@ -47,10 +47,10 @@
                                     </div>
                                     <div class="col-1">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#unblockModal">
-                                            <i class="fa-regular fa-lock-open"></i>
+                                            <i class="fa-solid fa-lock-open"></i>
                                         </a>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                            <i class="fa-regular fa-trash ps-5"></i>
+                                            <i class="fa-solid fa-trash ps-5"></i>
                                         </a>
                                     </div>
                                 </button>
@@ -64,10 +64,10 @@
                                     </div>
                                     <div class="col-1">
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#blockModal">
-                                            <i class="fa-regular fa-lock"></i>
+                                            <i class="fa-solid fa-lock"></i>
                                         </a>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                            <i class="fa-regular fa-trash ps-5"></i>
+                                            <i class="fa-solid fa-trash ps-5"></i>
                                         </a>
                                     </div>
                                 </button>
