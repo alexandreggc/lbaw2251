@@ -6,7 +6,7 @@ Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel'
 
 //User 
 Route::post('login', 'Auth\LoginController@login')->name('userLogin');
-Route::get('/users/{id}', 'UserController@show')->name('userView');
+Route::get('/users/{id}', 'UserController@show')->name('userView')->middleware();
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
@@ -19,6 +19,18 @@ Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 
 //Cards
 Route::get('/cards/{id}/edit', 'CardController@edit')->name('cardEditForm');
+Route::delete('/cards/{id}', 'CardController@delete')->name('cardDelete');
+Route::patch('/cards/{id}', 'CardController@update')->name('cardUpdate');
+Route::get('/cards/create', 'CardController@create')->name('cardCreateForm');
+Route::put('/cards/create', 'CardController@store')->name('cardCreate');
+
+//Addresses
+Route::get('/address/{id}/edit', 'AddressController@edit')->name('addressEditForm');
+Route::delete('/address/{id}', 'AddressController@delete')->name('addressDelete');
+Route::patch('/address/{id}', 'AddressController@update')->name('addressUpdate');
+Route::get('/address/create', 'AddressController@create')->name('addressCreateForm');
+Route::put('/address/create', 'AddressController@store')->name('addressCreate');
+
 
 //Admin
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
@@ -32,7 +44,7 @@ Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show')->nam
 
 //Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
 Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
-Route::post('/api/cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart')->middleware('auth:user');
+Route::post('/api/cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart')->middleware('auth:web');
 
 //Order
 

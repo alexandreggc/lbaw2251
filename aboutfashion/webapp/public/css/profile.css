@@ -70,3 +70,8 @@ div#myTabContent.tab-content {
     flex-direction: row;
     justify-content: space-between;
 }
+
+.add_item{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}

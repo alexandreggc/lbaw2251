@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
+
+    public function __construct(){
+        $this->middleware('auth:web');
+    }
+
     public function index(){
         return view('users.index', ['users' => User::all()]); 
     }
@@ -19,7 +25,7 @@ class UserController extends Controller{
             return abort('404');
         }
         $this->authorize('view', $user);
-        return view('pages.user.show', ['user' => $user]);
+        return view('pages.user.show', ['user' => $user, 'countries'=>Country::all()]);
     }
 
     public function edit($id){
