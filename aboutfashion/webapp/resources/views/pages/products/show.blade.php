@@ -21,21 +21,21 @@
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <div class="row bg-body">
-                            <div class="container-md">
+                            <div class="container-md ratio ratio-4x3">
                                 <img class="d-block w-100 img-fluid img-thumbnail" src="https://figueiraradical.com/4128-large_default/sweat-carhartt-hooded.jpg" alt="Los Angeles">
                             </div>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <div class="row bg-body">
-                            <div class="container-md">
+                            <div class="container-md ratio ratio-4x3">
                                 <img class="d-block w-100 img-fluid img-thumbnail" src="https://photos6.spartoo.pt/photos/209/20939896/20939896_500_A.jpg" alt="Chicago">
                             </div>
                         </div>
                     </div>
                     <div class="carousel-item">
                         <div class="row bg-body">
-                            <div class="container-md">
+                            <div class="container-md ratio ratio-4x3">
                                 <img class="d-block w-100 img-fluid img-thumbnail" src="https://www.lolitamoda.pt/uploads/photo/image/97253/gallery_M128722_1.JPG" alt="New York">
                             </div>
                         </div>
