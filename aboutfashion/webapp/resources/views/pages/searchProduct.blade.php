@@ -127,7 +127,7 @@
                     <div class="col-md-3 col-sm-6 mx-4 mt-2 mb-2 d-inline-block">
                         <div class="product-grid">
                             <div class="product-image shadow">
-                                <a href="api/products?id_product=${val.id}" class="image">
+                                <a href="/products/${val.id}" class="image">
                                     <img src="${val.images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(val.promotion.discount)}</span>
@@ -137,7 +137,7 @@
                                 </ul>
                             </div>
                             <div class="product-content shadow">
-                                <h3 class="title"><a href="#">${val.name}</a></h3>
+                                <h3 class="title"><a href="/products/${val.id}">${val.name}</a></h3>
                                 <div class="price">${havePromo1(val.price,val.promotion.discount)} <span>${havePromo2(val.price,val.promotion.discount)}</span></div>
                             </div>
                         </div>
@@ -212,7 +212,7 @@
                     <div class="col-md-3 col-sm-6 mx-4 mt-2 mb-2 d-inline-block">
                         <div class="product-grid">
                             <div class="product-image shadow">
-                                <a href="api/products?id_product=${val.id}" class="image">
+                                <a href="/products/${val.id}" class="image">
                                     <img src="${val.images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(val.promotion.discount)}</span>
@@ -222,7 +222,7 @@
                                 </ul>
                             </div>
                             <div class="product-content shadow">
-                                <h3 class="title"><a href="#">${val.name}</a></h3>
+                                <h3 class="title"><a href="/products/${val.id}">${val.name}</a></h3>
                                 <div class="price">${havePromo1(val.price,val.promotion.discount)} <span>${havePromo2(val.price,val.promotion.discount)}</span></div>
                             </div>
                         </div>
@@ -240,16 +240,16 @@
         if (promo == undefined) {
             result = "";
         } else {
-            result = '$' + value ;
+            result =  value + '€';
         }
         return result;
     }
     function havePromo1(value,promo) {
         let result;
         if (promo == undefined) {
-            result = '$'+ value;
+            result =  value + '€';
         } else {
-            result = '$' + Math.round(value - (value*(promo/100)));
+            result = Math.round(value - (value*(promo/100))) + '€';
         }
         return result;
     }
@@ -262,15 +262,7 @@
         }
         return result;
     }
-    function newPrice(promo) {
-        let result;
-        if (promo == undefined) {
-            result = "";
-        } else {
-            result = '-'+ promo +'%';
-        }
-        return result;
-    }
+
 </script>
 
 @endsection
