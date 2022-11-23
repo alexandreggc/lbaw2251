@@ -16,8 +16,14 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/cards.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://propeller.in/components/range-slider/css/nouislider.min.css">
+    <link rel="stylesheet" type="text/css" href="http://propeller.in/components/textfield/css/textfield.css">
+    <link rel="stylesheet" type="text/css" href="http://propeller.in/components/checkbox/css/checkbox.css">
+    <link rel="stylesheet" type="text/css" href="http://propeller.in/components/range-slider/css/range-slider.css">
     <script src="https://kit.fontawesome.com/be2806c733.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
+    <script type="text/javascript" src={{ asset('js/search_range.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
@@ -193,6 +199,7 @@
                                     <div class=" me-auto"></div>
                                     <label for="gender" class="form-label mt-4">Gender</label>
                                     <select class="form-select" name="gender">
+                                        <option selected>Select gender</option>
                                         <option value="F">FEMALE</option>
                                         <option value="M">MALE</option>
                                         <option value="O">OTHER</option>
@@ -239,6 +246,8 @@
         </footer>
 
     </main>
+    <!-- Jquery js -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
     </script>
@@ -247,6 +256,11 @@
     </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <!-- Slider js -->
+    <script src="http://propeller.in/components/range-slider/js/wNumb.js"></script>
+    <script src="http://propeller.in/components/range-slider/js/nouislider.js"></script>
+    
+
 </body>
 
 </html>
