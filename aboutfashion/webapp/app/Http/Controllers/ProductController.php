@@ -123,15 +123,17 @@ class ProductController extends Controller{
     }  
 
     public function searchAPI(Request $request){        
-        $this->validate($request, [
+       /* $this->validate($request, [
            'id_product' => 'integer',
            'id_category' => 'integer',
+           'id_size' => 'integer',
+           'id_color' => 'string',
            'min_price' => 'numeric',
            'max_price' => 'numeric',
            'min_classification' => 'numeric',
            'product_name' => 'string',
         ]);
-        
+        */
 
         $filters = array();
         if(!is_null($request['id_product'])){
@@ -141,10 +143,10 @@ class ProductController extends Controller{
             array_push($filters, array('id_category','=',$request['id_category']));
         }
         if(!is_null($request['min_price'])){
-            array_push($filters, array('price','<=',$request['min_price']));
+            array_push($filters, array('price','>=',$request['min_price']));
         }
         if(!is_null($request['max_price'])){
-            array_push($filters, array('price','>=',$request['max_price']));
+            array_push($filters, array('price','<=',$request['max_price']));
         } 
 
         $query = Product::where($filters);
