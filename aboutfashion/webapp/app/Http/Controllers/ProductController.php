@@ -190,25 +190,7 @@ class ProductController extends Controller{
                 $promotion = array("id"=>$promotions[0]['id'],"discount"=>$promotions[0]['discount'],"start_date"=>$promotions[0]['start_date'], "final_date"=>$promotions[0]['final_date']);
             }
 
-            $stocksDB = Product::find($product['id'])->stocks()->distinct()->get();
-            $stocks = array();
-            foreach($stocksDB as $stock){
-                $stocks[] = array("id_size"=> $stock['id_size'], "id_color"=>$stock['id_color'], "stock"=>$stock['stock']);
-            }
-
-            $sizesDB = Product::find($product['id'])->sizes()->distinct()->get();
-            $sizes = array();
-            foreach($sizesDB as $size){
-                $sizes[] = array("id"=>$size['id'], "name"=>$size['name']);
-            }
-            
-            $colorsDB = Product::find($product['id'])->colors()->distinct()->get();
-            $colors = array();
-            foreach($colorsDB as $color){
-                $colors[] = array("id"=>$color['id'], "name"=>$color['name']);
-            }
-
-            $productsJSON[] = array("id"=> $product['id'], "name"=>$product['name'], "description"=>$product['description'], "price"=>$product['price'], "avg_classification"=> $evaluation, "images"=>$images, "category"=>$category, "promotion"=>$promotion, "stocks"=>$stocks, "sizes"=>$sizes, "colors" => $colors);
+            $productsJSON[] = array("id"=> $product['id'], "name"=>$product['name'], "description"=>$product['description'], "price"=>$product['price'], "avg_classification"=> $evaluation, "images"=>$images, "category"=>$category, "promotion"=>$promotion);
         } 
 
         return json_encode($productsJSON);
