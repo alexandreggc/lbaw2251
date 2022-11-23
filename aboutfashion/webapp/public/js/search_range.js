@@ -10,23 +10,13 @@ slider.oninput = function() {
 var pmdSliderValueRange = document.getElementById('pmd-slider-value-range');
 
 noUiSlider.create(pmdSliderValueRange, {
-  start: [ 20, 80 ], // Handle start position
+  start: [ 0, 1000 ], // Handle start position
   connect: true, // Display a colored bar between the handles
-  tooltips: [ wNumb({ decimals: 0 }), wNumb({ decimals: 0 }) ],
-  format: wNumb({
-    decimals: 0,
-    thousand: '',
-    postfix: '',
-  }),
   range: { // Slider can select '0' to '100'
     'min': 0,
-    'max': 100
+    'max': 1000
   },
-   step: 5,
-    pips: { 
-      mode: 'steps',
-      density: 10
-    }
+   step: 10
 });
 
 var valueMax = document.getElementById('value-max'),
