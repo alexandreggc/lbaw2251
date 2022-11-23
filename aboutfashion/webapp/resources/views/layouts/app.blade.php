@@ -258,7 +258,6 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- Slider js  -->    
-    <script type="text/javascript" src={{ asset('js/search_products.js') }} defer></script>
     <script src="http://propeller.in/components/range-slider/js/wNumb.js"></script>
     <script src="http://propeller.in/components/range-slider/js/nouislider.js"></script>
     
