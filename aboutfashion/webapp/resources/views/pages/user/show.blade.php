@@ -185,9 +185,10 @@
 
                             </ul>
                             <div class="bottom_buttons">
-                                <a class="btn btn-primary" href="/cards/{{ $card['id'] }}/edit" role="button"> Edit
+                                <a class="btn btn-primary" href={{ route('cardEditForm', ['id' => $card['id']]) }}
+                                    role="button"> Edit
                                     Card </a>
-                                <form action="{{ url('/cards', ['id' => $card['id']]) }}" method="post">
+                                <form action="{{ route('cardDelete', ['id' => $card['id']]) }}" method="post">
                                     <input class="btn btn-danger" type="submit" value="Delete Card" />
                                     @method('delete')
                                     @csrf

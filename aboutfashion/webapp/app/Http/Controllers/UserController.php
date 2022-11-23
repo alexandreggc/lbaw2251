@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
+
+    public function __construct(){
+        $this->middleware('auth:web');
+    }
+
     public function index(){
         return view('users.index', ['users' => User::all()]); 
     }
