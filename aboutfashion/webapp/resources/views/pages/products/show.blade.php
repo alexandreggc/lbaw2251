@@ -14,32 +14,18 @@
         <div class="col">
             <div id="carousel_product" class="carousel slide" data-bs-ride="true">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carousel_product" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carousel_product" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carousel_product" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    @foreach($product->images as $image)
+                        <button type="button" data-bs-target="#carousel_product" data-bs-slide-to="{{ $loop->index }}" 
+                                class="{{ $loop->first ? 'active' : '' }}" aria-current="true" aria-label="Slide {{ $loop->index }}">
+                        </button>
+                    @endforeach
                 </div>
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="row bg-body">
-                            <div class="container-md ratio ratio-4x3">
-                                <img class="d-block w-100 img-fluid img-thumbnail" src="https://figueiraradical.com/4128-large_default/sweat-carhartt-hooded.jpg" alt="Los Angeles">
-                            </div>
+                    @foreach($product->images as $image)
+                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                            <img src="{{ $image->file }}" class="d-block w-100" width="300px" height="500px"/>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row bg-body">
-                            <div class="container-md ratio ratio-4x3">
-                                <img class="d-block w-100 img-fluid img-thumbnail" src="https://photos6.spartoo.pt/photos/209/20939896/20939896_500_A.jpg" alt="Chicago">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="row bg-body">
-                            <div class="container-md ratio ratio-4x3">
-                                <img class="d-block w-100 img-fluid img-thumbnail" src="https://www.lolitamoda.pt/uploads/photo/image/97253/gallery_M128722_1.JPG" alt="New York">
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel_product" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
