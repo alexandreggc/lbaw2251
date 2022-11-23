@@ -16,7 +16,6 @@
       <div class="row">
           <h3> ABOUT FASHION</h3>
           <p>This is a information system available through the web for for the sale of clothing, accessories and footwear, aimed at adults. This platform allows users to easily keep abreast of items/promotions currently available.This system have operations to consult the information, request and return individual items, make purchases online, register comments for the items, evaluate the ordered items and manage all your data present the personal account.</p>
-
       </div>
     </section>
 
@@ -49,7 +48,6 @@
           </div>
         </div>
       </div>
-
       <div class="row text-center justify-content-center pb-3">
         <div class="col-md-4 d-flex justify-content-center">
           <div class="card text-center" style="width: 14rem;">
@@ -58,8 +56,7 @@
               <p class="card-text">up202004175</p>
             </div>
           </div>
-        </div>  
-        
+        </div>
       </div>
     </section>
   </div>

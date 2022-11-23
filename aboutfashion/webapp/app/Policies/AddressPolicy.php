@@ -6,18 +6,16 @@ use App\Models\Address;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AddressPolicy
-{
+class AddressPolicy{
     use HandlesAuthorization;
 
-    public function show(User $user, Address $address)
-    {
-        return $user->id = $address->id_user;
+    public function show(User $user, Address $address){
+        return $user->id == $address->id_user;
     }
 
     public function list(User $user, $addresses){
         foreach($addresses as $address){
-            if($address->id != $user->id){
+            if($address->id_user != $user->id){
                 return false;
             }
         }
@@ -25,14 +23,12 @@ class AddressPolicy
     } 
 
 
-    public function update(User $user, Address $address)
-    {
+    public function update(User $user, Address $address){
         return $user->id == $address->id_user;
     }
 
 
-    public function delete(User $user, Address $address)
-    {
+    public function delete(User $user, Address $address){
         return $user->id == $address->id_user;
     } 
 }
