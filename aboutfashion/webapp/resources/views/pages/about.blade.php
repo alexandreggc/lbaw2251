@@ -27,7 +27,7 @@
         <div class="col-md-4 d-flex justify-content-center">
           <div class="card text-center" style="width: 14rem;">
             <div class="card-body">
-              <h5 class="card-title">AlexAlexandre Correia</h5>
+              <h5 class="card-title">Alexandre Correia</h5>
               <p class="card-text">up202007042</p>
             </div>
           </div>
