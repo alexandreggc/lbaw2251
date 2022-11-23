@@ -21,13 +21,14 @@
     <link rel="stylesheet" type="text/css" href="http://propeller.in/components/textfield/css/textfield.css">
     <link rel="stylesheet" type="text/css" href="http://propeller.in/components/checkbox/css/checkbox.css">
     <link rel="stylesheet" type="text/css" href="http://propeller.in/components/range-slider/css/range-slider.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/be2806c733.js" crossorigin="anonymous"></script>
     <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/search_range.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <main>
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
@@ -79,6 +80,7 @@
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
                                         </li>
                                     @endif
+
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -90,6 +92,7 @@
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
                             </li>
+
                         </ul>
                     </div>
                 </div>
@@ -224,7 +227,7 @@
             @yield('content')
         </section>
 
-        <footer
+        <footer 
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
@@ -254,7 +257,8 @@
     </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <!-- Slider js -->
+    <!-- Slider js  -->    
+    <script type="text/javascript" src={{ asset('js/search_products.js') }} defer></script>
     <script src="http://propeller.in/components/range-slider/js/wNumb.js"></script>
     <script src="http://propeller.in/components/range-slider/js/nouislider.js"></script>
     
