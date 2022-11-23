@@ -16,17 +16,17 @@
             </div>
             <div class="form-group">
                 <label for="nif" class="form-label mt-4">NIF</label>
-                <input type="number" class="form-control" id="nif" placeholder="NIF" name="nif">
+                <input type="text" class="form-control" id="nif" placeholder="NIF" name="nif">
             </div>
             <div class="form-group">
                 <label for="exampleSelect1" class="form-label mt-4">Select Country</label>
                 <select class="form-select" id="exampleSelect1" name="id_country" required>
                     <option>Select Country</option>
-                    @foreach($countries as $country)
-                    <option value="{{$country['id']}}">{{$country['name']}}</option>
+                    @foreach ($countries as $country)
+                        <option value="{{ $country['id'] }}" name='id_country'>{{ $country['name'] }}</option>
                     @endforeach
                 </select>
-                </div>
+            </div>
             <div class="form-group">
                 <label for="street" class="form-label mt-4">Street</label>
                 <input type="text" class="form-control" id="street" placeholder="Street" name="street" required>

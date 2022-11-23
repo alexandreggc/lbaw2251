@@ -57,6 +57,7 @@ class AddressController extends Controller
         $address->note = $request['note'];
         $address->id_country = $request['id_country'];
         $address->id_user = Auth::user()->id;
+
   
         if($address->save()){
           return Redirect::route('userView', array('id'=>Auth::user()));
