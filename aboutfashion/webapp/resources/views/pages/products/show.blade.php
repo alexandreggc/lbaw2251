@@ -112,7 +112,7 @@
         <div class="col p-3"> <!-- primeira coluna de reviews -->
             <div class="row p-3"> <!-- elemento da primeira coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
@@ -141,7 +141,7 @@
             </div>
             <div class="row p-3"> <!-- elemento da primeira coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
@@ -170,7 +170,7 @@
             </div>
             <div class="row p-3"> <!-- elemento da primeira coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
@@ -201,7 +201,7 @@
         <div class="col p-3"> <!-- segunda coluna de reviews -->
             <div class="row p-3"> <!-- elemento da segunda coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
@@ -230,7 +230,7 @@
             </div>
             <div class="row p-3"> <!-- elemento da segunda coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
@@ -259,7 +259,7 @@
             </div>
             <div class="row p-3"> <!-- elemento da segunda coluna -->
                 <div class="col-2">
-                    <img src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
+                    <img class="rounded-2" src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png" width=100 height=100 alt="user image"></img> <!-- imagem de perfil de quem fez a review -->
                 </div>
                 <div class="col-10">
                     <div class="row">
