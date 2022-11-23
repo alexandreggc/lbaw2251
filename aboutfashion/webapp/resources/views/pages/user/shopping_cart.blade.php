@@ -2,7 +2,7 @@
 @section('content')
 <head>
     <ol class="breadcrumb p-3 pb-1">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
         <li class="breadcrumb-item active">Shopping Cart</li>
     </ol>
 </head>
