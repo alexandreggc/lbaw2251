@@ -44,7 +44,7 @@ Route::get('/products/{id}', 'App\Http\Controllers\ProductController@show')->nam
 
 //Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
 Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
-Route::post('/api/cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart')->middleware('auth:web');
+Route::post('/api/shopping-cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart');
 
 //Order
 

@@ -12,6 +12,11 @@ use Auth;
 
 class ShoppingCartController extends Controller{
 
+
+    public function __construct(){
+        $this->middleware('auth:web');
+    }
+
     public function show(Request $request){
         $user = User::find($request['id_user']);
         //VER COMO RECEBER O ARRAY DE DETAILS PARA SEREM DEMONSTRADOS NA VIEW
@@ -31,12 +36,16 @@ class ShoppingCartController extends Controller{
     }
 
     public function addProductCart(Request $request){
-        $this->validate($request, [
+        $validator = Validator::make($request->all(),[
             'id_product' => 'required|integer',
             'id_size' => 'required|integer',
             'id_color' => 'required|integer',
-            'quantity' => 'required|integer',
+            'quantity' => 'required|integer', 
         ]);
+        if($validator->fail()){
+                
+        }
+        
         
         $id_product = $request['id_product'];
         $id_size = $request['id_size'];

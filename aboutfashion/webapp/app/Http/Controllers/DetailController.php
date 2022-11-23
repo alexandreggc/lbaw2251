@@ -14,7 +14,7 @@ class DetailController extends Controller
     {
         $detail = new Detail();
 
-        $this->authorize('create', Detail::class);
+        $this->authorize('create', $detail);
      
         $detail->quantity = $quantity;
         $detail->id_size = $id_size;
