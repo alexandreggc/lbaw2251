@@ -41,13 +41,11 @@ class AdminPolicy
     }
 
 
-    public function deleteUser(Admin $admin, User $user){
-        //return $admin->role == 'Technician';
-        return true;
+    public function deleteUser(Admin $admin){
+        return $admin->role == 'Technician';
     }
 
-    public function blockUser(Admin $admin, User $user){
-        //return $admin->role == 'Technician';
-        return true;
+    public function blockUser(Admin $admin){
+        return $admin->role == 'Technician';
     }
 }

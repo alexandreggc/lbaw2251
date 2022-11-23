@@ -14,18 +14,18 @@ class AdminController extends Controller
     }
 
     public function deleteUser(Request $request, $id){
+        //$this->authorize('deleteUser');
         $user = User::find($id);
-        $this->authorize('deleteUser',$user);
         $user->delete();
         return redirect(route('homeAdminPanel')); 
     }
 
     public function blockUser(Request $request, $id){
         $user = User::find($id);
-        $this->authorize('blockUser',$user);
-        $user->block = $user->block ? 0 : 1;
+        //$this->authorize('blockUser'); //TODO
+        $user->blocked = $user->blocked ? 0 : 1;
         $user->save();        
-        return redirect(route('homeAdminPanel')); 
+        return redirect(route('homeAdminPanel'));
     }
     
     public function index()
