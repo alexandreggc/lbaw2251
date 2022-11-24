@@ -14,10 +14,13 @@ Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
-Route::post('login', 'Auth\LoginController@login')->name('userLogin');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+
+//Orders
+//Route::get('/orders/create', 'OrderController@create')->name('orderCreateForm');
+Route::post('/orders/create', 'OrderController@create')->name('orderCreate');
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 
 //Cards
@@ -51,7 +54,5 @@ Route::get('/products/{id}', 'ProductController@show')->name('productView');
 //Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
 Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 Route::post('/api/shopping-cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart');
-
-//Order
-
-//Route::post('/api/cart/add', 'OrderController@addProductCart')->name('addProductCart')->middleware('auth:user');
+Route::post('/api/shopping-cart/remove', 'ShoppingCartController@removeProductCart')->name('removeProductCart');
+Route::post('/api/shopping-cart/checkout', 'ShoppingCartController@checkout')->name('checkoutCart');
