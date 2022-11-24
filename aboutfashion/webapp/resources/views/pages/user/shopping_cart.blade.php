@@ -38,7 +38,7 @@
                             <td>{{$item->color}}</td>
                             <td>{{$item->size}}</td>
                             <td>{{$item->quantity}}</td>
-                            <td>{{$item->price * $quantity }}€</td>
+                            <td>{{$item->price * $item->$quantity }}€</td>
                             <td><i class="fa-solid fa-trash" href="/remove/{{$item->id}}" styles="color: $danger"></i></td> <!-- a cor não está a associar -->
                         </tr>
                         @endforeach

@@ -17,8 +17,8 @@ class ShoppingCartController extends Controller{
         $this->middleware('auth:web');
     }
 
-    public function show(Request $request){
-        $user = User::find($request['id_user']);
+    public function show($id){
+        $user = User::find($id);
         //VER COMO RECEBER O ARRAY DE DETAILS PARA SEREM DEMONSTRADOS NA VIEW
         $cart = [];
         $total = 0;
@@ -28,7 +28,7 @@ class ShoppingCartController extends Controller{
                 $details = $order->details;
                 foreach($details as $detail){
                     $total += $detail->price;
-                    $cart->add($detail);
+                    array_push($cart,$detail);
                 }
             }
         }
