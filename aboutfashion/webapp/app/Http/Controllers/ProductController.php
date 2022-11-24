@@ -8,8 +8,7 @@ use App\Models\Color;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-
-
+use Illuminate\Support\Facades\Validator;
 
 
 class ProductController extends Controller{
@@ -124,17 +123,21 @@ class ProductController extends Controller{
     }  
 
     public function searchAPI(Request $request){        
-       /* $this->validate($request, [
-           'id_product' => 'integer',
-           'id_category' => 'integer',
-           'id_size' => 'integer',
-           'id_color' => 'string',
-           'min_price' => 'numeric',
-           'max_price' => 'numeric',
-           'min_classification' => 'numeric',
-           'product_name' => 'string',
+       $validator = Validator::make($request->all(),[
+           'id_product' => 'nullable|integer',
+           'id_category' => 'nullable|integer',
+           'id_size' => 'nullable|integer',
+           'id_color' => 'nullable|string',
+           'min_price' => 'nullable|numeric',
+           'max_price' => 'nullable|numeric',
+           'min_classification' => 'nullable|numeric',
+           'product_name' => 'nullable|string',
         ]);
-        */
+
+        if($validator->fails()){
+            return Response()->json(['status'=>'BAD REQUEST', 'msg'=>'Some or all arguments entered are not correct'],400);
+        }
+        
 
         $filters = array();
         if(!is_null($request['id_product'])){

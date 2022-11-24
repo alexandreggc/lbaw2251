@@ -44,6 +44,7 @@ Route::patch('/admin-panel/users/{id}/block', 'AdminController@blockUser')->name
 
 //Products
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
+Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
