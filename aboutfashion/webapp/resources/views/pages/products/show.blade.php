@@ -70,40 +70,42 @@
                         <p>5</p>
                     </div>
                     <div class="row">
-                        <div class="col-4 p-5 pt-3 text-left">
-                            <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Size
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">XS</a></li>
-                                    <li><a class="dropdown-item" href="#">S</a></li>
-                                    <li><a class="dropdown-item" href="#">M</a></li>
-                                    <li><a class="dropdown-item" href="#">XL</a></li>
-                                </ul>
+                        <form action="{{route('addProductCart')}}" method="post">
+                            <div class="col-4 p-5 pt-3 text-left">
+                                <div class="dropdown mb-3" id="div_color">
+                                    <select class="form-select " id="color" name="id_color" style="width:150px">
+                                        <option selected>Select color</option>
+                                        @foreach($product->colors as $color)
+                                        <option value="{{ $color['id'] }}">
+                                        {{ $color['name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="dropdown mb-3" id="div_size">
+                                    <select class="form-select" name="id_size" id="size" style="width:150px">
+                                        <option selected>Select size</option>
+                                        @foreach($product->sizes as $size)
+                                        <option value="{{ $size['id'] }}">
+                                        {{ $size['name'] }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <label for="quantity">Quantity : </label>
+                                <input type="text" class="" id="quantity" name="quantity"  placeholder="" style="width:30px;"> 
+
                             </div>
-                        </div>
-                        <div class="col-4 p-5 pt-3 text-left">
-                            <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Color
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Black</a></li>
-                                    <li><a class="dropdown-item" href="#">Gray</a></li>
-                                    <li><a class="dropdown-item" href="#">Beige</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        </form>
+                        
+                        
                         <div class="col-4 text-center">
                             <br>
                             <div class="row">
                                 <h4>Price: {{ $product->price }}€</h4>
                             </div>
                             <br>
-                            <div class="row">
+                            <div class="row " id="cart">
                                 <button type="button" class="btn btn-lg btn-primary" onclick="addProductCart()">Add to
                                     cart</button>
                             </div>
@@ -334,4 +336,5 @@
                 </div>
             </div>
     </body>
+
 @endsection
