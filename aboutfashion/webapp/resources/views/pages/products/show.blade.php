@@ -70,7 +70,6 @@
                         <p>5</p>
                     </div>
                     <div class="row">
-                        <form action="{{route('addProductCart')}}" method="post">
                             <div class="col-4 p-5 pt-3 text-left">
                                 <div class="dropdown mb-3" id="div_color">
                                     <select class="form-select " id="color" name="id_color" style="width:150px">
@@ -96,7 +95,6 @@
                                 <input type="text" class="" id="quantity" name="quantity"  placeholder="" style="width:30px;"> 
 
                             </div>
-                        </form>
                         
                         
                         <div class="col-4 text-center">
