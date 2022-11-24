@@ -67,13 +67,13 @@
                                             <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
                                                 @method('patch')
                                                 @csrf
-                                                <button type="submit" class="btn-sm">block</button>
+                                                <button type="submit" class="btn btn-primary btn-sm">block</button>
                                             </form>
                                             @else
                                             <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
                                                 @method('patch')
                                                 @csrf
-                                                <button type="submit" class="btn-sm">unblock</button>
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">unblock</button>
                                             </form>
                                             @endif
                                         </td>
@@ -81,7 +81,7 @@
                                             <form action="{{ route('deleteUserAdmin', array('id'=>$user['id'])) }}" method="post">
                                                 @method('delete')
                                                 @csrf
-                                                <button type="submit" class="btn-sm">delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">delete</button>
                                             </form>
                                         </td>
                                     </tr>
