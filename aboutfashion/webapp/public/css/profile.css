@@ -1,0 +1,77 @@
+#content {
+    width: auto;
+    margin: 0 auto;
+}
+
+div#myTabContent.tab-content {
+    padding: 2em;
+}
+
+.list-group {
+    flex-basis: auto;
+    justify-content:space-around;
+    padding-bottom: 1em;
+}
+#profile-tab {
+    padding: 1em 2em 0em 2em;
+}
+
+#personalInfo{
+    display: flex;
+    justify-content:space-between;
+    flex-flow: row
+}
+#personalInfo ul.list-group{
+    margin: auto 0;
+    flex-grow: 1;
+}
+#personalInfo div.card.mb-3{
+    margin-left: 1em;
+}
+
+.cards_flex{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cards_flex div.card.border-primary.mb-3{
+    width: 25em;
+    margin-right: 1em;
+}
+
+#edit_form{
+    padding: 2em;
+    max-width: 50em;
+}
+
+#order_details{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em 2em 0em 2em;
+}
+
+#order_details div.card.mb-3{
+    width: 25em;
+    margin-right: 1em;
+}
+
+#order_page h2{
+    padding-top: 0.5em;
+    padding-left: 0.8em;
+}
+
+#total{
+    padding: 1em 2em 0em 2em;
+    max-width: 29em;
+}
+
+.bottom_buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.add_item{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}

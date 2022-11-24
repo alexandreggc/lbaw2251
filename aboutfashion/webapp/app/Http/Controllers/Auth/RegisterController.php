@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Providers\RouteServiceProvider;
 
 class RegisterController extends Controller
 {
@@ -27,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/cards';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -48,9 +49,12 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:authenticated_user,email',
             'password' => 'required|string|min:6|confirmed',
+            'birth_date' => 'date',
+            'gender' => 'string|regex:/^[ BMFO]$/',
         ]);
     }
 
@@ -62,10 +66,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if($data['gender'] == ''){
+            $gender = null;
+        }else{
+            $gender = $data['gender'];
+        }
+            
+        
         return User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'gender' => $gender,
+            'birth_date' => $data['birth_date'],
+            'id_image' => 1,
+            'blocked' => false,
         ]);
     }
 }

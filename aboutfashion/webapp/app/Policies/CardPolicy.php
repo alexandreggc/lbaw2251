@@ -2,37 +2,38 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\Card;
-
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Auth;
 
 class CardPolicy
 {
     use HandlesAuthorization;
 
+
     public function show(User $user, Card $card)
     {
-      // Only a card owner can see it
-      return $user->id == $card->user_id;
+        return $user->id = $card->id_user;
     }
 
-    public function list(User $user)
+    public function list(User $user, $cards){
+        foreach($cards as $card){
+            if($card->id != $user->id){
+                return false;
+            }
+        }
+        return true;
+    } 
+
+
+    public function update(User $user, Card $card)
     {
-      // Any user can list its own cards
-      return Auth::check();
+        return $user->id == $card->id_user;
     }
 
-    public function create(User $user)
-    {
-      // Any user can create a new card
-      return Auth::check();
-    }
 
     public function delete(User $user, Card $card)
     {
-      // Only a card owner can delete it
-      return $user->id == $card->user_id;
-    }
+        return $user->id == $card->id_user;
+    } 
 }
