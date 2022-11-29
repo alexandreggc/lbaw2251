@@ -22,7 +22,7 @@ class Order extends Model
     }
 
     public function details(){
-        return $this->belongsToMany('\App\Models\Detail', 'order_details', 'id_order', 'id_details');
+        return $this->hasMany('\App\Models\Detail', 'id_order');
     }
 
     public function totalPrice($id)
