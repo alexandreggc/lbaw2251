@@ -155,6 +155,7 @@ CREATE TABLE product(
     name TEXT NOT NULL CONSTRAINT product_unique UNIQUE,
     description TEXT NOT NULL,
     price NUMERIC NOT NULL,
+    avg_classification NUMERIC,
     id_category INTEGER NOT NULL REFERENCES category(id) ON UPDATE CASCADE
 );
 CREATE TABLE product_image(
@@ -224,7 +225,8 @@ CREATE TABLE details(
     quantity int NOT NULL CHECK (quantity > 0),
     id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE ON DELETE CASCADE,
     id_size INTEGER NOT NULL REFERENCES size(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE ON DELETE CASCADE
+    id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
@@ -233,11 +235,6 @@ CREATE TABLE user_order(
     id_user INTEGER REFERENCES authenticated_user(id) ON UPDATE CASCADE ON DELETE SET NULL,
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE ON DELETE SET NULL,
     id_card INTEGER REFERENCES card(id) ON UPDATE CASCADE ON DELETE SET NULL
-);
-CREATE TABLE order_details(
-    id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (id_order, id_details)
 );
 -----------------------------------------------------------------------------------------------
 
@@ -299,6 +296,14 @@ CREATE INDEX search_idx ON product USING GIN (tsvectors);
 
 
 --TRIGGERS and User Defined Functions
+
+-- Update classfication
+
+
+
+
+
+
 
 -- Verificar o stock dos produtos no momento da adição ao carrinho
 
