@@ -1,4 +1,12 @@
-create schema if not exists lbaw2251;
+
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near "CASCADE"
+LINE 45: ...IGGER IF EXISTS update_avg_classification_product CASCADE ON...
+                                                              ^ (SQL: create schema if not exists lbaw2251;
 --DROP's
 SET search_path TO lbaw2251;
 --DROP's
@@ -38,33 +46,26 @@ DROP INDEX IF EXISTS user_first_name_idx  CASCADE;
 DROP INDEX IF EXISTS search_idx  CASCADE;
 
 DROP FUNCTION IF EXISTS product_search CASCADE;
-DROP TRIGGER IF EXISTS product_search_update ON product CASCADE;
+DROP TRIGGER IF EXISTS product_search_update ON product;
 
 
 DROP FUNCTION IF EXISTS update_avg_classification_product CASCADE;
-DROP TRIGGER IF EXISTS update_avg_classification_product ON review CASCADE;
+DROP TRIGGER IF EXISTS update_avg_classification_product CASCADE ON review;
 
-DROP FUNCTION IF EXISTS delete_user_information CASCADE;
-DROP TRIGGER IF EXISTS delete_user_account ON authenticated_user CASCADE;
+DROP FUNCTION delete_user_information CASACADE;
+DROP TRIGGER IF EXISTS delete_user_account CASACADE ON authenticated_user;
 
-DROP FUNCTION IF EXISTS check_review_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_review_insert ON review CASCADE ;
+DROP FUNCTION IF EXISTS check_review_privileges CASACADE;
+DROP TRIGGER IF EXISTS before_review_insert CASCADE ON review;
 
 DROP FUNCTION IF EXISTS check_like_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_like_insert ON user_like CASCADE;
-
-DROP FUNCTION IF EXISTS check_address_order CASCADE;
-DROP TRIGGER IF EXISTS check_address_order ON user_order CASCADE;
-
-
-DROP FUNCTION IF EXISTS check_card_order CASCADE;
-DROP TRIGGER IF EXISTS check_card_order ON user_order CASCADE;
+DROP TRIGGER IF EXISTS before_like_insert CASCADE ON user_like;
 
 DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_report_insert ON report CASCADE;
+DROP TRIGGER IF EXISTS before_report_insert CASCADE ON report;
 
 DROP FUNCTION IF EXISTS order_parameters CASCADE;
-DROP TRIGGER IF EXISTS check_order_parameters ON user_order CASCADE;
+DROP TRIGGER IF EXISTS check_order_parameters CASCADE ON user_order;
 
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
 CREATE TYPE order_state_type AS ENUM (
@@ -326,44 +327,7 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_avg_classification_product
 AFTER INSERT ON review
-EXECUTE PROCEDURE update_avg_classification_product(); 
-
--- Verify card
-
-CREATE FUNCTION check_card_order()
-RETURNS TRIGGER AS 
-$$BEGIN
-    IF NOT EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN card WHERE id_user = NEW.id_user AND id_card = NEW.id_card)
-    THEN
-        RAISE EXCEPTION 'The card does not belong to the user';
-    END IF;
-    RETURN NEW;
-END; $$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER check_card_order
-BEFORE INSERT ON user_order
-FOR EACH ROW
-EXECUTE PROCEDURE check_card_order();
-
--- Verify address
-
-CREATE FUNCTION check_address_order()
-RETURNS TRIGGER AS 
-$$BEGIN
-    IF NOT EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN address WHERE id_user = NEW.id_user AND id_address = NEW.id_address)
-    THEN
-        RAISE EXCEPTION 'The address does not belong to the user';
-    END IF;
-    RETURN NEW;
-END; $$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER check_address_order
-BEFORE INSERT ON user_order
-FOR EACH ROW
-EXECUTE PROCEDURE check_address_order();
-
+EXECUTE PROCEDURE update_avg_classification_product();  
 
 -- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida
 
@@ -12437,3 +12401,23 @@ insert into report (id, description, resolved, report_date, id_review, id_user) 
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh', true, '2022-11-03 18:40:43', 18, 123);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti', false, '2022-11-06 07:03:20', null, 117);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan', true, '2022-11-08 22:53:20', 14, 154);
+)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:759
+    755▕         // If an exception occurs when attempting to run a query, we'll format the error
+    756▕         // message to include the bindings with SQL, which will make this exception a
+    757▕         // lot more helpful to the developer instead of just the database's errors.
+    758▕         catch (Exception $e) {
+  ➜ 759▕             throw new QueryException(
+    760▕                 $query, $this->prepareBindings($bindings), $e
+    761▕             );
+    762▕         }
+    763▕     }
+
+      [2m+7 vendor frames [22m
+  8   database/seeders/DatabaseSeeder.php:18
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+23 vendor frames [22m
+  32  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()
