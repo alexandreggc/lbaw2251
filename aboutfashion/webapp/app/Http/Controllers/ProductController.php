@@ -151,16 +151,12 @@ class ProductController extends Controller{
         }
         if(!is_null($request['max_price'])){
             array_push($filters, array('price','<=',$request['max_price']));
+        }if(!is_null($request['min_classification'])){
+            array_push($filters, array('avg_classification','<=',$request['min_classification']));
         } 
-
         $query = Product::where($filters);
-        
-        
         if(!is_null($request['product_name'])){
             $query->search($request['product_name']);
-        }
-        if(!is_null($request['min_classification'])){
-            $query->whereRaw('(SELECT avg(evaluation) FROM lbaw2251.review WHERE id_product = lbaw2251.product.id) >= ?', [$request['min_classification']])->where($filters);
         }
         if(!is_null($request['id_size'])){
             $query->whereRelation('stocks', 'id_size', $request['id_size']);
