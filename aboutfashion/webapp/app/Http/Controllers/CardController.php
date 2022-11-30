@@ -42,7 +42,7 @@ class CardController extends Controller
         'number' => 'required|unique:card,number|size:16',
         'month'=> 'required|integer|between:1,12',
         'year'=> 'required|integer|between:22,50', 
-        'code'=> 'required|integer|size:3', 
+        'code'=> 'required|string|size:3', 
       ]);
       if($validator->fails()){
         return redirect()->back(); // adicionar mensagens de erro
