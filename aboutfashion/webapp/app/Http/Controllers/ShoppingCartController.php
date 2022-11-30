@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Detail;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Order;
 
-use \App\Models\Order;
-use \App\Http\Controllers\StockController;
-use \App\Http\Controllers\DetailController;
-use Auth;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
+
 
 class ShoppingCartController extends Controller{
 
@@ -17,85 +19,50 @@ class ShoppingCartController extends Controller{
         $this->middleware('auth:web');
     }
 
-    public function show($id){
-        $user = User::find($id);
-        //VER COMO RECEBER O ARRAY DE DETAILS PARA SEREM DEMONSTRADOS NA VIEW
-        $cart = [];
-        $total = 0;
-        if(Auth::check()){
-            $orders = $user->orders;
-            foreach($orders as $order){
-                $details = $order->details;
-                foreach($details as $detail){
-                    $total += $detail->price;
-                    array_push($cart,$detail);
-                }
-            }
+    private function createShoppingCart(int $id_user){
+        $shoppingCart = Order::where('id_user',$id_user)->where('status', 'Shopping Cart')->first();
+        if(is_null($shoppingCart)){
+            $shoppingCart = new Order();
+            $shoppingCart->id_user = $id_user;
+            $shoppingCart->save();
         }
-        return view('pages.user.shopping_cart', ['user' => $user, 'cart' => $cart, 'total' => $total]);
+        return $shoppingCart;
+    }
+
+    private function createDetail(int $id_order, int $id_product, int $id_color, int $id_size){
+        $filters = array(['id_order',$id_order], ['id_product',$id_product], ['id_size',$id_size], ['id_color', $id_color]);
+        $detail = Detail::where($filters)->first();
+        if(is_null($detail)){
+            $detail = new Detail();
+            $detail->id_product = $id_product;
+            $detail->id_color = $id_color;
+            $detail->id_size = $id_size;
+            $detail->quantity = 0;
+            $detail->save();
+        }
+        return $detail;
     }
 
     public function addProductCart(Request $request){
-        $validator = Validator::make($request->all(),[
-            'id_product' => 'required|integer',
-            'id_size' => 'required|integer',
-            'id_color' => 'required|integer',
-            'quantity' => 'required|integer', 
-        ]);
-        if($validator->fail()){
-                
-        }
-        
-        
-        $id_product = $request['id_product'];
-        $id_size = $request['id_size'];
-        $id_color = $request['id_color'];
-        $quantity = $request['quantity'];
-
-        $stockController = new StockController();
-        $detailController = new DetailController();
-
-        if($detailController->updateQuantityAux($quantity, $id_color, $id_color, $id_product)){
-            return response('Ok! Product updated.',200)->header('Content-Type', 'text/plain');
-        }
-
-        if($stockController->hasStock($id_product, $id_size, $id_color)){
-            abort(404, 'Product not found!');
-        }
-
-        $detail = $detailController->store($quantity, $id_size, $id_color, $id_product);
-        $shoppingCart = $this->createShoppingCart();
-        
-        $shoppingCart->details()->attach($detail);
-        
-        return response('Ok! Product added.',200)->header('Content-Type', 'text/plain');
-    }
-
-    public function deleteProductCart(Request $request){
-        $this->validate($request, [
-           'id_detail' => 'required|integer',
+        $validator = Validator::make($request->all(), [
+           'id_user' => 'required|integer',
+           'id_color' => 'required|integer',
+           'id_size' => 'required|integer',
+           'id_product' => 'required|integer'
         ]);
 
-        $detailController = new DetailController;
-        
-        $query = Order::where('status', 'Shopping Cart')->where('id_user', Auth::user()->id())->get();
-        if(count($query) == 0){
-            abort(404, 'Product not found!');
+        if($validator->fails()){
+            return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
-        
-        $detailController->delete($request['id_detail'], $query[0]['id']);
-    }
 
-    public function createShoppingCart(){
-        $query = Order::where('id_user', Auth::user()->id)->where('status', 'Shopping Cart')->get();
-        if(count($query) == 0){
-            $order = new Order();
-            $order->status = 'Shopping Cart';
-            $order->date = date('Y-m-d H:i:s');
-            $order->id_user = Auth::user()->id;
-            $order->save();
-            return $order;
-        }
-        return Order::find($query[0]['id']);
-    }
+        $user = User::find($request['id_user']); 
+        $this->authorize('updateCart', $user);
+
+        $shoppingCart = $this->createShoppingCart($user->id);
+        $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
+        $detail->quantity += 1;
+        $detail->save();
+        return Response::json(array('status'=>'success','message'=>'Success!'), 200);
+        
+    }    
 }

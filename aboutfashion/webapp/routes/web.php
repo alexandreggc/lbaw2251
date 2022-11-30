@@ -53,6 +53,7 @@ Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
 //Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
 Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
-Route::post('/users/{id}/shopping-cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart');
-Route::post('/users/{id}shopping-cart/remove', 'ShoppingCartController@removeProductCart')->name('removeProductCart');
-Route::post('/users/{id}/shopping-cart/checkout', 'ShoppingCartController@checkout')->name('checkoutCart');
+//Route::post('/users/{id}/shopping-cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart');
+//Route::post('/users/{id}shopping-cart/remove', 'ShoppingCartController@removeProductCart')->name('removeProductCart');
+//Route::post('/users/{id}/shopping-cart/checkout', 'ShoppingCartController@checkout')->name('checkoutCart');
+Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart');
