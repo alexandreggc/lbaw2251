@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label for="code" class="form-label mt-4">Code</label>
-                <input type="number" class="form-control" id="code" placeholder="Code" name="code">
+                <input type="text" class="form-control" id="code" placeholder="Code" name="code">
             </div>
             <div class="modal-footer">
                 <span class="error-text me-auto" style="color:red"> </span>

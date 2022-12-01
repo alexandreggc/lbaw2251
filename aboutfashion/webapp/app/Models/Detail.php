@@ -22,6 +22,6 @@ class Detail extends Model
     }
 
     public function orders(){
-        return $this->belongsTo('\App\Models\Order', 'order_details', 'id_details', 'id_order');
+        return $this->belongsTo('\App\Models\Order', 'id_order');
     }
 }

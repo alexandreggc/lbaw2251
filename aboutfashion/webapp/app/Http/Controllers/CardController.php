@@ -28,22 +28,21 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-      if(!is_null($request['number'])){
-        if(strlen($request['number']) != 16){
+      if(!is_null($request['number']) && !is_numeric($request['number'])){
           return redirect()->back(); // adicionar mensagens de erro
-        }
-        if(!is_numeric($request['number'])){
-          return redirect()->back(); // adicionar mensagens de erro
-        }
+      }
+
+      if(!is_null($request['code']) && !is_numeric($request['code'])){
+        return redirect()->back(); // adicionar mensagens de erro
       } 
 
       $validator = Validator::make($request->all(),[
         'nickname'=> 'nullable|string|max:100',
         'name' => 'required|string|max:100',
-        'number' => 'required|unique:card,number',
+        'number' => 'required|unique:card,number|size:16',
         'month'=> 'required|integer|between:1,12',
         'year'=> 'required|integer|between:22,50', 
-        'code'=> 'required|integer|digits_between:1,3', 
+        'code'=> 'required|string|size:3', 
       ]);
       if($validator->fails()){
         return redirect()->back(); // adicionar mensagens de erro

@@ -30,32 +30,42 @@ DROP TABLE IF EXISTS details CASCADE;
 DROP TABLE IF EXISTS user_order CASCADE;
 DROP TABLE IF EXISTS order_details CASCADE;
 DROP TABLE IF EXISTS user_like CASCADE;
-DROP FUNCTION IF EXISTS check_stock CASCADE;
-DROP FUNCTION IF EXISTS add_product_to_cart CASCADE;
-DROP FUNCTION IF EXISTS remove_product_from_cart CASCADE;
-DROP FUNCTION IF EXISTS product_price_with_promotion CASCADE;
-DROP FUNCTION IF EXISTS delete_user_information CASCADE;
-DROP FUNCTION IF EXISTS product_search_update CASCADE;
-DROP TRIGGER IF EXISTS delete_user_account on authenticated_user CASCADE;
-DROP FUNCTION IF EXISTS check_review_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_review_insert on review CASCADE;
-DROP FUNCTION IF EXISTS check_like_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_like_insert on user_like CASCADE;
-DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
-DROP TRIGGER IF EXISTS before_report_insert on report CASCADE;
-DROP FUNCTION IF EXISTS order_parameters CASCADE;
-DROP TRIGGER IF EXISTS check_order_parameters on user_order CASCADE;
-DROP FUNCTION IF EXISTS product_search CASCADE;
-DROP TRIGGER IF EXISTS product_search_update on product CASCADE;
+
 DROP INDEX IF EXISTS user_order_idx  CASCADE;
 DROP INDEX IF EXISTS product_stock_idx  CASCADE;
 DROP INDEX IF EXISTS final_date_promo_idx  CASCADE;
 DROP INDEX IF EXISTS user_first_name_idx  CASCADE; 
 DROP INDEX IF EXISTS search_idx  CASCADE;
-DROP FUNCTION IF EXISTS classification_product CASCADE;
+
+DROP FUNCTION IF EXISTS product_search CASCADE;
+DROP TRIGGER IF EXISTS product_search_update ON product CASCADE;
 
 
---TYPE's
+DROP FUNCTION IF EXISTS update_avg_classification_product CASCADE;
+DROP TRIGGER IF EXISTS update_avg_classification_product ON review CASCADE;
+
+DROP FUNCTION IF EXISTS delete_user_information CASCADE;
+DROP TRIGGER IF EXISTS delete_user_account ON authenticated_user CASCADE;
+
+DROP FUNCTION IF EXISTS check_review_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_review_insert ON review CASCADE ;
+
+DROP FUNCTION IF EXISTS check_like_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_like_insert ON user_like CASCADE;
+
+DROP FUNCTION IF EXISTS check_address_order CASCADE;
+DROP TRIGGER IF EXISTS check_address_order ON user_order CASCADE;
+
+
+DROP FUNCTION IF EXISTS check_card_order CASCADE;
+DROP TRIGGER IF EXISTS check_card_order ON user_order CASCADE;
+
+DROP FUNCTION IF EXISTS check_report_privileges CASCADE;
+DROP TRIGGER IF EXISTS before_report_insert ON report CASCADE;
+
+DROP FUNCTION IF EXISTS order_parameters CASCADE;
+DROP TRIGGER IF EXISTS check_order_parameters ON user_order CASCADE;
+
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
 CREATE TYPE order_state_type AS ENUM (
     'Shopping Cart',
@@ -126,7 +136,7 @@ CREATE TABLE card(
     number TEXT NOT NULL CONSTRAINT cart_unique UNIQUE,
     month int NOT NULL,
     year int NOT NULL,
-    code int NOT NULL,
+    code TEXT NOT NULL,
     id_user INTEGER NOT NULL REFERENCES authenticated_user(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 CREATE TABLE country(
@@ -155,6 +165,7 @@ CREATE TABLE product(
     name TEXT NOT NULL CONSTRAINT product_unique UNIQUE,
     description TEXT NOT NULL,
     price NUMERIC NOT NULL,
+    avg_classification NUMERIC,
     id_category INTEGER NOT NULL REFERENCES category(id) ON UPDATE CASCADE
 );
 CREATE TABLE product_image(
@@ -219,13 +230,7 @@ CREATE TABLE stock(
     id_size INTEGER NOT NULL REFERENCES size(id) ON UPDATE CASCADE ON DELETE CASCADE,
     id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-CREATE TABLE details(
-    id SERIAL PRIMARY KEY,
-    quantity int NOT NULL CHECK (quantity > 0),
-    id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_size INTEGER NOT NULL REFERENCES size(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+
 CREATE TABLE user_order(
     id SERIAL PRIMARY KEY,
     status order_state_type NOT NULL DEFAULT 'Shopping Cart',
@@ -234,11 +239,16 @@ CREATE TABLE user_order(
     id_address INTEGER REFERENCES address(id) ON UPDATE CASCADE ON DELETE SET NULL,
     id_card INTEGER REFERENCES card(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
-CREATE TABLE order_details(
-    id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    id_details INTEGER NOT NULL REFERENCES details(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (id_order, id_details)
+
+CREATE TABLE details(
+    id SERIAL PRIMARY KEY,
+    quantity int NOT NULL CHECK (quantity > 0),
+    id_product INTEGER NOT NULL REFERENCES product(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_size INTEGER NOT NULL REFERENCES size(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_color INTEGER NOT NULL REFERENCES color(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
 -----------------------------------------------------------------------------------------------
 
 -- Index na tabela user_order no atributo id_user
@@ -300,58 +310,60 @@ CREATE INDEX search_idx ON product USING GIN (tsvectors);
 
 --TRIGGERS and User Defined Functions
 
--- Verificar o stock dos produtos no momento da adição ao carrinho
+-- Update classfication
 
-CREATE FUNCTION check_stock(Product details)
-RETURNS INTEGER AS
-$$ BEGIN
-    IF Product.quantity = 0 THEN
-        RAISE EXCEPTION 'Product out of stock';
+CREATE FUNCTION update_avg_classification_product()
+RETURNS TRIGGER AS
+$$BEGIN
+    UPDATE product SET avg_classification = (
+        SELECT avg(evaluation)
+        FROM review
+        WHERE id_product = NEW.id_product
+    ) WHERE id = NEW.id_product;
+    RETURN NEW;
+END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_avg_classification_product
+AFTER INSERT ON review
+FOR EACH ROW
+EXECUTE PROCEDURE update_avg_classification_product(); 
+
+-- Verify card
+
+CREATE FUNCTION check_card_order()
+RETURNS TRIGGER AS 
+$$BEGIN
+    IF EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN card WHERE id_user = NEW.id_user AND id_card = NEW.id_card)
+    THEN
+        RAISE EXCEPTION 'The card does not belong to the user';
     END IF;
-    RETURN 1;
+    RETURN NEW;
 END; $$
 LANGUAGE plpgsql;
 
--- Adicionar um artigo ao carrinho
+CREATE TRIGGER check_card_order
+BEFORE INSERT ON user_order
+FOR EACH ROW
+EXECUTE PROCEDURE check_card_order();
 
-CREATE FUNCTION add_product_to_cart(Cart user_order, Product details)
-RETURNS user_order AS
-$$ BEGIN
-  IF (Cart.state = 'Shopping Cart') THEN
-      IF check_stock(Product) = 1 THEN
-          INSERT INTO order_details VALUES (Cart.id, Product.id);
-    	ELSE
-        	RAISE EXCEPTION 'Error adding product to cart';
-	    END IF;
-	ELSE
-      RAISE EXCEPTION 'Error adding product to cart';
-  END IF;
-  RETURN Cart;
-END; $$
-LANGUAGE plpgsql;
+-- Verify address
 
--- Remover um artigo ao carrinho
-
-CREATE FUNCTION remove_product_from_cart(Cart user_order, Product details)
-RETURNS user_order AS
-$$ BEGIN
-    IF Cart.state = 'Shopping Cart' THEN
-        DELETE FROM order_details WHERE id_order = Cart.id AND id_details = Product.id;
-        RETURN Cart;
-    ELSE
-        RAISE EXCEPTION 'Error removing product from cart';
+CREATE FUNCTION check_address_order()
+RETURNS TRIGGER AS 
+$$BEGIN
+    IF EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN address WHERE  id_user = NEW.id_user AND id_address = NEW.id_address)
+    THEN
+        RAISE EXCEPTION 'The address does not belong to the user';
     END IF;
+    RETURN NEW;
 END; $$
 LANGUAGE plpgsql;
 
--- Aceder ao preço de um produto com a promoção aplicada
-
-CREATE FUNCTION product_price_with_promotion(Product product, Promotion promotion)
-RETURNS NUMERIC AS
-$$ BEGIN
-    RETURN Product.price * (1 - Promotion.discount);
-END; $$
-LANGUAGE plpgsql;
+CREATE TRIGGER check_address_order
+BEFORE INSERT ON user_order
+FOR EACH ROW
+EXECUTE PROCEDURE check_address_order();
 
 
 -- Ao apagar a conta de um utilizador toda a informação partilhada (encomendas, gostos, reviews) é mantida
@@ -381,13 +393,7 @@ EXECUTE PROCEDURE delete_user_information();
 CREATE FUNCTION check_review_privileges()
 RETURNS TRIGGER AS
 $$ BEGIN
-    IF NOT EXISTS (SELECT *
-                   FROM (SELECT DISTINCT id_user, id_product, id_size, id_color
-                        FROM user_order, order_details, details
-                        WHERE user_order.id = order_details.id_order AND order_details.id_details = details.id
-                        ORDER BY id_user, id_product, id_size, id_color) AS user_purchases
-                   WHERE NEW.id_user = user_purchases.id_user AND NEW.id_product = user_purchases.id_product)
-                   -- se quisermos especificar o tamanho e cor podemos adicionar aqui
+    IF NOT EXISTS (SELECT * FROM user_order NATURAL JOIN details WHERE status = 'Completed' AND id_user = NEW.id_user AND id_product = NEW.id_product)
     THEN
         RAISE EXCEPTION 'An item can only be reviewed if it has been purchased';
     END IF;
@@ -1745,206 +1751,128 @@ insert into user_notification (id_user, id_notification) values (90, 125);
 
 -- Card 
 
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Adorne Gorini', '5100175084456910', 11, 38, 879, 36);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Stirling McEntagart', '5100134149511680', 3, 46, 823, 168);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jkytter2', 'Jdavie Kytter', '5100130893648801', 7, 41, 485, 149);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Blondell Becker', '5100133054663767', 6, 44, 827, 135);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Linnea Dibbs', '5100144666005107', 7, 29, 475, 138);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Ofelia Morpeth', '5100145790278841', 3, 24, 888, 189);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Gray Morais', '5100175147501942', 1, 50, 725, 173);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ltranter7', 'Lorri Tranter', '5100178519588620', 3, 31, 361, 131);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mpaulson8', 'Morissa Paulson', '5100139660931258', 2, 42, 409, 165);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'pfrichley9', 'Phelia Frichley', '5100137547333946', 3, 37, 719, 11);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'csimchenkoa', 'Carlie Simchenko', '5100140637930225', 1, 44, 966, 180);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Rivi Peppett', '5100131580896950', 1, 24, 538, 169);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mgoresc', 'Mommy Gores', '5100145371654675', 2, 42, 422, 34);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'echasled', 'Ellswerth Chasle', '5100175081741827', 2, 24, 688, 94);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Mella Wickrath', '5100176891365765', 12, 26, 117, 195);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Candy McDill', '5100176995405483', 4, 25, 388, 68);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'crockliffeg', 'Cyrill Rockliffe', '5100179406672550', 4, 48, 448, 44);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'jraymenth', 'Jerri Rayment', '5100148983850699', 7, 28, 805, 40);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'ncolwelli', 'Neil Colwell', '5100149555602542', 2, 48, 165, 144);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'sbertiej', 'Saw Bertie', '5100139800180071', 6, 43, 958, 14);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Rustin Dibnah', '5100144824959674', 1, 36, 157, 52);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Aindrea Chrystal', '5100170785244343', 4, 45, 688, 54);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Mireille Gossart', '5100133564270210', 12, 27, 965, 174);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'fmegaheyn', 'Fitzgerald Megahey', '5100177824765592', 2, 49, 501, 93);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Nathanil Le Brom', '5100173059033251', 3, 26, 424, 128);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Tracy Ruthen', '5100145714927481', 5, 49, 266, 122);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'escimoneq', 'Edmon Scimone', '5100134058581534', 1, 29, 358, 61);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Laureen Fawloe', '5100176599154495', 2, 25, 185, 168);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'cpettiphers', 'Charo Pettipher', '5100175698619218', 3, 24, 869, 79);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mbromontt', 'Morna Bromont', '5100146910150142', 10, 24, 416, 13);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'gfinanu', 'Gilemette Finan', '5100172293838533', 8, 33, 799, 198);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'agowenv', 'Antin Gowen', '5100139588670962', 10, 28, 466, 139);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'qkuhlw', 'Quintilla Kuhl', '5100130785338156', 11, 31, 574, 134);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'amarsx', 'Alla Mars', '5100143782671883', 4, 37, 274, 155);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Othelia Grigoriscu', '5100144315658926', 9, 37, 903, 125);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Verna Pickance', '5100178870629880', 1, 31, 944, 71);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Lalo Granham', '5100171746110276', 11, 33, 874, 143);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'adeboo11', 'Ambrosius Deboo', '5100178540574078', 12, 35, 708, 75);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'tchadwen12', 'Torrie Chadwen', '5100176115703700', 3, 24, 759, 137);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Kameko Caldeyroux', '5100142540234059', 2, 38, 789, 63);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'slambotin14', 'Skelly Lambotin', '5100141238150072', 6, 34, 538, 88);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Bentley Huard', '5100175344485238', 11, 42, 841, 130);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Eal Brahms', '5100176401528704', 8, 36, 186, 35);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Hilario Fincher', '5100173877624935', 5, 22, 711, 81);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'shanson18', 'Sella Hanson', '5100134691701309', 7, 23, 117, 193);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'smarle19', 'Selia Marle', '5100132681787775', 10, 36, 222, 21);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'croberds1a', 'Caprice Roberds', '5100144653427827', 11, 22, 924, 139);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Ethyl Wasmuth', '5100149972496429', 2, 36, 505, 80);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Clair Leathe', '5100145656618635', 11, 33, 302, 109);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Bibi Rowlson', '5100138495609923', 4, 30, 167, 15);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Vicky Peete', '5100142950761823', 10, 43, 285, 157);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Hagan Crutcher', '5100148241072045', 9, 29, 579, 117);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Malia Marrow', '5100142836346518', 9, 24, 281, 93);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mdonise1h', 'Marshall D''Onise', '5100137381322500', 7, 45, 598, 5);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'rfairrie1i', 'Rochester Fairrie', '5100149653171903', 12, 28, 849, 156);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'falloisi1j', 'Florry Alloisi', '5100177469810687', 11, 46, 458, 111);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Alameda Shugg', '5100170043496834', 10, 36, 177, 73);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Appolonia Radbone', '5100178272169667', 8, 31, 409, 128);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mpampling1m', 'Mikael Pampling', '5100140928852294', 8, 28, 725, 26);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Base Glaserman', '5100173344596807', 9, 24, 128, 131);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'West Swinnard', '5100149483583319', 9, 22, 493, 110);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'chundal1p', 'Constantine Hundal', '5100147825426759', 12, 28, 173, 191);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Lane Bullen', '5100133423160230', 6, 45, 630, 181);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Alyson Faulconer', '5100146631321972', 4, 30, 963, 15);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Adel Cokayne', '5100132248740085', 7, 39, 259, 198);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Port Cownden', '5100176480495627', 3, 24, 291, 80);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'achapiro1u', 'Almire Chapiro', '5100147461941590', 8, 30, 588, 196);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Tomaso Hecks', '5100178858985270', 7, 45, 967, 160);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'ehorsted1w', 'Elysia Horsted', '5100172377801498', 3, 27, 822, 53);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'istampe1x', 'Inigo Stampe', '5100133792861368', 8, 33, 977, 126);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'gbuckbee1y', 'Galvan Buckbee', '5100174825484554', 7, 49, 129, 157);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'tpedrollo1z', 'Tades Pedrollo', '5100173736126361', 3, 30, 863, 155);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Jarid Vreede', '5100173753108052', 6, 22, 223, 25);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Elita Fleming', '5100147338313577', 10, 34, 317, 118);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'djennens22', 'Damien Jennens', '5100172530407274', 5, 35, 766, 65);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Peter Stainland', '5100172626355387', 12, 50, 293, 99);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'tpaddock24', 'Tobin Paddock', '5100148022442250', 4, 37, 593, 17);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'jboncoeur25', 'Jasmine Boncoeur', '5100176169452410', 8, 37, 726, 79);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Windham Brian', '5100148115559853', 3, 49, 339, 47);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'agrogona27', 'Aldrich Grogona', '5100146765279988', 8, 43, 400, 158);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'esantos28', 'Errick Santos', '5100131492553913', 9, 23, 572, 197);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Bendite Getch', '5100171561779478', 5, 23, 978, 66);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'rviscovi2a', 'Rosmunda Viscovi', '5100142303688723', 4, 45, 606, 1);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Pearl Houliston', '5100176119966287', 6, 35, 988, 174);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Afton Pitway', '5100140584571576', 5, 30, 553, 131);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Bill Easun', '5100173816510435', 7, 46, 192, 45);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mjohnsson2e', 'Moses Johnsson', '5100142380188464', 6, 33, 866, 163);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'ecoppen2f', 'Evelyn Coppen', '5100145586385339', 4, 31, 884, 8);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'vleaney2g', 'Vivie Leaney', '5100138073951226', 9, 30, 508, 57);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Kirby Aggas', '5100178500732757', 4, 34, 279, 174);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Mano Coldbathe', '5100132911668100', 1, 32, 402, 75);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Marne Berthel', '5100174727854060', 6, 31, 406, 37);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Jase Pummery', '5100131064748826', 6, 35, 517, 33);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Mandy Skarin', '5100137940394719', 10, 26, 215, 138);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Perkin Orleton', '5100132720343234', 3, 43, 658, 182);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'rcharker2n', 'Rowena Charker', '5100135790603007', 5, 27, 115, 72);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Sibel Easterling', '5100176599744725', 12, 41, 307, 148);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Muriel Scading', '5100175106323270', 9, 37, 530, 151);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'mallmen2q', 'Marvin Allmen', '5100173519506698', 11, 36, 219, 80);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  null, 'Saw Melvin', '5100144100621899', 7, 30, 445, 66);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT,  'tgegay2s', 'Theobald Gegay', '5100132609303788', 7, 26, 555, 75);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'acaddie2t', 'Aubrette Caddie', '5100144079109140', 2, 47, 352, 45);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Arleyne Fickling', '5100137324235645', 3, 40, 813, 154);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ikennifeck2v', 'Isidore Kennifeck', '5100146225915346', 2, 33, 301, 41);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'fcragoe2w', 'Ferrel Cragoe', '5100131100313619', 4, 24, 845, 154);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Lacy Douthwaite', '5100176315600284', 2, 47, 128, 179);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Jarib Senchenko', '5100130002693722', 8, 32, 523, 198);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Florence Dutson', '5100175047836398', 11, 23, 817, 64);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Indira Deverill', '5100149325704065', 4, 46, 293, 62);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jzamboniari31', 'Joella Zamboniari', '5100174309310689', 9, 24, 868, 145);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'pmackettrick32', 'Pippo MacKettrick', '5100177278014356', 4, 24, 102, 109);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Lefty Soreau', '5100149229581270', 6, 48, 924, 51);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'beginton34', 'Bev Eginton', '5100143970115305', 12, 43, 318, 91);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ififoot35', 'Irina Fifoot', '5100176772692105', 10, 23, 684, 41);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Aloise Dominik', '5100143177717325', 5, 30, 874, 60);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mrydeard37', 'Muriel Rydeard', '5100148879845951', 2, 28, 130, 2);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'eahren38', 'Elfie Ahren', '5100137754994125', 10, 47, 399, 108);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ahows39', 'Adrienne Hows', '5100130343768696', 12, 28, 895, 135);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Maribel Gladebeck', '5100134674448480', 5, 50, 966, 61);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Stirling Bainton', '5100179577974165', 5, 32, 289, 53);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Biddie Exter', '5100143008574242', 7, 37, 770, 60);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Tonia Kilcullen', '5100134674073270', 3, 47, 903, 4);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Eve Renol', '5100139919711097', 7, 39, 662, 27);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'qaccombe3f', 'Quinn Accombe', '5100146594782822', 9, 48, 270, 131);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Geri Cordero', '5100172482811168', 11, 30, 113, 135);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Murdoch Jeskins', '5100137232313153', 11, 48, 616, 108);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lmcginly3i', 'Livvie McGinly', '5100138612877858', 6, 50, 326, 47);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rzavattero3j', 'Raul Zavattero', '5100146293388095', 12, 48, 398, 53);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jheberden3k', 'Joey Heberden', '5100138934024957', 5, 40, 633, 157);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Catlee Hofton', '5100145573648186', 8, 45, 914, 133);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mbier3m', 'Marie Bier', '5100174465184191', 10, 40, 916, 19);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lherrero3n', 'Lyn Herrero', '5100177019621386', 10, 22, 635, 77);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mstetson3o', 'Morgan Stetson', '5100132183007151', 6, 46, 951, 179);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'moppery3p', 'Moria Oppery', '5100172334684664', 12, 22, 620, 167);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'cgeorgiades3q', 'Currey Georgiades', '5100172322059184', 7, 29, 189, 185);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kpeacock3r', 'Kirbee Peacock', '5100146872142178', 7, 34, 968, 110);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rsheards3s', 'Rhodie Sheards', '5100147933802370', 10, 49, 520, 43);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Leicester Rosbrough', '5100179978290815', 5, 27, 249, 82);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'esaull3u', 'Erhart Saull', '5100174333552249', 4, 37, 786, 110);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jtomsett3v', 'Jerry Tomsett', '5100134291959307', 1, 28, 773, 81);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'bpetyt3w', 'Burl Petyt', '5100140571198904', 3, 46, 743, 101);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Norah Espinoza', '5100132818604018', 5, 39, 238, 111);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'edaskiewicz3y', 'Eddy Daskiewicz', '5100179804884609', 7, 35, 168, 1);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Haskell Bushill', '5100179499621076', 3, 22, 565, 100);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Hilary Frankema', '5100130502548533', 7, 28, 982, 107);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'doshaughnessy41', 'Denyse O''Shaughnessy', '5100173673775071', 12, 42, 919, 74);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lbadgers42', 'Latashia Badgers', '5100141690403829', 12, 23, 564, 107);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Wiley Winspeare', '5100146814961230', 12, 32, 361, 19);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'msaxton44', 'Montague Saxton', '5100134500195628', 9, 27, 747, 50);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'csadlier45', 'Cornie Sadlier', '5100179454709957', 6, 40, 467, 186);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Rafaela Urwin', '5100141905320131', 9, 36, 408, 195);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'arunsey47', 'Axe Runsey', '5100173490883967', 3, 45, 359, 167);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'gvan48', 'Grove Van Saltsberg', '5100132712751345', 9, 35, 879, 67);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lverlinde49', 'L;urette Verlinde', '5100170832786833', 7, 25, 177, 1);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Dorie Lorenc', '5100148376636523', 5, 43, 906, 48);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'afahy4b', 'Alard Fahy', '5100170692669335', 4, 37, 956, 32);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rtaffee4c', 'Rolph Taffee', '5100135153049749', 6, 41, 168, 81);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ajakubovits4d', 'Ange Jakubovits', '5100136284439122', 11, 42, 679, 171);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'iselborne4e', 'Ina Selborne', '5100130104209757', 2, 32, 949, 49);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Gard Tinsey', '5100176724831157', 9, 22, 804, 29);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Karisa Ketts', '5100140725573267', 11, 31, 757, 124);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rlief4h', 'Robinson Lief', '5100148006875384', 7, 41, 895, 103);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Mariele Parell', '5100143819840360', 5, 27, 252, 7);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'wkieff4j', 'Web Kieff', '5100138581807696', 10, 41, 751, 46);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Vaughn Powlesland', '5100130702710206', 7, 36, 397, 83);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rkeys4l', 'Ruthanne Keys', '5100136110452521', 12, 32, 215, 80);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'wbabington4m', 'Wolf Babington', '5100177349179410', 11, 38, 605, 15);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Lauree Patience', '5100141706415536', 12, 22, 295, 83);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jantao4o', 'Julieta Antao', '5100149241508657', 12, 48, 951, 75);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Grannie Humfrey', '5100148056499473', 12, 41, 632, 195);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kmcamish4q', 'Katherina McAmish', '5100141625466701', 4, 38, 678, 130);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'reldredge4r', 'Robena Eldredge', '5100173487214218', 2, 41, 826, 81);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Chanda Braitling', '5100140014764916', 5, 34, 532, 149);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Riva Elcoux', '5100143975447257', 9, 28, 542, 194);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'tkelle4u', 'Tibold Kelle', '5100175768963322', 10, 31, 261, 139);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Roze Blanden', '5100148783206613', 9, 22, 224, 82);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Barbaraanne Langelay', '5100144136641549', 3, 22, 685, 132);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'bcandy4x', 'Buffy Candy', '5100145875998248', 9, 30, 960, 175);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Deb Dabrowski', '5100143611617453', 12, 29, 790, 179);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'fdevaney4z', 'Frazier Devaney', '5100135045010289', 10, 32, 620, 29);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rhaydney50', 'Rivy Haydney', '5100133488307346', 6, 29, 183, 176);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Winnie Dunn', '5100142127805354', 9, 45, 891, 23);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Dougy Line', '5100149334226258', 3, 22, 160, 187);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Radcliffe Realph', '5100138733376053', 3, 38, 825, 185);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'smowett54', 'Shayna Mowett', '5100142253633067', 9, 24, 358, 152);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'dconnop55', 'Dalila Connop', '5100171141484243', 9, 44, 159, 86);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Emmie O'' Driscoll', '5100146137564554', 12, 44, 701, 25);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Sampson Qusklay', '5100179514347335', 12, 28, 290, 67);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Sollie Boyn', '5100130303308046', 8, 45, 876, 177);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'crollinson59', 'Cord Rollinson', '5100133648538384', 7, 25, 717, 57);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Lennie Bulleyn', '5100172766630383', 1, 26, 754, 82);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rlindenblatt5b', 'Reuven Lindenblatt', '5100146700198806', 7, 28, 701, 26);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ajantzen5c', 'Ashly Jantzen', '5100135835197643', 8, 35, 804, 62);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mredhouse5d', 'Mallissa Redhouse', '5100173096403566', 12, 40, 661, 11);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Margaretta Delcastel', '5100142193600424', 8, 36, 193, 132);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Hermina Pietrzak', '5100149419759330', 11, 38, 936, 186);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ematuszkiewicz5g', 'Eulalie Matuszkiewicz', '5100139760921951', 9, 25, 320, 153);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Geordie McIlharga', '5100135992765042', 2, 36, 468, 121);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'fmckew5i', 'Fonz McKew', '5100140907651444', 4, 26, 994, 76);
-insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Daisey Rolley', '5100136808570154', 9, 34, 143, 199);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'gcarolan0', 'Gertrude Carolan', '3540004363997605', 11, 50, '258', 1);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Rhodia Hanwell', '3533658200225683', 10, 27, '589', 2);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'nodby2', 'Nanice Odby', '6762084375943117618', 6, 40, '424', 3);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lfrankland3', 'Levin Frankland', '3580434833200499', 5, 46, '925', 4);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Damita Highway', '3550857083214438', 11, 38, '465', 5);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mzimmer5', 'Miguel Zimmer', '3554441652258666', 8, 39, '818', 6);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Lindy Norree', '3571403820410230', 5, 50, '756', 7);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Janna Dasent', '3537648925800031', 5, 42, '870', 8);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Filmer Mold', '5602223929864345', 7, 36, '864', 9);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'imungham9', 'Irita Mungham', '5641825589075831', 11, 50, '764', 10);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'educaena', 'Enrico Ducaen', '4041596586958', 12, 24, '206', 11);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Hortense Milligan', '3539706283528244', 2, 38, '847', 12);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Farr Loody', '3544476305167016', 10, 42, '804', 13);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'smuscroftd', 'Sutton Muscroft', '201962422323277', 8, 30, '301', 14);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Les Seekings', '6771723750509246167', 10, 50, '078', 15);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Park McSwan', '348159371002705', 6, 24, '794', 16);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jleblancg', 'Jules Leblanc', '3550474224160023', 5, 35, '724', 17);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'espaiceh', 'Etheline Spaice', '4041592542518732', 9, 48, '055', 18);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'cyushkovi', 'Charita Yushkov', '3581849784238611', 10, 38, '762', 19);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Nickolas Sherrard', '5569095099785976', 2, 50, '942', 20);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Carney Shovlin', '3533682442448309', 9, 29, '763', 21);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Brand Coen', '3587353617580079', 9, 23, '081', 22);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kfauschm', 'Kim Fausch', '5100179095901500', 11, 37, '500', 23);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mgosartn', 'Melba Gosart', '201888244140443', 11, 50, '519', 24);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jhasto', 'Jori Hast', '201937006734032', 4, 30, '211', 25);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'asepeyp', 'Arluene Sepey', '5602243309129623401', 8, 34, '787', 26);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'upirdyq', 'Ursulina Pirdy', '36792566690707', 5, 49, '166', 27);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lertelr', 'Luelle Ertel', '374622923341126', 5, 45, '539', 28);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ttreanors', 'Terese Treanor', '4399888542768964', 7, 24, '721', 29);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Sal Peattie', '5111810089158643', 4, 44, '749', 30);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'nrusseu', 'Nowell Russe', '4508758442586345', 7, 45, '614', 31);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Austina Upham', '3534571466838652', 5, 49, '053', 32);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ljefferyw', 'Luciano Jeffery', '3549954419892286', 6, 24, '740', 33);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'bmucklestonex', 'Brynna Mucklestone', '30541453370436', 4, 50, '700', 34);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ztapsfieldy', 'Zola Tapsfield', '630476025572192397', 12, 26, '852', 35);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Gretta Van''t Hoff', '6771172871640554', 3, 32, '532', 36);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Auguste Sacco', '3532767992698840', 5, 36, '490', 37);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Cass Heskey', '3535658554238819', 2, 33, '528', 38);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'dvidyapin12', 'Dukie Vidyapin', '3542831816128075', 5, 28, '299', 39);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Alysa Kestle', '5010120059013071', 10, 43, '271', 40);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jgoodchild14', 'Julius Goodchild', '56022575952471008', 10, 31, '003', 41);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Glenine Sharples', '4041598231421', 2, 32, '586', 42);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Andy Charpling', '3540390419911579', 9, 24, '823', 43);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lbuzza17', 'Leta Buzza', '5018255858392334', 5, 28, '648', 44);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Esma Comer', '4844253836955150', 9, 48, '742', 45);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Jamaal Bytheway', '3535061391252442', 1, 36, '082', 46);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'dmauvin1a', 'Daniella Mauvin', '3556472451383999', 3, 39, '568', 47);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'gmulqueeny1b', 'Gerrie Mulqueeny', '3556559519297896', 5, 24, '952', 48);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'estandbrook1c', 'Elena Standbrook', '3577068922437466', 4, 35, '961', 49);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Olimpia Vakhrushev', '374288854709234', 9, 25, '571', 50);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Glennis Rhydderch', '30301593555408', 10, 39, '453', 51);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'gstonard1f', 'Gaylord Stonard', '3553598326954615', 3, 27, '808', 52);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'astairmand1g', 'Alix Stairmand', '3536480564151224', 1, 44, '870', 53);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mdoppler1h', 'Milissent Doppler', '3569362375233021', 3, 38, '296', 54);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'gcrosfeld1i', 'Gwenni Crosfeld', '564182990012056815', 1, 37, '709', 55);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Nanny Kief', '5100177808982049', 5, 34, '351', 56);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Thaine Capaldi', '3571580985969330', 9, 28, '957', 57);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Dov Trehearne', '5602215171509057', 2, 43, '906', 58);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kbrinicombe1m', 'Kaile Brinicombe', '3565649164388089', 4, 30, '651', 59);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Ophelie Reinhart', '5581137783906478', 8, 35, '235', 60);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'wredmain0', 'Wilona Redmain', '3575477948401970', 11, 40, '057', 1);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Zacharie Leonardi', '5206959321753822', 9, 40, '796', 2);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Kelsi Wilmot', '3582513799726395', 5, 35, '866', 3);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Annemarie Life', '6385756322218529', 9, 47, '375', 4);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kleverage4', 'Kathleen Leverage', '5610176305238775', 9, 38, '944', 5);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kberkery5', 'Kalie Berkery', '5048377356693072', 1, 41, '358', 6);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'aashman6', 'Angil Ashman', '3580752185860358', 4, 23, '174', 7);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ebulch7', 'Emalia Bulch', '3534274548797679', 5, 36, '012', 8);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rcridlin8', 'Robinetta Cridlin', '3568389757238774', 8, 40, '931', 9);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Sybilla Razoux', '3537204835925680', 7, 43, '942', 10);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'hrenihana', 'Hayyim Renihan', '633476684762553026', 7, 39, '958', 11);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'lmcclaughlinb', 'Lillis McClaughlin', '6767780537900521', 7, 31, '839', 12);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Muffin Hulcoop', '675944451520361414', 3, 49, '484', 13);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Carry Gilhooley', '30234776259722', 1, 24, '622', 14);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Pearce Britten', '3568628556313753', 12, 36, '394', 15);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'kwintringhamf', 'Kelbee Wintringham', '4017951891679711', 4, 50, '160', 16);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'wchismang', 'Winfield Chisman', '3581143799393664', 4, 49, '751', 17);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'cjordanh', 'Casar Jordan', '676768140668360483', 9, 43, '772', 18);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Mariann Kyteley', '3560058051262172', 11, 38, '769', 19);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'zayresj', 'Zandra Ayres', '6304170789721595', 9, 38, '222', 20);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Jaymee Walicki', '374622020109822', 1, 45, '000', 21);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'syoselevitchl', 'Susannah Yoselevitch', '6304607931512262570', 2, 36, '993', 22);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Orrin Cicetti', '3539768895151815', 11, 28, '574', 23);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'iswashn', 'Ian Swash', '3582922174598461', 11, 42, '250', 24);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Welby Coney', '3573473139366546', 1, 29, '386', 25);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jbraganzap', 'Janifer Braganza', '3532413615111842', 10, 33, '038', 26);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Zarah Tate', '372301272533086', 6, 35, '178', 27);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mshambroker', 'Myron Shambroke', '3563053911700922', 7, 48, '222', 28);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rcastagnas', 'Rolf Castagna', '3574075963331337', 6, 25, '356', 29);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'shoulisont', 'Steward Houlison', '67631194397468999', 5, 50, '585', 30);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Elianora McCauley', '6387352814688664', 12, 31, '567', 31);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Ree Spurrier', '5431969353274602', 3, 31, '722', 32);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Joyan Sowerbutts', '5007663694860526', 8, 25, '368', 33);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ldeemanx', 'Lauritz Deeman', '374622381679116', 12, 43, '894', 34);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'dgonnellyy', 'Dorolice Gonnelly', '56022261762242653', 5, 26, '949', 35);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'tcraikerz', 'Taber Craiker', '4905135651067920', 11, 50, '276', 36);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Delmore MacGiany', '5138348011965982', 6, 35, '153', 37);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Fred Cardno', '4175007362681120', 10, 43, '042', 38);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'nteodori12', 'Neville Teodori', '5100134829944789', 8, 38, '084', 39);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ehamsher13', 'Elwood Hamsher', '3575058931378027', 2, 41, '354', 40);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'rconnick14', 'Ransom Connick', '4936913560810892', 9, 48, '744', 41);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Robinett Lyard', '3542667339644747', 12, 35, '794', 42);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ichitter16', 'Isacco Chitter', '5268693051562039', 11, 30, '093', 43);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'apeschmann17', 'Arvin Peschmann', '36672920037334', 9, 49, '440', 44);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'mjurges18', 'Mylo Jurges', '3534299920107015', 10, 24, '639', 45);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Robbert Penright', '374622141338755', 10, 34, '139', 46);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Phineas Bownas', '5100134117551338', 1, 26, '596', 47);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'stuckerman1b', 'Sibyl Tuckerman', '3551068825194271', 12, 35, '700', 48);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Janith Mallebone', '3537419646302875', 9, 31, '472', 49);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Simona Honsch', '3552025631647198', 2, 26, '714', 50);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'jquiddihy1e', 'Jermaine Quiddihy', '56106057449192314', 6, 25, '764', 51);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'abiggin1f', 'Alejandro Biggin', '3534125535426914', 7, 35, '768', 52);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Jean Bugdall', '3549370863718945', 11, 41, '885', 53);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Aleen Reedie', '3529083501333456', 12, 23, '482', 54);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Malorie Deshorts', '3548214852513910', 11, 31, '918', 55);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Roselia Benley', '3560573659366233', 11, 35, '969', 56);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Merrile Ferrer', '3529716145354483', 9, 29, '563', 57);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, 'ocarlill1l', 'Ode Carlill', '201596563758204', 10, 32, '845', 58);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Tiffi Emmot', '502088363704182767', 6, 29, '711', 59);
+insert into card (id, nickname, name, number, month, year, code, id_user) values (DEFAULT, null, 'Nerty Raulin', '5602213533249330', 8, 29, '665', 60);
+
+
 --Category
 insert into category (id, name) values (DEFAULT, 'Man');
 insert into category (id, name) values (DEFAULT, 'Woman');
@@ -11718,369 +11646,440 @@ insert into stock (stock, id_product, id_size, id_color) values (8, 205, 4, 14);
 insert into stock (stock, id_product, id_size, id_color) values (4, 156, 3, 12);
 insert into stock (stock, id_product, id_size, id_color) values (6, 12, 5, 8);
 
--- Details
-
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 1, 4, 12);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 2, 5, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 3, 1, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 4, 1, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 5, 1, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 6, 4, 4);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 7, 5, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 8, 3, 14);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 9, 2, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 10, 2, 6);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 11, 4, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 12, 1, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 13, 1, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 14, 3, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 15, 2, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 16, 5, 14);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 17, 4, 6);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 18, 2, 4);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 19, 1, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 20, 5, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 21, 3, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 22, 3, 2);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 23, 2, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 24, 5, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 25, 2, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 26, 1, 2);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 27, 4, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 28, 5, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 29, 1, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 30, 3, 10);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 31, 2, 2);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 32, 5, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 33, 5, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 34, 3, 6);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 35, 5, 12);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 36, 3, 7);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 37, 3, 4);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 38, 4, 5);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 39, 4, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 40, 1, 2);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 41, 1, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 7, 42, 1, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 43, 3, 3);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 44, 2, 11);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 45, 2, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 46, 2, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 47, 2, 5);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 48, 3, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 49, 4, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 2, 50, 2, 9);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 51, 4, 13);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 52, 3, 12);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 53, 1, 11);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 54, 5, 4);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 55, 1, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 4, 56, 4, 6);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 3, 57, 4, 8);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 1, 58, 2, 11);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 6, 59, 5, 1);
-insert into details (id, quantity, id_product, id_size, id_color) values (DEFAULT, 5, 60, 1, 10);
-
-
 --ADDRESS
 
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Eadith Caulket', null, '466296634', 'Crest Line', 162, null, null, 11, 1);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Alessandra Gellert', null, '305969005', 'Ramsey', 127, null, null, 5, 2);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lorilyn Presswell', 'Pixoboo', '224798511', 'Loeprich', 89, 'E', 'nibh in quis justo', 25, 3);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hazel Jirik', null, '824290248', 'Memorial', 159, null, null, 30, 4);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Othilie Woolnough', null, '320396561', 'Division', 164, null, null, 23, 5);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jamal Treker', 'Dablist', '608206992', 'Farwell', 84, 'E', 'nulla quisque arcu libero rutrum ac lobortis', 10, 6);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Isabella Britee', null, '011562730', 'Green Ridge', 60, null, null, 23, 7);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cloe Boog', null, '618724413', 'Melrose', 97, null, null, 28, 8);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Delmore Robert', null, '876594609', 'Schurz', 20, null, null, 28, 9);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Leone Tyndall', null, '605712949', 'Village Green', 8, null, null, 14, 10);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Erasmus Pebworth', 'Kwinu', '679294237', 'Golf', 142, 'E', 'dapibus dolor vel est donec', 32, 11);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Doris Blaney', null, '648446585', 'Ramsey', 43, null, null, 25, 12);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sheffield Jerzycowski', null, '574977783', 'Fair Oaks', 42, null, null, 13, 13);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lyndell Ivashkin', 'Twitterbridge', '899195398', 'Ryan', 159, 'E', 'neque libero convallis eget', 16, 14);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Merrill Prinett', 'Wordify', '509867050', 'Lawn', 167, 'E', 'erat eros viverra eget congue eget semper rutrum nulla nunc', 29, 15);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Otha Halson', null, '094586613', 'Hallows', 82, null, null, 16, 16);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jimmie Crellim', null, '077854408', 'Eastlawn', 110, null, null, 35, 17);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Perl Karet', 'Plajo', '335932465', 'Vidon', 183, 'E', 'ut dolor morbi vel lectus in quam fringilla rhoncus mauris', 16, 18);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Mair Milvarnie', null, '904623604', 'Sutteridge', 141, null, null, 40, 19);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hanan Morgan', null, '420951011', 'Elmside', 21, null, null, 15, 20);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Shurlocke Alphege', null, '347817998', 'Brown', 170, null, null, 17, 21);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Basilio Impett', 'Meezzy', '670382181', 'Cardinal', 113, 'E', 'accumsan felis ut at dolor quis odio consequat', 19, 22);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lisetta Clemensen', null, '610750300', 'Sachs', 58, null, null, 21, 23);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Nollie Batson', 'Zoonder', '500848046', 'Fieldstone', 6, 'E', 'posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat', 34, 24);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Scotti Mennear', 'Voonder', '304128098', 'Leroy', 19, 'E', 'curabitur gravida nisi at nibh in', 29, 25);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Conn McGuggy', null, '956943803', 'Oriole', 30, null, null, 31, 26);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Julia Schellig', null, '324559318', 'Schurz', 89, null, null, 3, 27);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Charlena Glencross', null, '204557970', 'Park Meadow', 199, null, null, 11, 28);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Julianne Woodhead', null, '267497438', 'Meadow Ridge', 40, null, null, 15, 29);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Dillie Dadley', 'Rooxo', '962458741', 'Rieder', 65, 'E', 'morbi sem mauris', 2, 30);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Kimberlyn Yemm', null, '315385331', 'Helena', 1, null, null, 14, 31);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Benyamin Orrick', null, '350547542', 'Springs', 116, null, null, 38, 32);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Mikkel Masser', null, '263814074', 'Gina', 174, null, null, 11, 33);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Caesar Hanny', null, '830395198', 'Hovde', 98, null, null, 22, 34);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lyn Simenot', null, '015435473', 'Di Loreto', 102, null, null, 12, 35);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Alyssa Partener', 'Dablist', '408770361', 'Heath', 123, 'E', 'maecenas tincidunt lacus at velit vivamus vel nulla eget', 22, 36);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Kathie Cadlock', null, '207886437', 'Comanche', 137, null, null, 5, 37);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jackie Lucy', null, '305203597', 'Duke', 13, null, null, 40, 38);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Gannon Gasgarth', null, '461175547', 'Randy', 198, null, null, 28, 39);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Alisander Sainsberry', 'Riffwire', '810796706', 'Tennyson', 124, 'E', 'lectus in est risus auctor sed tristique', 39, 40);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Melisse Orton', null, '473143457', 'Magdeline', 104, null, null, 13, 41);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Stephenie Menego', null, '841604509', 'Kinsman', 49, null, null, 23, 42);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Errol Everest', null, '418232289', 'Blaine', 62, null, null, 36, 43);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Craggy Ghirigori', null, '959943553', 'Rusk', 133, null, null, 26, 44);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Talia Swindin', 'Dynabox', '561343842', 'Mayfield', 193, 'E', 'tristique est et tempus semper est quam pharetra', 29, 45);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Herman Dumbrall', null, '724763922', 'Westridge', 172, null, null, 7, 46);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Henry Tarborn', null, '909086922', 'Pleasure', 140, null, null, 12, 47);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Samaria Dumpleton', null, '274921928', 'Stephen', 68, null, null, 8, 48);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Agatha Alty', null, '211724379', 'Cordelia', 5, null, null, 16, 49);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Yank Tumber', 'Realblab', '374267927', 'Forest Dale', 49, 'E', 'iaculis congue vivamus metus arcu adipiscing', 1, 50);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Abe Halpin', null, '947534225', 'Pearson', 17, null, null, 11, 51);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Elane Ludvigsen', null, '868058317', 'Bayside', 77, null, null, 3, 52);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ardelle Haxell', null, '015560427', '4th', 116, null, null, 30, 53);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Carlen Doohey', null, '054630458', 'Lunder', 92, null, null, 13, 54);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hamilton Klouz', null, '328597087', 'Farragut', 137, null, null, 8, 55);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Wye Skeates', null, '109742054', 'Dahle', 133, null, null, 33, 56);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Danette Honsch', null, '762878471', 'Straubel', 179, null, null, 18, 57);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jacintha Folliott', 'Livetube', '703600790', 'Redwing', 47, 'E', 'maecenas tincidunt lacus', 34, 58);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Kai Truin', null, '415806512', 'Victoria', 129, null, null, 23, 59);
-insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Arlette Cherry Holme', null, '047676811', 'Grasskamp', 75, null, null, 27, 60);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Mitzi Jiricka', 'Feedfish', '362666567', 'Granby', 13, 'Left', 'lectus pellentesque eget', 23, 1);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hollie Burgiss', 'Npath', '808608814', 'Oak Valley', 40, 'Left', 'morbi odio odio elementum', 27, 2);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Burton Witham', null, '653984862', 'Prairieview', 97, null, null, 19, 3);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Townie Shacklady', 'Photojam', '823321110', 'Merrick', 7, 'Left', 'in hac habitasse platea dictumst', 4, 4);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Abby Dunning', 'Flashdog', '348663766', 'Melrose', 64, 'Left', 'curabitur at ipsum ac', 9, 5);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Tamqrah MacFadin', 'Feedfire', '096377463', 'Roxbury', 61, 'Left', 'mauris non ligula', 15, 6);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Owen Methley', 'Thoughtworks', '565325485', 'Eagan', 99, 'Left', 'rhoncus mauris enim leo rhoncus', 16, 7);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hubert Spiers', 'Flipopia', '318912497', 'Hagan', 53, 'Left', 'sapien arcu sed augue aliquam', 13, 8);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ertha Pashby', 'Browsecat', '510827281', 'Larry', 68, 'Left', 'risus semper porta', 14, 9);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Reinwald Corns', 'Devbug', '913577200', 'Rutledge', 72, 'Left', 'amet turpis elementum', 20, 10);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Doreen Osanne', 'Dablist', '066703749', 'Cottonwood', 74, 'Left', 'commodo placerat praesent', 18, 11);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Briano Floyde', null, '432170893', 'Dexter', 2, null, null, 1, 12);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Monte Besant', 'Fatz', '949620113', 'Basil', 38, 'Left', 'morbi non quam nec', 11, 13);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Claude McNickle', null, '121687327', 'Bayside', 34, null, null, 10, 14);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Nataniel Lounds', null, '312928860', 'Mendota', 31, null, null, 31, 15);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Noby Lippitt', null, '087880157', 'International', 60, null, null, 26, 16);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Skipper Churchward', null, '497671675', 'Golden Leaf', 53, null, null, 34, 17);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sianna Chasteau', 'Quinu', '284122866', 'Mccormick', 90, 'Left', 'lectus suspendisse potenti in', 8, 18);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Donny Elcoate', null, '484330126', 'Harbort', 81, null, null, 1, 19);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Eliot Poacher', null, '192816670', 'Lillian', 72, null, null, 28, 20);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jaclyn Gilleson', 'Buzzbean', '897368658', 'Killdeer', 98, 'Left', 'libero ut massa', 25, 21);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Clerc Broady', null, '027306922', 'Nancy', 50, null, null, 2, 22);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Domenico Minot', 'Thoughtbridge', '411499734', 'Transport', 35, 'Left', 'mauris non ligula pellentesque ultrices', 16, 23);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hermia Buyers', 'Twimbo', '345771158', 'West', 52, 'Left', 'mauris morbi non lectus', 18, 24);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lola Gindghill', 'Innojam', '096295328', 'Victoria', 87, 'Left', 'vulputate luctus cum sociis natoque', 10, 25);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Adelaide Swadon', 'Eidel', '872698150', 'Dwight', 31, 'Left', 'dolor quis odio consequat', 20, 26);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jackqueline De Pietri', 'Gigaclub', '987422715', 'Menomonie', 80, 'Left', 'sed magna at nunc', 33, 27);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Berkly Bettesworth', null, '615703929', 'Prentice', 28, null, null, 22, 28);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cherie Millsap', null, '533407990', 'Sundown', 26, null, null, 13, 29);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lorraine Jery', 'Topdrive', '335324859', 'Ruskin', 68, 'Left', 'turpis elementum ligula vehicula consequat', 25, 30);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Allyce Cragell', null, '353822732', 'Charing Cross', 20, null, null, 8, 31);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lisle Bilborough', null, '911411657', 'Clemons', 56, null, null, 8, 32);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Evita Stollhofer', 'Jetpulse', '503028928', 'East', 91, 'Left', 'lectus in est', 4, 33);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cal Kaliszewski', null, '244903244', 'International', 54, null, null, 3, 34);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Terry Orr', null, '787478955', 'Northland', 87, null, null, 33, 35);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Christyna Paternoster', null, '064416678', 'Wayridge', 55, null, null, 31, 36);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Juana Bussons', 'Wikivu', '955878025', 'Burning Wood', 5, 'Left', 'arcu sed augue', 15, 37);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Dorelia Minker', 'Trudoo', '696986760', 'Kingsford', 16, 'Left', 'tincidunt nulla mollis', 2, 38);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sharia Rookes', 'Skinder', '626833535', 'Rowland', 70, 'Left', 'dis parturient montes nascetur', 11, 39);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Torey Ruggles', null, '802758826', 'Golf View', 34, null, null, 24, 40);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cinnamon Letixier', 'Latz', '968423858', 'Eggendart', 75, 'Left', 'curabitur gravida nisi at', 13, 41);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Pennie Tranckle', 'Dabfeed', '450097613', 'Rowland', 16, 'Left', 'ipsum ac tellus', 11, 42);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Leah MacDowal', 'Twimm', '796025386', 'Pleasure', 9, 'Left', 'massa id nisl venenatis lacinia', 31, 43);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ashlin Vamplus', 'Cogidoo', '675678435', 'Bashford', 33, 'Left', 'ipsum dolor sit amet', 32, 44);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Chrissie Franzman', null, '581918868', 'Elmside', 93, null, null, 4, 45);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Marmaduke MacCostigan', 'Yakitri', '507959382', 'Carpenter', 76, 'Left', 'lorem vitae mattis nibh ligula', 32, 46);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Bordy Jochens', null, '639624454', 'Lerdahl', 30, null, null, 20, 47);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ester Killimister', null, '579679570', 'Nelson', 100, null, null, 28, 48);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Korry Goly', 'Dazzlesphere', '327276471', 'Di Loreto', 57, 'Left', 'ornare consequat lectus in', 20, 49);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Stesha Ivashev', 'Bubblemix', '008738359', 'New Castle', 29, 'Left', 'vel accumsan tellus nisi', 30, 50);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Tawsha Paulin', null, '052884223', 'Towne', 80, null, null, 30, 51);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Bertine Pottiphar', null, '328809443', 'Nevada', 54, null, null, 13, 52);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Valle Kitchinghan', null, '789925249', 'Sherman', 65, null, null, 28, 53);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Issy Healey', 'Plajo', '331859313', 'Anderson', 92, 'Left', 'bibendum morbi non quam nec', 1, 54);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Charlena Pittet', 'Jabberstorm', '427232975', 'Atwood', 77, 'Left', 'mus etiam vel augue', 16, 55);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cull Akram', 'Pixonyx', '417518308', 'Lotheville', 74, 'Left', 'ultrices posuere cubilia curae', 35, 56);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Skipper O''Carmody', null, '978469722', 'Delaware', 45, null, null, 8, 57);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Etty Marquess', 'Thoughtworks', '217615249', 'Melvin', 81, 'Left', 'quam a odio in', 18, 58);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Clay Coulthurst', 'Flipbug', '232281350', 'Talmadge', 29, 'Left', 'orci luctus et ultrices posuere', 5, 59);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Rianon Spiring', 'Mymm', '750655813', 'Blaine', 51, 'Left', 'neque sapien placerat ante nulla', 17, 60);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sibyl Mounce', null, '298800918', 'Pearson', 99, null, null, 14, 1);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Stephanus Venediktov', 'Browsebug', '298632809', 'Delaware', 14, 'Left', 'sed accumsan felis', 31, 2);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Mill Ivakin', null, '657593368', 'Oxford', 46, null, null, 35, 3);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Diann Moogan', null, '598529652', 'Dovetail', 16, null, null, 35, 4);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jordan Tattersall', null, '984577272', 'Fordem', 85, null, null, 23, 5);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Nicole Farquar', null, '114863593', 'Pepper Wood', 76, null, null, 12, 6);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Mendy Wither', 'Meejo', '900044649', 'Crowley', 7, 'Left', 'in hac habitasse platea dictumst', 12, 7);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Silvano Carlisle', null, '385412568', 'Toban', 93, null, null, 34, 8);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Padgett Kennaway', 'Npath', '198893823', 'Mcguire', 97, 'Left', 'vitae nisi nam ultrices', 27, 9);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Layton Tinmouth', null, '068443931', '5th', 56, null, null, 31, 10);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lewie Renzini', null, '175984349', 'Cascade', 9, null, null, 7, 11);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ysabel Barhims', null, '445684904', 'Armistice', 59, null, null, 24, 12);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Finlay Braddick', 'Voomm', '545073684', 'Welch', 71, 'Left', 'et commodo vulputate justo', 28, 13);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sheba Bielby', 'Rhybox', '902208659', 'Hollow Ridge', 82, 'Left', 'sit amet turpis elementum', 23, 14);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Alonzo Formigli', null, '538959341', 'Manufacturers', 13, null, null, 34, 15);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Alvan Schukraft', null, '249134950', 'Grover', 65, null, null, 3, 16);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cristin Kimbling', null, '940826142', 'Arapahoe', 35, null, null, 23, 17);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Orazio Doyle', 'Photospace', '266048462', 'Elmside', 33, 'Left', 'convallis tortor risus dapibus', 27, 18);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Erma Chaimson', 'Topicware', '215321633', 'Logan', 10, 'Left', 'est phasellus sit amet erat', 9, 19);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lezlie Fawdry', null, '531655017', 'Summer Ridge', 81, null, null, 16, 20);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Arnuad Pryn', null, '342744029', 'Dawn', 82, null, null, 21, 21);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Fidelia Brandom', null, '551282283', 'Golf View', 89, null, null, 13, 22);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jack Badrick', 'Flipopia', '583446919', 'Ronald Regan', 74, 'Left', 'nulla justo aliquam quis', 20, 23);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Brigitta Ghio', 'Kwideo', '685557978', 'Straubel', 66, 'Left', 'tempus semper est', 20, 24);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Ruddy Cary', 'Topicstorm', '625178200', 'Bunting', 92, 'Left', 'sed justo pellentesque', 30, 25);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Angelika Petrov', 'JumpXS', '833290554', 'Barnett', 73, 'Left', 'proin risus praesent lectus vestibulum', 21, 26);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Owen Olekhov', 'Thoughtbridge', '517313212', 'Coleman', 24, 'Left', 'ac enim in', 32, 27);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Nobie Dodgshun', 'Shufflebeat', '380295456', 'Portage', 17, 'Left', 'sit amet nulla', 24, 28);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Yoshiko Gange', null, '952420401', 'Marcy', 83, null, null, 29, 29);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Eliza Diggons', 'Tagopia', '351806027', 'Corscot', 13, 'Left', 'dui nec nisi volutpat', 34, 30);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Jordan Pocock', null, '099761076', 'Grover', 59, null, null, 25, 31);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Cristen Eskriett', null, '025158865', 'Heath', 71, null, null, 35, 32);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hussein Ygoe', null, '861948123', 'Rockefeller', 100, null, null, 20, 33);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Madalyn Cowoppe', null, '871457781', 'Warner', 64, null, null, 26, 34);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lira Grigson', null, '616992437', 'Swallow', 38, null, null, 24, 35);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Arlette Collick', null, '841324230', 'Bunker Hill', 82, null, null, 9, 36);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Lacey MacWhan', null, '983946495', 'Grasskamp', 53, null, null, 21, 37);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Darby Lampen', null, '916687519', 'Forest Dale', 3, null, null, 22, 38);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Hally Wavish', 'Eimbee', '260701555', 'Fisk', 36, 'Left', 'iaculis justo in', 7, 39);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Neville Turri', null, '878640807', 'Moulton', 12, null, null, 32, 40);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Urson Prate', null, '492901288', 'Fieldstone', 3, null, null, 1, 41);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Kenny Haggerston', 'Yakidoo', '433294064', 'Walton', 25, 'Left', 'ultrices mattis odio donec', 8, 42);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Joshia Layborn', null, '746925018', 'Portage', 22, null, null, 9, 43);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Karlan Sandercock', 'Skinix', '893986895', 'Elgar', 9, 'Left', 'turpis eget elit sodales scelerisque', 1, 44);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Sauveur Wastie', null, '174109133', 'Debs', 58, null, null, 12, 45);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Joellyn Braithwait', null, '546760059', 'Esch', 56, null, null, 21, 46);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Abby Busse', 'Oodoo', '588998127', 'Utah', 63, 'Left', 'mauris laoreet ut rhoncus', 26, 47);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Charleen Buckby', 'Brainbox', '011858860', 'Hoard', 94, 'Left', 'augue vestibulum ante ipsum primis', 26, 48);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Edward L''oiseau', 'Topicblab', '803829907', 'Bobwhite', 26, 'Left', 'varius ut blandit non', 21, 49);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Marlo Swanborrow', 'Meetz', '121170289', 'Roxbury', 2, 'Left', 'eget eros elementum pellentesque', 35, 50);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Blinnie Leggon', null, '713967685', 'Westend', 20, null, null, 6, 51);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Otis Ketley', null, '627776354', 'Briar Crest', 44, null, null, 3, 52);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Reiko Huston', null, '179988910', '8th', 56, null, null, 27, 53);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Shannen Cator', 'Abata', '070180809', 'Morningstar', 50, 'Left', 'viverra dapibus nulla suscipit', 32, 54);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Clare Danett', 'Linktype', '949910290', 'Larry', 55, 'Left', 'accumsan felis ut', 34, 55);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Nickie Markie', 'Mycat', '290846380', 'Dahle', 57, 'Left', 'porttitor pede justo eu massa', 8, 56);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Bartholemy Bail', 'Yamia', '821827639', 'High Crossing', 11, 'Left', 'varius ut blandit non', 24, 57);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Dunn Timmes', 'Livepath', '819851415', 'Monica', 7, 'Left', 'vulputate vitae nisl aenean', 10, 58);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Kippie Prinne', 'Riffpedia', '920597409', 'Colorado', 81, 'Left', 'donec odio justo sollicitudin ut', 28, 59);
+insert into address (id, name, company, nif, street, number, apartment, note, id_country, id_user) values (DEFAULT, 'Loy Morman', null, '249165661', 'Fremont', 74, null, null, 12, 60);
 
 --User Order
 
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-05-16 13:11:17', 1, 1, 1);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2022-12-24 17:05:43', 2, 2, 2);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-06-01 02:31:04', 3, 3, 3);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-06-14 09:11:23', 4, 4, 4);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-05-04 05:24:23', 5, 5, 5);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-08-18 14:36:00', 6, 6, 6);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-07-01 04:38:08', 7, 7, 7);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-18 13:12:42', 8, 8, 8);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-09-17 04:00:43', 9, 9, 9);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-04-11 20:20:25', 10, 10, 10);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-04-25 04:53:12', 11, 11, 11);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-19 03:59:02', 12, 12, 12);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-09-08 06:32:29', 13, 13, 13);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-01-08 05:45:34', 14, 14, 14);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-11-20 21:07:37', 15, 15, 15);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-09-27 13:51:41', 16, 16, 16);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-07-19 16:06:37', 17, 17, 17);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-09-20 13:40:32', 18, 18, 18);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2023-05-06 11:46:53', 19, 19, 19);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-06-14 15:27:31', 20, 20, 20);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-11-27 11:43:10', 21, 21, 21);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-30 05:24:01', 22, 22, 22);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-07-08 05:35:25', 23, 23, 23);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-06-14 23:20:37', 24, 24, 24);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-09-03 22:33:19', 25, 25, 25);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-03-13 13:12:14', 26, 26, 26);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-15 08:11:52', 27, 27, 27);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2023-01-01 20:10:53', 28, 28, 28);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2023-06-16 17:38:29', 29, 29, 29);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-07-18 10:37:16', 30, 30, 30);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-11-16 05:10:22', 31, 31, 31);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-01-04 21:17:48', 32, 32, 32);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-10-04 04:59:34', 33, 33, 33);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-05-05 02:10:38', 34, 34, 34);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-08-07 07:13:15', 35, 35, 35);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-02-27 05:03:25', 36, 36, 36);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-01-09 11:03:57', 37, 37, 37);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2022-12-15 13:01:18', 38, 38, 38);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-07-18 07:58:37', 39, 39, 39);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-04-23 11:20:14', 40, 40, 40);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-12-21 14:54:55', 41, 41, 41);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-08-27 11:40:31', 42, 42, 42);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-01-18 14:52:05', 43, 43, 43);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-01-01 09:44:38', 44, 44, 44);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-05-26 11:38:58', 45, 45, 45);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-01-28 12:57:53', 46, 46, 46);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-09-08 22:29:44', 47, 47, 47);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-12-18 00:11:47', 48, 48, 48);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-29 15:12:07', 49, 49, 49);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2022-12-07 05:25:10', 50, 50, 50);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2023-01-20 18:44:11', 51, 51, 51);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-08-24 12:15:26', 52, 52, 52);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-06-01 00:21:43', 53, 53, 53);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-11-16 04:30:32', 54, 54, 54);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-01-09 01:41:17', 55, 55, 55);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Pending', '2023-02-18 18:51:31', 56, 56, 56);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2023-07-03 22:33:18', 57, 57, 57);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Cancelled', '2022-11-20 09:06:57', 58, 58, 58);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2023-01-30 22:40:39', 59, 59, 59);
-insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Shopping Cart', '2023-01-01 00:16:37', 60, 60, 60);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-11 01:43:19', 1, 1, 1);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-19 21:58:35', 2, 2, 2);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-17 06:23:38', 3, 3, 3);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-02 13:43:14', 4, 4, 4);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-06 21:40:35', 5, 5, 5);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-25 00:00:43', 6, 6, 6);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-24 08:53:50', 7, 7, 7);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-05 08:14:29', 8, 8, 8);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-07 15:00:17', 9, 9, 9);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-02 01:27:02', 10, 10, 10);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-03 06:31:04', 11, 11, 11);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-01 04:50:49', 12, 12, 12);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-27 09:07:24', 13, 13, 13);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-18 15:07:20', 14, 14, 14);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-18 14:01:53', 15, 15, 15);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-24 21:51:42', 16, 16, 16);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-21 13:04:46', 17, 17, 17);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-24 12:07:07', 18, 18, 18);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-03 09:48:35', 19, 19, 19);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-05 16:32:03', 20, 20, 20);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-03 06:25:21', 21, 21, 21);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-13 21:44:00', 22, 22, 22);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-04 08:12:22', 23, 23, 23);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-27 13:26:08', 24, 24, 24);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-03 08:59:02', 25, 25, 25);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-24 11:08:29', 26, 26, 26);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-10 08:22:00', 27, 27, 27);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-28 15:36:00', 28, 28, 28);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-19 15:39:19', 29, 29, 29);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-26 12:09:19', 30, 30, 30);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-19 23:02:58', 31, 31, 31);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-13 13:25:33', 32, 32, 32);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-22 00:57:51', 33, 33, 33);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-18 06:08:59', 34, 34, 34);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-05 21:51:56', 35, 35, 35);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-11 16:58:07', 36, 36, 36);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-26 09:22:20', 37, 37, 37);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-22 23:59:44', 38, 38, 38);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-16 02:11:28', 39, 39, 39);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-11 11:54:33', 40, 40, 40);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-20 11:42:08', 41, 41, 41);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-27 03:06:00', 42, 42, 42);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-01 11:20:06', 43, 43, 43);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-23 20:33:24', 44, 44, 44);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-21 03:32:25', 45, 45, 45);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-22 15:41:04', 46, 46, 46);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-22 20:35:22', 47, 47, 47);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-14 10:28:39', 48, 48, 48);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-11 06:46:31', 49, 49, 49);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-15 08:39:58', 50, 50, 50);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-04 19:41:56', 51, 51, 51);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-20 16:13:58', 52, 52, 52);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-01 03:24:31', 53, 53, 53);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-25 22:23:31', 54, 54, 54);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-09 12:49:28', 55, 55, 55);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-13 20:22:52', 56, 56, 56);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-12 02:11:41', 57, 57, 57);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-08 01:18:05', 58, 58, 58);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-14 19:28:34', 59, 59, 59);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'Completed', '2022-11-13 18:46:18', 60, 60, 60);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-17 08:43:57', 1, 61, 61);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-22 04:36:58', 2, 62, 62);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-27 07:26:13', 3, 63, 63);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-03 08:27:04', 4, 64, 64);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-01 12:15:28', 5, 65, 65);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-30 23:45:58', 6, 66, 66);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-14 19:30:47', 7, 67, 67);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-11 13:28:34', 8, 68, 68);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-15 20:38:48', 9, 69, 69);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-09 03:22:07', 10, 70, 70);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-03 02:37:40', 11, 71, 71);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-22 10:36:58', 12, 72, 72);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-07 01:07:34', 13, 73, 73);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-10 09:40:26', 14, 74, 74);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-23 17:00:41', 15, 75, 75);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-21 23:31:10', 16, 76, 76);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-09 01:56:50', 17, 77, 77);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-02 09:20:01', 18, 78, 78);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-24 16:07:21', 19, 79, 79);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-04 10:07:06', 20, 80, 80);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-21 18:15:19', 21, 81, 81);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-18 00:32:43', 22, 82, 82);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-17 01:10:55', 23, 83, 83);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-12 07:00:54', 24, 84, 84);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-23 16:04:28', 25, 85, 85);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-05 09:52:54', 26, 86, 86);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-18 06:09:26', 27, 87, 87);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-26 13:05:49', 28, 88, 88);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-17 23:51:05', 29, 89, 89);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-26 18:29:17', 30, 90, 90);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-29 20:04:11', 31, 91, 91);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-20 22:32:42', 32, 92, 92);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-12 08:10:26', 33, 93, 93);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-20 23:19:14', 34, 94, 94);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-03 00:13:12', 35, 95, 95);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-18 10:55:53', 36, 96, 96);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-24 03:04:40', 37, 97, 97);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-13 02:27:38', 38, 98, 98);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-12 21:29:16', 39, 99, 99);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-28 17:29:19', 40, 100, 100);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-01 11:25:07', 41, 101, 101);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-30 08:16:21', 42, 102, 102);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-10 23:39:00', 43, 103, 103);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-05 03:41:34', 44, 104, 104);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-21 10:53:21', 45, 105, 105);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-30 12:18:23', 46, 106, 106);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-01 08:34:04', 47, 107, 107);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-16 20:13:10', 48, 108, 108);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-24 19:54:24', 49, 109, 109);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-18 10:04:32', 50, 110, 110);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-12 07:50:58', 51, 111, 111);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-02 09:38:57', 52, 112, 112);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-02 06:19:28', 53, 113, 113);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-21 17:52:27', 54, 114, 114);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-21 01:46:28', 55, 115, 115);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-15 14:46:10', 56, 116, 116);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-15 23:40:59', 57, 117, 117);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-28 17:21:59', 58, 118, 118);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-07 03:41:29', 59, 119, 119);
+insert into user_order (id, status, date, id_user, id_address, id_card) values (DEFAULT, 'In Progress', '2022-12-30 04:54:01', 60, 120, 120);
 
---order details
-insert into order_details (id_order, id_details) values (1, 1);
-insert into order_details (id_order, id_details) values (2, 2);
-insert into order_details (id_order, id_details) values (3, 3);
-insert into order_details (id_order, id_details) values (4, 4);
-insert into order_details (id_order, id_details) values (5, 5);
-insert into order_details (id_order, id_details) values (6, 6);
-insert into order_details (id_order, id_details) values (7, 7);
-insert into order_details (id_order, id_details) values (8, 8);
-insert into order_details (id_order, id_details) values (9, 9);
-insert into order_details (id_order, id_details) values (10, 10);
-insert into order_details (id_order, id_details) values (11, 11);
-insert into order_details (id_order, id_details) values (12, 12);
-insert into order_details (id_order, id_details) values (13, 13);
-insert into order_details (id_order, id_details) values (14, 14);
-insert into order_details (id_order, id_details) values (15, 15);
-insert into order_details (id_order, id_details) values (16, 16);
-insert into order_details (id_order, id_details) values (17, 17);
-insert into order_details (id_order, id_details) values (18, 18);
-insert into order_details (id_order, id_details) values (19, 19);
-insert into order_details (id_order, id_details) values (20, 20);
-insert into order_details (id_order, id_details) values (21, 21);
-insert into order_details (id_order, id_details) values (22, 22);
-insert into order_details (id_order, id_details) values (23, 23);
-insert into order_details (id_order, id_details) values (24, 24);
-insert into order_details (id_order, id_details) values (25, 25);
-insert into order_details (id_order, id_details) values (26, 26);
-insert into order_details (id_order, id_details) values (27, 27);
-insert into order_details (id_order, id_details) values (28, 28);
-insert into order_details (id_order, id_details) values (29, 29);
-insert into order_details (id_order, id_details) values (30, 30);
-insert into order_details (id_order, id_details) values (31, 31);
-insert into order_details (id_order, id_details) values (32, 32);
-insert into order_details (id_order, id_details) values (33, 33);
-insert into order_details (id_order, id_details) values (34, 34);
-insert into order_details (id_order, id_details) values (35, 35);
-insert into order_details (id_order, id_details) values (36, 36);
-insert into order_details (id_order, id_details) values (37, 37);
-insert into order_details (id_order, id_details) values (38, 38);
-insert into order_details (id_order, id_details) values (39, 39);
-insert into order_details (id_order, id_details) values (40, 40);
-insert into order_details (id_order, id_details) values (41, 41);
-insert into order_details (id_order, id_details) values (42, 42);
-insert into order_details (id_order, id_details) values (43, 43);
-insert into order_details (id_order, id_details) values (44, 44);
-insert into order_details (id_order, id_details) values (45, 45);
-insert into order_details (id_order, id_details) values (46, 46);
-insert into order_details (id_order, id_details) values (47, 47);
-insert into order_details (id_order, id_details) values (48, 48);
-insert into order_details (id_order, id_details) values (49, 49);
-insert into order_details (id_order, id_details) values (50, 50);
-insert into order_details (id_order, id_details) values (51, 51);
-insert into order_details (id_order, id_details) values (52, 52);
-insert into order_details (id_order, id_details) values (53, 53);
-insert into order_details (id_order, id_details) values (54, 54);
-insert into order_details (id_order, id_details) values (55, 55);
-insert into order_details (id_order, id_details) values (56, 56);
-insert into order_details (id_order, id_details) values (57, 57);
-insert into order_details (id_order, id_details) values (58, 58);
-insert into order_details (id_order, id_details) values (59, 59);
-insert into order_details (id_order, id_details) values (60, 60);
-insert into order_details (id_order, id_details) values (44, 18);
-insert into order_details (id_order, id_details) values (6, 23);
-insert into order_details (id_order, id_details) values (60, 11);
-insert into order_details (id_order, id_details) values (35, 51);
-insert into order_details (id_order, id_details) values (58, 52);
-insert into order_details (id_order, id_details) values (56, 24);
-insert into order_details (id_order, id_details) values (21, 35);
-insert into order_details (id_order, id_details) values (6, 34);
-insert into order_details (id_order, id_details) values (14, 13);
-insert into order_details (id_order, id_details) values (36, 41);
-insert into order_details (id_order, id_details) values (37, 8);
-insert into order_details (id_order, id_details) values (9, 12);
-insert into order_details (id_order, id_details) values (2, 1);
-insert into order_details (id_order, id_details) values (29, 19);
-insert into order_details (id_order, id_details) values (29, 49);
-insert into order_details (id_order, id_details) values (57, 24);
-insert into order_details (id_order, id_details) values (6, 12);
-insert into order_details (id_order, id_details) values (7, 12);
-insert into order_details (id_order, id_details) values (53, 37);
-insert into order_details (id_order, id_details) values (25, 17);
-insert into order_details (id_order, id_details) values (38, 48);
-insert into order_details (id_order, id_details) values (4, 22);
-insert into order_details (id_order, id_details) values (50, 59);
-insert into order_details (id_order, id_details) values (20, 5);
-insert into order_details (id_order, id_details) values (1, 52);
-insert into order_details (id_order, id_details) values (35, 44);
-insert into order_details (id_order, id_details) values (26, 31);
-insert into order_details (id_order, id_details) values (39, 56);
-insert into order_details (id_order, id_details) values (53, 34);
-insert into order_details (id_order, id_details) values (5, 38);
-insert into order_details (id_order, id_details) values (25, 30);
-insert into order_details (id_order, id_details) values (27, 36);
-insert into order_details (id_order, id_details) values (9, 14);
-insert into order_details (id_order, id_details) values (30, 31);
-insert into order_details (id_order, id_details) values (52, 45);
-insert into order_details (id_order, id_details) values (56, 13);
-insert into order_details (id_order, id_details) values (21, 57);
-insert into order_details (id_order, id_details) values (48, 57);
-insert into order_details (id_order, id_details) values (36, 54);
-insert into order_details (id_order, id_details) values (37, 45);
-insert into order_details (id_order, id_details) values (52, 6);
-insert into order_details (id_order, id_details) values (31, 30);
-insert into order_details (id_order, id_details) values (57, 16);
-insert into order_details (id_order, id_details) values (23, 29);
-insert into order_details (id_order, id_details) values (7, 11);
-insert into order_details (id_order, id_details) values (29, 3);
-insert into order_details (id_order, id_details) values (9, 49);
+
+-- Details
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 1, 3, 8, 1);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 2, 5, 1, 2);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 3, 3, 11, 3);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 4, 1, 2, 4);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 5, 1, 11, 5);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 6, 4, 6, 6);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 7, 4, 9, 7);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 8, 2, 4, 8);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 9, 1, 8, 9);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 10, 3, 11, 10);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 11, 1, 6, 11);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 12, 3, 5, 12);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 13, 1, 13, 13);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 14, 5, 2, 14);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 15, 2, 6, 15);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 16, 2, 7, 16);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 17, 4, 10, 17);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 18, 2, 2, 18);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 19, 4, 7, 19);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 20, 3, 1, 20);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 21, 1, 11, 21);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 22, 3, 4, 22);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 23, 4, 5, 23);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 24, 4, 14, 24);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 25, 3, 10, 25);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 26, 4, 1, 26);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 27, 1, 6, 27);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 28, 5, 9, 28);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 29, 4, 5, 29);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 30, 1, 12, 30);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 31, 1, 12, 31);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 32, 1, 12, 32);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 33, 3, 2, 33);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 34, 4, 8, 34);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 35, 3, 12, 35);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 36, 1, 4, 36);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 37, 1, 13, 37);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 38, 3, 10, 38);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 39, 4, 14, 39);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 40, 2, 7, 40);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 41, 5, 10, 41);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 42, 3, 10, 42);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 43, 3, 9, 43);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 44, 2, 1, 44);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 45, 5, 6, 45);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 46, 5, 14, 46);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 47, 2, 14, 47);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 48, 3, 6, 48);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 49, 2, 12, 49);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 50, 2, 2, 50);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 51, 5, 13, 51);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 52, 4, 7, 52);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 53, 4, 11, 53);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 54, 5, 12, 54);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 55, 5, 14, 55);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 56, 1, 9, 56);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 57, 3, 9, 57);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 4, 58, 3, 5, 58);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 59, 4, 4, 59);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 60, 2, 5, 60);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 50, 3, 5, 61);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 35, 1, 2, 62);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 119, 4, 7, 63);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 25, 1, 11, 64);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 83, 4, 6, 65);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 63, 4, 9, 66);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 96, 1, 2, 67);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 168, 4, 10, 68);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 117, 5, 11, 69);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 16, 5, 4, 70);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 186, 2, 4, 71);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 4, 3, 6, 72);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 189, 5, 1, 73);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 24, 4, 5, 74);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 33, 5, 10, 75);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 150, 2, 11, 76);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 34, 5, 7, 77);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 38, 2, 1, 78);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 179, 1, 2, 79);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 20, 4, 13, 80);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 162, 4, 10, 81);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 71, 4, 12, 82);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 21, 4, 12, 83);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 51, 3, 9, 84);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 9, 5, 4, 85);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 171, 1, 3, 86);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 50, 3, 5, 87);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 12, 1, 11, 88);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 111, 2, 10, 89);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 146, 2, 13, 90);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 114, 4, 10, 91);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 43, 4, 4, 92);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 57, 2, 3, 93);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 109, 4, 13, 94);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 34, 3, 12, 95);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 34, 1, 9, 96);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 15, 1, 6, 97);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 92, 1, 12, 98);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 120, 3, 7, 99);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 67, 4, 8, 100);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 56, 3, 8, 101);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 179, 5, 13, 102);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 93, 4, 8, 103);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 4, 1, 3, 104);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 119, 2, 6, 105);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 142, 1, 9, 106);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 12, 4, 9, 107);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 89, 3, 10, 108);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 71, 2, 9, 109);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 106, 2, 9, 110);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 16, 4, 2, 111);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 87, 4, 8, 112);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 98, 4, 2, 113);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 126, 1, 8, 114);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 181, 4, 6, 115);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 1, 101, 5, 4, 116);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 76, 4, 3, 117);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 46, 3, 13, 118);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 3, 43, 2, 1, 119);
+insert into details (id, quantity, id_product, id_size, id_color, id_order) values (DEFAULT, 2, 130, 3, 2, 120);
+
+
 
 -- Review
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'nisl nunc', 'Quality-focused context-sensitive adapter', '2022-07-31 17:07:42', 1, 1);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'odio justo sollicitudin', 'Future-proofed well-modulated core', '2022-10-05 18:02:44', 2, 2);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'turpis adipiscing lorem', 'Inverse holistic service-desk', '2022-04-29 12:05:25', 3, 3);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'in eleifend', 'Persevering holistic projection', '2022-01-22 10:57:53', 4, 4);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'maecenas rhoncus', 'Cloned bifurcated time-frame', '2022-04-26 19:19:37', 5, 5);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'aliquet massa id', 'Advanced static synergy', '2022-05-30 07:44:12', 6, 6);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'congue eget semper', 'Profound local matrices', '2022-03-24 00:59:37', 7, 7);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'tincidunt nulla mollis', 'Customizable 6th generation knowledge user', '2021-12-08 12:14:46', 8, 8);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'erat id', 'Focused mission-critical conglomeration', '2022-04-12 04:47:52', 9, 9);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'tristique in tempus', 'Function-based tangible ability', '2022-10-25 17:51:02', 10, 10);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'in faucibus orci', 'Virtual clear-thinking contingency', '2022-09-20 07:42:54', 11, 11);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'at feugiat', 'Multi-layered 24/7 parallelism', '2022-10-13 14:39:23', 12, 12);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'velit nec', 'Realigned value-added knowledge user', '2022-07-07 07:55:30', 13, 13);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'dignissim vestibulum vestibulum', 'User-friendly contextually-based adapter', '2022-05-04 08:15:00', 14, 14);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'nunc nisl duis', 'Innovative global flexibility', '2022-12-23 19:56:33', 15, 15);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'duis bibendum', 'Configurable clear-thinking internet solution', '2022-10-08 01:15:04', 16, 16);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'hac habitasse', 'Stand-alone exuding data-warehouse', '2022-06-27 11:19:32', 17, 17);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'amet consectetuer', 'Face to face human-resource Graphical User Interface', '2022-07-27 05:13:54', 18, 18);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'nullam molestie', 'Enhanced systematic ability', '2022-01-21 18:35:23', 19, 19);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'nisl duis', 'Multi-tiered object-oriented structure', '2022-09-22 06:35:14', 20, 20);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'at dolor', 'Streamlined bifurcated throughput', '2022-05-09 01:24:54', 21, 21);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'in porttitor', 'Operative dedicated productivity', '2022-12-05 12:11:35', 22, 22);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'eu interdum eu', 'Ergonomic system-worthy orchestration', '2022-12-26 23:53:22', 23, 23);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'dui proin leo', 'Automated intangible task-force', '2022-08-30 09:50:39', 24, 24);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'risus dapibus', 'Sharable empowering data-warehouse', '2022-08-11 18:35:03', 25, 25);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'nullam orci', 'Expanded scalable customer loyalty', '2022-08-14 23:49:39', 26, 26);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'venenatis lacinia aenean', 'Quality-focused stable internet solution', '2022-11-15 21:58:03', 27, 27);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'nec nisi volutpat', 'Balanced 24/7 leverage', '2022-07-04 15:38:43', 28, 28);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'morbi quis', 'Advanced contextually-based knowledge user', '2022-05-15 08:50:22', 29, 29);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'mi integer', 'Distributed solution-oriented methodology', '2022-11-05 17:07:06', 30, 30);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'in faucibus orci', 'Versatile secondary collaboration', '2022-08-10 04:44:08', 31, 31);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'ante vivamus', 'Up-sized actuating alliance', '2022-11-25 08:56:42', 32, 32);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'pede libero quis', 'Customizable bi-directional moratorium', '2022-06-19 08:39:07', 33, 33);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'felis sed interdum', 'Switchable explicit monitoring', '2022-04-23 20:26:50', 34, 34);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'quam pharetra', 'Synergized web-enabled data-warehouse', '2022-08-18 04:40:41', 35, 35);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'libero ut massa', 'Multi-layered asymmetric approach', '2022-05-07 18:49:05', 36, 36);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'porta volutpat quam', 'Customizable discrete parallelism', '2022-12-15 23:34:21', 37, 37);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'ut massa', 'Open-source well-modulated solution', '2022-01-09 08:18:49', 38, 38);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'non quam nec', 'Fully-configurable homogeneous functionalities', '2022-12-07 14:58:24', 39, 39);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'a ipsum integer', 'Optimized needs-based standardization', '2022-10-05 03:53:54', 40, 40);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'ut volutpat sapien', 'Sharable dynamic attitude', '2022-01-19 20:44:33', 41, 41);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'in eleifend', 'Adaptive encompassing task-force', '2022-07-29 21:48:22', 42, 42);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'quis justo maecenas', 'Horizontal executive hub', '2021-12-31 01:48:59', 43, 43);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'turpis sed', 'Implemented 5th generation budgetary management', '2022-04-25 13:37:32', 44, 44);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'fusce congue diam', 'De-engineered client-server conglomeration', '2022-11-30 08:37:17', 45, 45);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'leo rhoncus sed', 'User-friendly scalable emulation', '2022-08-05 04:01:12', 46, 46);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'elit ac', 'Organic neutral time-frame', '2022-07-06 07:13:24', 47, 47);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'sapien arcu sed', 'Phased client-driven product', '2022-08-27 21:20:27', 48, 48);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'nisl ut volutpat', 'Switchable methodical access', '2022-12-10 22:13:36', 49, 49);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'nam dui', 'Right-sized static knowledge base', '2022-12-04 01:59:18', 50, 50);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'mi in', 'Cloned uniform task-force', '2022-11-15 17:50:40', 51, 51);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'consequat metus', 'Decentralized directional conglomeration', '2021-12-22 14:26:57', 52, 52);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'est lacinia', 'Open-source content-based system engine', '2022-08-23 14:42:31', 53, 53);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'metus arcu', 'Switchable 5th generation functionalities', '2022-04-09 03:22:53', 54, 54);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'eu felis fusce', 'Re-engineered directional encryption', '2022-11-09 08:47:43', 55, 55);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'montes nascetur', 'Programmable hybrid frame', '2022-10-27 02:17:12', 56, 56);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'eu massa donec', 'Object-based cohesive task-force', '2022-06-20 21:51:51', 57, 57);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'enim leo', 'Customizable actuating functionalities', '2022-07-27 03:34:50', 58, 58);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'suscipit ligula', 'Seamless discrete process improvement', '2022-04-18 18:50:14', 59, 59);
+insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'nullam sit amet', 'Polarised zero defect hardware', '2022-05-15 14:00:56', 60, 60);
 
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'ornare consequat lectus in est risus auctor sed', 'habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam', '2022-11-20 14:24:22', 1, 1);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'odio justo sollicitudin ut suscipit a feugiat et eros vestibulum', 'phasellus id sapien in sapien iaculis congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget', '2022-12-31 08:33:07', 2, 2);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'montes nascetur ridiculus mus vivamus', 'tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a', '2022-12-27 06:26:29', 3, 3);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'non velit donec diam neque', 'vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero ut massa volutpat convallis morbi odio odio elementum', '2022-11-10 23:40:03', 4, 4);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'sociis natoque penatibus et magnis dis parturient montes nascetur', 'cubilia curae mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit amet', '2022-11-20 08:37:08', 5, 5);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'eu massa donec dapibus duis', 'eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum donec ut mauris eget massa tempor', '2022-12-12 17:20:20', 6, 6);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'sodales sed tincidunt eu felis', 'rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci', '2022-12-16 07:22:57', 7, 7);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'in hac habitasse platea dictumst etiam faucibus cursus urna', 'amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod', '2022-10-30 04:03:37', 8, 8);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'a pede posuere nonummy integer non velit donec diam neque', 'semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam', '2022-10-21 23:41:54', 9, 9);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'justo sollicitudin ut suscipit a feugiat et', 'ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla suscipit ligula in lacus curabitur at', '2022-11-20 08:56:23', 10, 10);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'eget orci vehicula condimentum curabitur in', 'aenean sit amet justo morbi ut odio cras mi pede malesuada in imperdiet et commodo vulputate justo in blandit ultrices', '2022-11-09 21:41:02', 11, 11);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'libero nam dui proin leo', 'a feugiat et eros vestibulum ac est lacinia nisi venenatis tristique fusce congue diam id ornare imperdiet sapien urna pretium nisl ut volutpat sapien arcu', '2022-11-10 13:22:12', 12, 12);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis', 'porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae', '2023-01-03 16:21:43', 13, 13);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'ultrices posuere cubilia curae donec', 'mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla suscipit ligula in lacus', '2022-11-05 18:23:13', 14, 14);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis', 'dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam', '2022-12-14 08:28:49', 15, 15);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'dapibus augue vel accumsan tellus nisi eu', 'leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi', '2022-11-08 12:40:13', 16, 16);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'quisque porta volutpat erat quisque erat eros viverra', 'aliquet maecenas leo odio condimentum id luctus nec molestie sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est et tempus', '2022-11-01 06:54:06', 17, 17);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'elit proin risus praesent lectus vestibulum quam sapien', 'lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti cras in purus eu magna vulputate luctus', '2022-12-17 20:17:40', 18, 18);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'augue vel accumsan tellus nisi eu orci mauris lacinia sapien', 'maecenas tristique est et tempus semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia', '2022-11-16 17:52:55', 19, 19);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'donec diam neque vestibulum eget vulputate ut ultrices', 'id ornare imperdiet sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac', '2022-12-02 14:21:08', 20, 20);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'sagittis nam congue risus semper porta volutpat quam', 'justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse accumsan tortor', '2022-12-15 06:48:49', 21, 21);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'porttitor id consequat in consequat ut nulla sed accumsan felis', 'habitasse platea dictumst morbi vestibulum velit id pretium iaculis diam erat fermentum justo nec condimentum neque sapien placerat ante nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit', '2022-11-08 22:24:17', 22, 22);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'nullam molestie nibh in lectus pellentesque at nulla', 'pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc', '2022-11-11 16:36:33', 23, 23);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'integer ac neque duis bibendum morbi non quam', 'molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero ut massa volutpat convallis morbi odio', '2022-12-05 07:08:41', 24, 24);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'in lectus pellentesque at nulla suspendisse potenti', 'sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et', '2022-12-31 23:59:01', 25, 25);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'tristique fusce congue diam id ornare', 'sed tristique in tempus sit amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis turpis enim blandit mi in porttitor', '2022-11-21 04:29:24', 26, 26);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'nec dui luctus rutrum nulla tellus', 'quam sapien varius ut blandit non interdum in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis', '2022-12-31 13:48:45', 27, 27);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'donec ut dolor morbi vel lectus', 'nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae', '2022-12-28 07:45:22', 28, 28);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'sapien dignissim vestibulum vestibulum ante ipsum', 'congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero nam dui proin leo odio porttitor', '2022-11-28 05:22:28', 29, 29);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'lacus at turpis donec posuere metus vitae', 'nec nisi volutpat eleifend donec ut dolor morbi vel lectus in quam fringilla rhoncus mauris enim leo rhoncus sed vestibulum', '2022-12-16 09:37:31', 30, 30);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'amet eleifend pede libero quis orci nullam molestie', 'aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a', '2022-10-22 21:10:44', 31, 31);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'tristique in tempus sit amet sem fusce', 'cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque penatibus et magnis', '2022-11-28 07:52:34', 32, 32);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'non ligula pellentesque ultrices phasellus id sapien in sapien iaculis', 'primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec ut dolor', '2022-11-17 02:13:00', 33, 33);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'eget tempus vel pede morbi porttitor lorem id', 'ultrices erat tortor sollicitudin mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui', '2022-11-19 06:48:07', 34, 34);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'vel nulla eget eros elementum pellentesque quisque porta volutpat', 'sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui', '2022-12-08 05:54:31', 35, 35);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'interdum venenatis turpis enim blandit mi', 'cras mi pede malesuada in imperdiet et commodo vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet consectetuer adipiscing elit proin interdum mauris non ligula', '2022-11-26 05:01:18', 36, 36);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'vitae consectetuer eget rutrum at lorem integer', 'nunc purus phasellus in felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat ut', '2022-12-14 12:16:15', 37, 37);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'at lorem integer tincidunt ante vel ipsum', 'nulla ultrices aliquet maecenas leo odio condimentum id luctus nec molestie sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique', '2022-10-26 01:47:13', 38, 38);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'sed interdum venenatis turpis enim blandit', 'vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus', '2022-12-20 08:11:54', 39, 39);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'justo eu massa donec dapibus duis at', 'ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi', '2022-11-24 18:15:34', 40, 40);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'quis turpis sed ante vivamus', 'faucibus orci luctus et ultrices posuere cubilia curae nulla dapibus dolor vel est donec odio justo sollicitudin ut suscipit a feugiat et eros vestibulum ac', '2022-11-13 09:59:55', 41, 41);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'turpis integer aliquet massa id lobortis convallis tortor', 'id massa id nisl venenatis lacinia aenean sit amet justo morbi ut odio cras mi pede malesuada in imperdiet et commodo vulputate', '2022-12-10 01:07:07', 42, 42);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'nunc rhoncus dui vel sem sed sagittis nam congue risus', 'potenti cras in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque penatibus et', '2022-12-14 16:06:00', 43, 43);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'aliquam sit amet diam in magna bibendum', 'convallis morbi odio odio elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu', '2022-12-23 07:26:33', 44, 44);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'ullamcorper purus sit amet nulla', 'id nisl venenatis lacinia aenean sit amet justo morbi ut odio cras mi pede malesuada in imperdiet et commodo vulputate justo in', '2022-10-31 18:32:18', 45, 45);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'sapien placerat ante nulla justo aliquam quis turpis eget elit', 'sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce', '2023-01-02 21:09:41', 46, 46);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'nulla eget eros elementum pellentesque quisque porta', 'congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti cras in purus eu', '2022-11-14 13:17:31', 47, 47);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'nulla integer pede justo lacinia eget tincidunt eget', 'ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac', '2022-11-26 20:21:15', 48, 48);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'non pretium quis lectus suspendisse potenti in', 'eget tempus vel pede morbi porttitor lorem id ligula suspendisse ornare consequat lectus in est risus auctor sed tristique in tempus sit', '2022-10-26 19:02:29', 49, 49);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'vestibulum rutrum rutrum neque aenean', 'luctus cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque penatibus et magnis dis parturient', '2022-10-21 03:08:32', 50, 50);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 1, 'a odio in hac habitasse platea dictumst maecenas', 'lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur', '2022-11-22 00:39:39', 51, 51);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 5, 'ante ipsum primis in faucibus orci', 'tellus nulla ut erat id mauris vulputate elementum nullam varius nulla facilisi cras non velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget eros elementum', '2022-11-05 17:56:45', 52, 52);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'commodo vulputate justo in blandit ultrices enim', 'in felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan', '2022-10-24 10:48:31', 53, 53);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 3, 'elementum pellentesque quisque porta volutpat erat quisque', 'in ante vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend', '2022-12-14 01:16:44', 54, 54);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'ornare imperdiet sapien urna pretium nisl ut volutpat', 'velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id pretium iaculis diam erat fermentum justo nec condimentum neque sapien placerat ante nulla', '2022-12-28 12:52:15', 55, 55);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'pede malesuada in imperdiet et', 'non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus', '2022-12-14 14:38:47', 56, 56);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'interdum mauris ullamcorper purus sit amet nulla quisque arcu libero', 'imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc', '2022-12-29 02:35:13', 57, 57);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'porttitor id consequat in consequat ut', 'non mi integer ac neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel', '2022-11-23 17:15:33', 58, 58);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 2, 'urna ut tellus nulla ut erat id mauris', 'vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula condimentum curabitur in libero ut', '2022-12-21 12:20:21', 59, 59);
-insert into review (id, evaluation, title, description, date, id_user, id_product) values (DEFAULT, 4, 'non sodales sed tincidunt eu felis fusce posuere felis', 'eget elit sodales scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum donec ut', '2022-11-09 01:37:08', 60, 60);
-
---Like
+--
 
 insert into user_like (id_user, id_review) values (90, 56);
 insert into user_like (id_user, id_review) values (138, 9);
