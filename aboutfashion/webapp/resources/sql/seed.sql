@@ -334,16 +334,16 @@ EXECUTE PROCEDURE update_avg_classification_product();
 CREATE FUNCTION check_card_order()
 RETURNS TRIGGER AS 
 $$BEGIN
-    IF EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN card WHERE id_user = NEW.id_user AND id_card = NEW.id_card)
+    IF NOT EXISTS (SELECT * FROM user_order NATURAL JOIN card WHERE id_user = NEW.id_user AND id_card = NEW.id_card)
     THEN
         RAISE EXCEPTION 'The card does not belong to the user';
     END IF;
-    RETURN NEW;
+    RETURN NEW;EXISTS (SELECT * FROM user_order NATURAL JOIN address WHERE  id_user = NEW.id_user AND id_address = NEW.id_address)
 END; $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER check_card_order
-BEFORE INSERT ON user_order
+BEFORE UPDATE ON user_order
 FOR EACH ROW
 EXECUTE PROCEDURE check_card_order();
 
@@ -352,7 +352,7 @@ EXECUTE PROCEDURE check_card_order();
 CREATE FUNCTION check_address_order()
 RETURNS TRIGGER AS 
 $$BEGIN
-    IF EXISTS (SELECT * FROM user_order NATURAL JOIN authenticated_user NATURAL JOIN address WHERE  id_user = NEW.id_user AND id_address = NEW.id_address)
+    IF NOT EXISTS (SELECT * FROM user_order NATURAL JOIN address WHERE  id_user = NEW.id_user AND id_address = NEW.id_address)
     THEN
         RAISE EXCEPTION 'The address does not belong to the user';
     END IF;
@@ -361,7 +361,7 @@ END; $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER check_address_order
-BEFORE INSERT ON user_order
+BEFORE UPDATE ON user_order
 FOR EACH ROW
 EXECUTE PROCEDURE check_address_order();
 
