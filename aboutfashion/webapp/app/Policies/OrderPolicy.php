@@ -10,7 +10,7 @@ class OrderPolicy
 {
     use HandlesAuthorization;
 
-    public function updateCart(User $user, User $requestUser){
-        return $user->id == $requestUser->id;
+    public function updateCart(User $user, int $id_user){
+        return $user->id == $id_user;
     }
 }

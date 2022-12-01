@@ -55,14 +55,30 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $user = User::find($request['id_user']); 
-        $this->authorize('updateCart', $user);
+        $this->authorize('updateCart', $request['id_user']);
 
         $shoppingCart = $this->createShoppingCart($user->id);
         $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
         $detail->quantity += 1;
-        $detail->save();
-        return Response::json(array('status'=>'success','message'=>'Success!'), 200);
-        
-    }    
+        $detail->save();        
+    }
+    
+    public function deleteProductCart(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_user' => 'required|integer',
+            'id_color' => 'required|integer',
+            'id_size' => 'required|integer',
+            'id_product' => 'required|integer'
+         ]);
+
+         if($validator->fails()){
+            return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
+        }
+
+        $this->authorize('updateCart', $request['id_user']);
+
+        $filters = array(['id_product', $request['id_product']],['id_size', $request['id_size']],['id_color', $request['id_color']]);
+        $detail = User::find($request['id_user'])->orders()->where('status', 'Shopping Cart')->details()->where($filters)->first();
+        $detail->delete();
+    } 
 }
