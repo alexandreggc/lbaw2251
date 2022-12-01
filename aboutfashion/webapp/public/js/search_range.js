@@ -29,4 +29,24 @@ pmdSliderValueRange.noUiSlider.on('update', function( values, handle ) {
   } else {
     valueMin.value = values[handle];
   }
-});	
+});
+
+
+function change_image(image){
+
+  var container = document.getElementById("main-image");
+
+ container.src = image.src;
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+
+
+
+
+
+
+
+});

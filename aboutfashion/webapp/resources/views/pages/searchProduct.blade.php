@@ -135,7 +135,6 @@
                 let placeholder = document.getElementById("data-output");
                 let out = "";
                 $.each(data, function(i, val) {
-                    console.log(data);
                     out += `
                     <div class="col-md-3 col-sm-6 mx-4 mt-2 mb-2 d-inline-block">
                         <div class="product-grid">
@@ -182,7 +181,6 @@
 
             const response = await fetch(url)
             const products = await response.json()
-            console.log(drawProducts)
             let oldBody = document.getElementById("data-output")
             let newBody = drawProducts(products)
 
@@ -231,7 +229,6 @@
 
             const response = await fetch(url)
             const products = await response.json()
-            console.log(drawProducts)
             let oldBody = document.getElementById("data-output")
             let newBody = drawProducts(products)
 
