@@ -3,10 +3,8 @@
 
     <head>
         <ol class="breadcrumb p-3 pb-1">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/products">Woman</a></li>
-            <li class="breadcrumb-item"><a href="/products">Clothing</a></li>
-            <li class="breadcrumb-item"><a href="/products">Jackets</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('searchProductView') }}">Search</a></li>
             <li class="breadcrumb-item active">{{ $product->name }}</li>
         </ol>
     </head>

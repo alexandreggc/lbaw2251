@@ -80,5 +80,21 @@ class ShoppingCartController extends Controller{
         $filters = array(['id_product', $request['id_product']],['id_size', $request['id_size']],['id_color', $request['id_color']]);
         $detail = User::find($request['id_user'])->orders()->where('status', 'Shopping Cart')->details()->where($filters)->first();
         $detail->delete();
+    }
+
+    public function updateProductCart(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id_user' => 'required|integer',
+            'id_color' => 'required|integer',
+            'id_size' => 'required|integer',
+            'id_product' => 'required|integer',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        if($validator->failed()){
+            return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
+        }
+
+        
     } 
 }

@@ -17,10 +17,7 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('us
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-
 //Orders
-//Route::get('/orders/create', 'OrderController@create')->name('orderCreateForm');
-Route::post('/orders/create', 'OrderController@create')->name('orderCreate');
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 
 //Cards
@@ -46,14 +43,12 @@ Route::patch('/admin-panel/users/{id}/block', 'AdminController@blockUser')->name
 
 
 //Products
-Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
-Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
-//Shopping Cart -- VER ESTA PARTE DO URL COM /USERS/{ID} -- MELHOR PASSAR PARA A SECÇÃO USER?
-Route::get('/users/{id}/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
-//Route::post('/users/{id}/shopping-cart/add', 'ShoppingCartController@addProductCart')->name('addProductCart');
-//Route::post('/users/{id}shopping-cart/remove', 'ShoppingCartController@removeProductCart')->name('removeProductCart');
-//Route::post('/users/{id}/shopping-cart/checkout', 'ShoppingCartController@checkout')->name('checkoutCart');
+//API
+Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
+Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
 Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart');
+Route::post('/api/shopping-cart/delete', 'ShoppingController@deleteProductCart')->name('deleteProductCart');
+Route::post('/api/shopping-cart/update', 'ShoppingController@updateProductCart')->name('updateProductCart');
