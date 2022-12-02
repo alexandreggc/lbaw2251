@@ -358,7 +358,7 @@
                         <h6 class="text-uppercase">Size</h6> `
                 let sizes = []
                 for (const val of product) {
-                    sizes.push(val.id_size)
+                    sizes.push(val.size.name)
                 }
                 sizes = removeDuplicates(sizes).sort()
                 for (const number of sizes) {

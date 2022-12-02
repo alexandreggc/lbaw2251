@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stock;
+use App\Models\Color;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use League\CommonMark\Extension\Attributes\Node\Attributes;
 
 
 class StockController extends Controller
@@ -31,7 +34,15 @@ class StockController extends Controller
         }
         if(!is_null($request['id_color'])){
             $stocks->where('id_color', $request['id_color']);
-        }           
-        return json_encode($stocks->get());
+        }
+        $stocks = $stocks->get();
+        $result = array();
+        foreach($stocks as $stock){
+            $size = Size::find($stock['id_size']);
+            $color = Color::find($stock['id_color']);
+            array_push($result, array('stock' => $stock['stock'], 'size'=>$size, 'color'=>$color));
+        }
+        
+        return json_encode($result);
     }
 }

@@ -60,15 +60,8 @@ class ProductController extends Controller{
         return $product;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
     public function show($id){
-        $product = Product::find($id);
-        //$images = $product->images;
+        $product = Product::findOrFail($id);
         return view('pages.products.show', ['product' => $product]);
     }
 
