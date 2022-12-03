@@ -26,6 +26,7 @@
     <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/search_range.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
+    <script type="text/javascript" src={{ asset('js/search.js') }} defer></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -227,7 +228,7 @@
             @yield('content')
         </section>
 
-        <footer 
+        <footer
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
@@ -257,10 +258,10 @@
     </script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <!-- Slider js  -->    
+    <!-- Slider js  -->
     <script src="http://propeller.in/components/range-slider/js/wNumb.js"></script>
     <script src="http://propeller.in/components/range-slider/js/nouislider.js"></script>
-    
+
 
 </body>
 
