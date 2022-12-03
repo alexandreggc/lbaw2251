@@ -26,7 +26,6 @@
     <script type="text/javascript" src={{ asset('js/confirm_passwords.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/search_range.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
-    <script type="text/javascript" src={{ asset('js/search.js') }} defer></script>
 </head>
 
 <body class="d-flex flex-column min-vh-100">

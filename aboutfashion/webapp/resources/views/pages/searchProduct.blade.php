@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <script type="text/javascript" src={{ asset('js/search.js') }} defer></script>
     <div class="container-fluid mt-5 ">
 
         <div class="row mb-5">
