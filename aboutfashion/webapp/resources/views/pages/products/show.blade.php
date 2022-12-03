@@ -47,7 +47,12 @@
                                         @endif
 
                                     </div>
-                                    <span id="disc"></span>
+                                    @if ($finalPrice == $product->price)
+                                        <span id="disc"></span>
+                                    @else
+                                        <span id="disc">{{ $product->getPromotion(date('Y-m-d H:i:s'))->discount }}%
+                                            OFF</span>
+                                    @endif
                                 </div>
 
 
