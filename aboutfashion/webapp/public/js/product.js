@@ -5,14 +5,10 @@ function attachEvents() {
     color.addEventListener("change", addSize)
 }
 
-async function addSize() {
+async function addSize(element) {
     color = document.getElementById("color").value
     if (!(color == "Select color")) {
-        url = '/api/products/stock?'
-        url += 'id_product='
-        url += document.getElementById('id-product').value
-        url += '&id_color='
-        url += color
+        url = '/api/products/stock?id_product=' + document.getElementById('id-product').innerText + '&id_color=' + color
         const response = await fetch(url)
         const product = await response.json()
         size = document.getElementById('div_size')
