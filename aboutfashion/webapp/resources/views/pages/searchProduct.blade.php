@@ -119,7 +119,7 @@
                         </select>
                     </form>
                 </div>
-                <div class="spinner-border text-primary" id="spinner" role="status">
+                <div class="spinner-border text-primary mx-auto " id="spinner" role="status" style="margin-top:240px;color:#212529;font-size: 30px;width: 6rem; height: 6rem">
                 </div>
                 <div class="container mx-auto" id="data-output">
 
