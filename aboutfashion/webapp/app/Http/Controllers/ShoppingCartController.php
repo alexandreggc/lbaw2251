@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Response;
 
 
 class ShoppingCartController extends Controller{
-
+    public function show(){
+        
+        return view('pages.user.shopping_cart');
+    }
 
     public function __construct(){
         $this->middleware('auth:web');

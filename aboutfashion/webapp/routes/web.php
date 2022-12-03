@@ -52,3 +52,5 @@ Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStoc
 Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart');
 Route::post('/api/shopping-cart/delete', 'ShoppingController@deleteProductCart')->name('deleteProductCart');
 Route::post('/api/shopping-cart/update', 'ShoppingController@updateProductCart')->name('updateProductCart');
+
+Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
