@@ -43,6 +43,13 @@ class Product extends Model{
         return $this->hasMany('App\Models\Detail','stock', 'id_product');
     }
 
+    public function getPriceWithPromotion(string $date){
+        $filter = array(['start_date','<=',$date], ['final_date','>=',$date]);
+        $promotion = $this->promotions()->where($filter)->orderBy('discount', 'DESC')->first();
+        $discount = is_null($promotion) ? 0 : $promotion->discount;
+        return $this->price * (1 - $discount / 100);
+    }
+
     public function scopeSearch($query, $search)
     {
         if (!$search) {
