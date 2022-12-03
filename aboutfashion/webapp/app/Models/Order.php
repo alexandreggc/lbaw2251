@@ -30,7 +30,7 @@ class Order extends Model
         $order = Order::find($id);
         $total = 0;
         foreach($order->details as $detail){
-            $total += $detail->product['price'] * $detail['quantity'];
+            $total += $detail->product->getPriceWithPromotion($order->date) * $detail->quantity;
         }
         return $total;
     }
