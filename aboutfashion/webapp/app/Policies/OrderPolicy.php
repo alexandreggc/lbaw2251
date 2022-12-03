@@ -13,4 +13,8 @@ class OrderPolicy
     public function updateCart(User $user, int $id_user){
         return $user->id == $id_user;
     }
+
+    public function show(User $user, Order $order){
+        return $user->id == $order->id_user;
+    }
 }

@@ -25,11 +25,10 @@ class Order extends Model
         return $this->hasMany('\App\Models\Detail', 'id_order');
     }
 
-    public function totalPrice($id)
+    public function totalPrice()
     {
-        $order = Order::find($id);
         $total = 0;
-        foreach($order->details as $detail){
+        foreach($this->details as $detail){
             $total += $detail->product->getPriceWithPromotion($order->date) * $detail->quantity;
         }
         return $total;
