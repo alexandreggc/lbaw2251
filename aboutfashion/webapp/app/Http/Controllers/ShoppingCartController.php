@@ -8,6 +8,7 @@ use App\Models\Order;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 
@@ -48,7 +49,6 @@ class ShoppingCartController extends Controller{
 
     public function addProductCart(Request $request){
         $validator = Validator::make($request->all(), [
-           'id_user' => 'required|integer',
            'id_color' => 'required|integer',
            'id_size' => 'required|integer',
            'id_product' => 'required|integer'
@@ -58,7 +58,7 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $this->authorize('updateCart', $request['id_user']);
+        $user = Auth::user();
 
         $shoppingCart = $this->createShoppingCart($user->id);
         $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
@@ -68,7 +68,6 @@ class ShoppingCartController extends Controller{
     
     public function deleteProductCart(Request $request){
         $validator = Validator::make($request->all(), [
-            'id_user' => 'required|integer',
             'id_color' => 'required|integer',
             'id_size' => 'required|integer',
             'id_product' => 'required|integer'
@@ -78,10 +77,10 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $this->authorize('updateCart', $request['id_user']);
+        $id_user = Auth::user()->id;
 
         $filters = array(['id_product', $request['id_product']],['id_size', $request['id_size']],['id_color', $request['id_color']]);
-        $detail = User::find($request['id_user'])->orders()->where('status', 'Shopping Cart')->details()->where($filters)->first();
+        $detail = User::find($id_user)->orders()->where('status', 'Shopping Cart')->details()->where($filters)->first();
         $detail->delete();
     }
 

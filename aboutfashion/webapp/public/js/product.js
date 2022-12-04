@@ -1,15 +1,20 @@
 attachEvents()
 
+if (document.getElementById('color').value != 'Select Color') {
+    addSize()
+}
+
 function attachEvents() {
-    color = document.getElementById("color")
+    let color = document.getElementById("color")
     color.addEventListener("change", addSize)
 }
 
 async function addSize(element) {
-    color = document.getElementById("color").value
-    if (!(color == "Select color")) {
-        url = '/api/products/stock?id_product=' + document.getElementById('id-product').innerText + '&id_color=' + color
-        const response = await fetch(url)
+    let color = document.getElementById('color').value
+    if (color == 'Select color') {
+        (document.getElementById('div_size')).innerHTML = '';
+    } else {
+        const response = await fetch('/api/products/stock?id_product=' + document.getElementById('id-product').innerText + '&id_color=' + color)
         const product = await response.json()
         size = document.getElementById('div_size')
         let out = ""
@@ -38,13 +43,19 @@ async function addSize(element) {
         }
         out += `</div>
                     <div class="cart mt-4 align-items-center"> 
-                        <button class="btn btn-primary mr-2 px-4" onclick="addProductCart()">Add to cart</button> 
+                        <button class="btn btn-primary mr-2 px-4" id='add-to-cart'>Add to cart</button> 
                     </div>`
         size.innerHTML = out;
-    } else {
-        size = document.getElementById('div_size')
-        let out = ""
-        size.innerHTML = out;
-
+        (document.getElementById('add-to-cart')).addEventListener('click', addToCart);
     }
+}
+
+async function addToCart(element) {
+    let color = document.getElementById('color').value
+    let size = $('input[name=size]:checked').attr('value')
+    let product = document.getElementById('id-product').innerText
+    const request = new XMLHttpRequest()
+    request.open('post', '/api/shopping-cart/add', true)
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product)
 }
