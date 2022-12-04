@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Review;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller{
@@ -93,9 +97,13 @@ class ReviewController extends Controller{
      * @param  Request  $request
      * @return Response
      */
-    public function edit(Request $request){
-        $review = update($request);
-        return view('reviews.edit', ['review' => $review]);    
+    public function edit($id){
+        $review = Review::find($id);
+        $this->authorize('update', $review);
+        if(is_null($review)){
+            return abort('404');
+          }
+        return view('pages.reviews.edit', ['review' => $review]);    
     }
 
     /**
@@ -114,10 +122,11 @@ class ReviewController extends Controller{
         $this->authorize('update', $user, $review);
 
         //atualizar os dados da review editada
-        $review->rating = $request->input('rating');
+        $review->evaluation = $request->input('rate');
+        $review->title = $request->input('title');
         $review->description = $request->input('description');
         $review->save();
-        return $review;
+        return $request->input('rate');
     }
 
     /**
@@ -137,6 +146,6 @@ class ReviewController extends Controller{
 
         //eliminar a review
         $review->delete();
-        return $review;
+        return Redirect::route('userView', array('id'=>Auth::user()));
     }
 }

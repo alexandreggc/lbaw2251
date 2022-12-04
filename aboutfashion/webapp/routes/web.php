@@ -17,6 +17,14 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('us
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
+//Reviews
+Route::get('/review/{id}/edit', 'ReviewController@edit')->name('reviewEditForm');
+Route::delete('/review/{id}', 'ReviewController@destroy')->name('reviewDelete');
+Route::patch('/review/{id}', 'ReviewController@update')->name('reviewUpdate');
+Route::get('/review/create', 'ReviewController@create')->name('reviewCreateForm');
+Route::put('/review/create', 'ReviewController@store')->name('reviewCreate');
+
+
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 
