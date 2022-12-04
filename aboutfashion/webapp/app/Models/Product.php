@@ -50,6 +50,12 @@ class Product extends Model{
         return $this->price * (1 - $discount / 100);
     }
 
+    public function getPromotion(string $date){
+        $filter = array(['start_date','<=',$date], ['final_date','>=',$date]);
+        $promotion = $this->promotions()->where($filter)->orderBy('discount', 'DESC')->first();
+        return $promotion;
+    }
+
     public function scopeSearch($query, $search)
     {
         if (!$search) {

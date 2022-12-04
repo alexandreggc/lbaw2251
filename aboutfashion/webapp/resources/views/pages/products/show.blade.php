@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('content')
+    <script type="text/javascript" src={{ asset('js/product.js') }} defer></script>
+    <span id="id-product" style="display: none">{{ $product->id }}</span>
+
     <head>
         <ol class="breadcrumb p-3 pb-1">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
@@ -7,6 +10,7 @@
             <li class="breadcrumb-item active">{{ $product->name }}</li>
         </ol>
     </head>
+
     <body style="justify-content-center">
         <div class="container mt-5 mb-5">
             <div class="row d-flex justify-content-center">
@@ -30,20 +34,38 @@
                                 <div class="mt-4 mb-3">
                                     <h3 class="text-uppercase ">{{ $product->name }}</h3>
                                     <div class="price d-flex flex-row align-items-center" id="price">
+                                        @php
+                                            $finalPrice = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                        @endphp
+                                        <span class="act-price">Price: {{ $finalPrice }}€</span>
+                                        @if ($finalPrice == $product->price)
+                                            <div class="ml-2 mx-2"> <small class="dis-price"></small></div>
+                                        @else
+                                            <div class="ml-2 mx-2"> <small class="dis-price"
+                                                    style="color: #888;text-decoration: line-through;">{{ $product->price }}€</small>
+                                            </div>
+                                        @endif
 
                                     </div>
-                                    <span id="disc"></span>
+                                    @if ($finalPrice == $product->price)
+                                        <span id="disc"></span>
+                                    @else
+                                        <span id="disc">{{ $product->getPromotion(date('Y-m-d H:i:s'))->discount }}%
+                                            OFF</span>
+                                    @endif
                                 </div>
+
+
+
                                 <p class="about">{{ $product->description }}</p>
                                 <ul class="list-unstyled d-flex  text-warning mb-0">
                                     @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->avg_classification)
+                                        @if ($t > $product->avg_classification)
                                             <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
+                                        @else
                                             <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
+                                        @endif
+                                    @endfor
                                 </ul>
                                 <div class="dropdown mt-3" id="div_color">
                                     <select class="form-select " id="color" name="id_color" style="width:150px">
@@ -70,8 +92,8 @@
             <h3 class="mx-auto" style="">Reviews</h3>
         </div>
         @php
-        $n = ceil(count($product->reviews)/3);
-        $j=0;
+            $n = ceil(count($product->reviews) / 3);
+            $j = 0;
         @endphp
         <div id="carouselExampleControls" class="carousel slide carousel-dark text-center mx-3 mb-5"
             data-bs-ride="carousel">
@@ -277,112 +299,5 @@
         </div>
         @endif
     </body>
-    <script>
-        addPrice()
-        attachEvents()
 
-        function attachEvents() {
-            color = document.getElementById("color")
-            color.addEventListener("change", addSize)
-        }
-        async function addPrice() {
-            url = '/api/products?'
-            url += 'id_product='
-            url += "{{ $product->id }}"
-            const response = await fetch(url)
-            const product = await response.json()
-            let price = document.getElementById("price")
-            let newBodyp = drawPrice(product)
-            price.innerHTML = newBodyp
-
-            let disc = document.getElementById("disc")
-            let newBodyd = drawDisc(product)
-            disc.innerHTML = newBodyd
-
-
-        }
-
-        function drawPrice(product) {
-            let out = "";
-            for (const val of product) {
-                if (val.promotion.discount == undefined) {
-                    out += `
-                    <span class="act-price">Price: ${val.price}€</span>
-                    <div class="ml-2 mx-2"> <small class="dis-price"></small></div>`;
-
-                } else {
-                    out +=
-                        `
-                    <span class="act-price">Price: ${promoPrice(val.price,val.promotion.discount)}€</span>
-                    <div class="ml-2 mx-2"> <small class="dis-price" style="color: #888;text-decoration: line-through;">${val.price}€</small></div>`;
-                }
-
-            }
-            return out;
-        }
-
-        function drawDisc(product) {
-            let out = "";
-            for (const val of product) {
-                if (!(val.promotion.discount == undefined)) {
-                    out += `${val.promotion.discount}% OFF`;
-                }
-            }
-            return out;
-        }
-
-        function promoPrice(value, promo) {
-            return Math.round(value - (value * (promo / 100)));
-        }
-
-        async function addSize() {
-            color = document.getElementById("color").value
-            if (!(color == "Select color")) {
-                url = '/api/products/stock?'
-                url += 'id_product='
-                url += "{{ $product->id }}"
-                url += '&id_color='
-                url += color
-                const response = await fetch(url)
-                const product = await response.json()
-                size = document.getElementById('div_size')
-                let out = ""
-                out += `<div class="sizes mt-5">
-                        <h6 class="text-uppercase">Size</h6> `
-                let sizes = []
-                let p = true
-                for (const val of product) {
-                    for (const i of sizes) {
-                        if (i[0] === val.size.id){
-                            p = false
-                        }
-                    }
-                    if (p == true){
-                        sizes.push([val.size.id,val.size.name])
-                    }
-                    p = true
-                }
-                
-                sizes = sizes.sort()
-                for (const number of sizes) {
-                    out += `
-                        <label class="radio"> <input type="radio" name="size" value="${number[0]}" checked> <span style="">${number[1]}</span> </label> 
-                    `
-
-                }
-                out += `</div>
-                    <div class="cart mt-4 align-items-center"> 
-                        <button class="btn btn-primary mr-2 px-4" onclick="addProductCart()">Add to cart</button> 
-                    </div>`
-                size.innerHTML = out;
-            } else {
-                size = document.getElementById('div_size')
-                let out = ""
-                size.innerHTML = out;
-
-            }
-        }
-
-        
-    </script>
 @endsection

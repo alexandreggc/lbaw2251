@@ -29,7 +29,7 @@ class Order extends Model
     {
         $total = 0;
         foreach($this->details as $detail){
-            $total += $detail->product->getPriceWithPromotion($order->date) * $detail->quantity;
+            $total += $detail->product->getPriceWithPromotion($this->date) * $detail->quantity;
         }
         return $total;
     }
