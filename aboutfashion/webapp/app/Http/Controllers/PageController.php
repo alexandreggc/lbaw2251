@@ -14,7 +14,19 @@ class PageController extends Controller{
 
     public function homePageAdmin(){
         $users = User::all();
-        return view('pages.admin.home', ['users'=>$users]);
+        $products = Product::all();
+        $promotions = Promotion::all();
+        /*$orders = Order::all();
+        $reviews = Review::all();
+        $reports = Report::all();
+        return view('pages.admin.home', 
+                    ['users'=>$users, 
+                    'products'=>$products, 
+                    'promotions'=>$promotions, 
+                    'orders'=>$orders, 
+                    'reviews'=>$reviews, 
+                    'reports'=>$reports]);*/
+        return view('pages.admin.home', ['users'=>$users, 'products'=>$products, 'promotions'=>$promotions]);
     }
 
     public function aboutPage(){
