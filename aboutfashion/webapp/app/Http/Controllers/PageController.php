@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Promotion;
 use App\Models\User;
+use App\Models\Product;
 
 class PageController extends Controller{
 
     public function homePage(){
-        return view('pages.home');
+        $promotions = Promotion::all();
+        return view('pages.home',['promotions'=>$promotions]);
     }
 
     public function homePageAdmin(){

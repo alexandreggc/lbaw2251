@@ -47,6 +47,7 @@ Route::get('/products', 'ProductController@showSearchPage')->name('searchProduct
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
 //API
+Route::get('/api/products/', 'PageController@homePage')->name('homePageAPI');
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
 Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart');
