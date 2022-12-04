@@ -222,7 +222,7 @@
         </section>
 
         <footer
-            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mt-auto">
+            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto" >
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"
