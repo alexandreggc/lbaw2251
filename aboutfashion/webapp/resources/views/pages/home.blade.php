@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="row">
-    <div class="row bg-body" style="background-image: url('{{ asset('img/img3.jpg')}}');height: 80vh">
+    <div class="row bg-body" style="background-image: url('{{ asset('img/img3.jpg')}}');height: 90vh">
         <div class="col-lg-4 mx-auto my-auto">
             <h1 class="p-3 text-center" style="color:#fff;background-color:rgba(0,0,0,.9);">FASHION</h1>
             <h1 class="p-3 text-center " style="color:#fff;background-color:rgba(0,0,0,.9);">HAS</h1>

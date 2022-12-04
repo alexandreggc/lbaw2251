@@ -33,13 +33,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
                 <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" style="border: none;"
-                            data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <i class="ic fa fa-bars"></i>
-                        </button>
-                    </div>
+                    
                     <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"

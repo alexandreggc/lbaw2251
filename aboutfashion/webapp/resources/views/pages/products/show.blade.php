@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-
+        @if (count($product->reviews)>0)
         <div class=" d-flex justify-content-center align-items-center text-center mx-auto mt-5 mb-5" style="width: 200px;">
             <h3 class="mx-auto" style="">Reviews</h3>
         </div>
@@ -83,7 +83,37 @@
                             <div class="row align-items-center">
                                 <div class="col-lg-4 mx-auto">
                                     <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
+                                        alt="avatar" style="width: 150px;" />
+                                    <h5 class="mb-3">{{$product->reviews[$j]->user->first_name}} {{$product->reviews[$j]->user->last_name}}</h5>
+                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
+                                    <p class="text-muted">
+                                        <i class="fas fa-quote-left pe-2"></i>
+                                        {{$product->reviews[$j]['description']}}
+                                    </p>
+                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                                        @for ($t = 1; $t < 6; $t++)
+                                            @if($t>$product->reviews[$j]['evaluation'])
+                                            <li><i class="far fa-star fa-sm"></i></li>
+                                            @else
+                                            <li><i class="fas fa-star fa-sm"></i></li>
+                                            @endif
+                                        
+                                        @endfor
+                                    </ul>
+                                </div>
+                                @php
+                                $j= $j+1;
+                                @endphp
+                                @if($j==count($product->reviews))  
+                                    </div>
+                                    </div>
+                                    </div>
+                                    @break
+                                @endif
+                                <div class="col-lg-4 mx-auto">
+                                    <img class="rounded-circle shadow-1-strong mb-4"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
                                         alt="avatar" style="width: 150px;" />
                                     <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
@@ -113,37 +143,7 @@
                                 @endif
                                 <div class="col-lg-4 mx-auto">
                                     <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                                @if($j==count($product->reviews))  
-                                    </div>
-                                    </div>
-                                    </div>
-                                    @break
-                                @endif
-                                <div class="col-lg-4 mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
                                         alt="avatar" style="width: 150px;" />
                                     <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
@@ -175,7 +175,7 @@
                             <div class="row">
                                 <div class="col-lg-4 mx-auto">
                                     <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
                                         alt="avatar" style="width: 150px;" />
                                     <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
@@ -205,7 +205,7 @@
                                 @endif
                                 <div class="col-lg-4  mx-auto">
                                     <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
                                         alt="avatar" style="width: 150px;" />
                                     <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
@@ -235,7 +235,7 @@
                                 @endif
                                 <div class="col-lg-4  mx-auto">
                                     <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="https://digimedia.web.ua.pt/wp-content/uploads/2017/05/default-user-image.png"
+                                        src="{{$product->reviews[$j]->user->photo['file']}}"
                                         alt="avatar" style="width: 150px;" />
                                     <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
@@ -275,6 +275,7 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
+        @endif
     </body>
     <script>
         addPrice()
