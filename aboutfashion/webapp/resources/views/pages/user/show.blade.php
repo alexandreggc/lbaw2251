@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <ul id="profile-tab" class="nav nav-tabs" role="tablist">
+<div class="profile-flex">
+    <ul id="profile-tab" class="nav nav-pills flex-column" role="tablist" >
         <li class="nav-item" role="presentation">
             <a class="nav-link active" data-bs-toggle="tab" href="#information" aria-selected="false" role="tab"
                 tabindex="-1">Information</a>
@@ -42,7 +43,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Gender
-                        <span>{{ $user['gender'] }}</span>
+                        <span>{{ $user['gender']==='M'? 'Male' : ($user['gender']==='F'? 'Female' : 'Other')}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Email
@@ -169,7 +170,55 @@
             <p>This is the wishlist page.</p>
         </div>
         <div class="tab-pane fade" id="reviews" role="tabpanel">
-            <p>This is the reviews page.</p>
+            <h2>My Reviews</h2>
+            <div class="cards_flex">
+                @foreach ($user->reviews as $review)
+                    <div class="card border-primary mb-3" style="max-width: 25rem;">
+                        <div class="card-header">Review #{{ $review['id'] }}</div>
+                        <div class="card-body">
+                            <h4 class="card-title">Title {{ $review['title'] }}</h4>
+                            <p class="text-muted"> 
+                                <i class="fas fa-quote-left pe-2" aria-hidden="true"></i>
+                                {{ $review['description']}} </p>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Product
+                                    <span>
+                                        <a href="/products/{{ $review->product['id'] }}" class="card-link">
+                                            {{ ucwords(strtolower($review->product['name'])) }}
+                                        </a>
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Evaluation
+                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                                    @for ($i = 1; $i <= $review['evaluation']; $i++)
+                                        <li><i class="fas fa-star fa-sm" aria-hidden="true"></i></li>
+                                    @endfor
+                                    @for ($i = $review['evaluation']; $i < 5; $i++)
+                                        <li><i class="far fa-star fa-sm" aria-hidden="true"></i></li>
+                                    @endfor
+                                    </ul>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Date
+                                    <span>{{ substr($review['date'], 0, 10) }}</span>
+                                </li>
+                            </ul>
+                            <div class="bottom_buttons">
+                                <a class="btn btn-primary" href={{ route('reviewEditForm', ['id' => $review['id']]) }} role="button"> 
+                                    Edit Review
+                                </a>
+                                <form action="{{ route('reviewDelete', ['id' => $review['id']]) }}" method="post">
+                                    <input class="btn btn-danger" type="submit" value="Delete Review" />
+                                    @method('delete')
+                                    @csrf
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
         <div class="tab-pane fade" id="cards" role="tabpanel">
             <h2>My Cards</h2>
@@ -213,4 +262,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
