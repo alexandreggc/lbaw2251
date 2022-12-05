@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Product;
@@ -112,21 +113,30 @@ class ReviewController extends Controller{
      * @param  Request  $request
      * @return Response
      */
-    public function update(Request $request){
+    public function update(Request $request, $id){
         //rever forma de chamar as policies
 
         //verificar se é possível editar a review
         //de acordo com as business rules definidas
-        $user = User::find($request->input('id_user'));
-        $review = Review::find($request->input('id'));
+        $user = Auth::user();
+        $review = Review::find($id);
         $this->authorize('update', $user, $review);
 
+        $validator = Validator::make($request->all(),[
+            'title'=> 'string|max:100',
+            'description' => 'string|max:100',
+            'evaluation' => 'integer',
+          ]);
+        if($validator->fails()){
+            return redirect()->back(); // adicionar mensagens de erro
+        }
+
         //atualizar os dados da review editada
-        $review->evaluation = $request->input('rate');
-        $review->title = $request->input('title');
-        $review->description = $request->input('description');
+        $review['evaluation'] = $request->input('evaluation');
+        $review['title'] = $request->input('title');
+        $review['description'] = $request->input('description');
         $review->save();
-        return $request->input('rate');
+        return Redirect::route('userView', array('id'=>Auth::user()));
     }
 
     /**
