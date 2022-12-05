@@ -125,6 +125,7 @@ class ProductController extends Controller{
            'max_price' => 'nullable|numeric',
            'min_classification' => 'nullable|numeric',
            'product_name' => 'nullable|string',
+           'order' => 'nullable|string'
         ]);
 
         if($validator->fails()){
@@ -158,8 +159,20 @@ class ProductController extends Controller{
             $query->whereRelation('stocks', 'id_color', $request['id_color']);
         }
        
-        
-        $products = $query->get();
+        if($request['order'] == 'price_asc'){
+            $products = $query->orderBy('price', 'ASC')->get();
+        }else if($request['order'] == 'price_desc'){
+            $products = $query->orderBy('price', 'DESC')->get();
+        }else if($request['order'] == 'avg_desc'){
+            $products = $query->orderBy('avg_classification', 'DESC')->get();
+        }else if($request['order'] == 'name_asc'){
+            $products = $query->orderBy('name', 'ASC')->get();
+        }else if($request['order'] == 'name_desc'){
+            $products = $query->orderBy('name', 'DESC')->get();
+        }
+        else{
+            $products = $query->get();
+        }
 
         $productsJSON = array();
 
