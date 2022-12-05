@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Response;
 
 
 class ShoppingCartController extends Controller{
-    public function show(){
-        
-        return view('pages.user.shopping_cart');
-    }
 
     public function __construct(){
         $this->middleware('auth:web');
@@ -28,6 +24,7 @@ class ShoppingCartController extends Controller{
         if(is_null($shoppingCart)){
             $shoppingCart = new Order();
             $shoppingCart->id_user = $id_user;
+            $shoppingCart->date = date('Y-m-d H:i:s');
             $shoppingCart->save();
         }
         return $shoppingCart;
@@ -38,6 +35,7 @@ class ShoppingCartController extends Controller{
         $detail = Detail::where($filters)->first();
         if(is_null($detail)){
             $detail = new Detail();
+            $detail->id_order = $id_order;
             $detail->id_product = $id_product;
             $detail->id_color = $id_color;
             $detail->id_size = $id_size;
@@ -47,7 +45,7 @@ class ShoppingCartController extends Controller{
         return $detail;
     }
 
-    public function addProductCart(Request $request){
+    public function add(Request $request){
         $validator = Validator::make($request->all(), [
            'id_color' => 'required|integer',
            'id_size' => 'required|integer',
@@ -63,40 +61,38 @@ class ShoppingCartController extends Controller{
         $shoppingCart = $this->createShoppingCart($user->id);
         $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
         $detail->quantity += 1;
-        $detail->save();        
+        $detail->save();    
     }
-    
-    public function deleteProductCart(Request $request){
+
+    public function delete(Request $request){
         $validator = Validator::make($request->all(), [
-            'id_color' => 'required|integer',
-            'id_size' => 'required|integer',
-            'id_product' => 'required|integer'
+            'id_detail' => 'required|integer',
          ]);
 
-         if($validator->fails()){
+        if($validator->fails()){
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $id_user = Auth::user()->id;
+        $detail = Detail::findOrFail($request['id_detail']);
+        $this->authorize('delete', $detail);
 
-        $filters = array(['id_product', $request['id_product']],['id_size', $request['id_size']],['id_color', $request['id_color']]);
-        $detail = User::find($id_user)->orders()->where('status', 'Shopping Cart')->details()->where($filters)->first();
         $detail->delete();
     }
 
-    public function updateProductCart(Request $request){
-        $validator = Validator::make($request->all(),[
-            'id_user' => 'required|integer',
-            'id_color' => 'required|integer',
-            'id_size' => 'required|integer',
-            'id_product' => 'required|integer',
+    public function update(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_detail' => 'required|integer',
             'quantity' => 'required|integer|min:1'
-        ]);
+         ]);
 
-        if($validator->failed()){
+        if($validator->fails()){
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        
-    } 
+        $detail = Detail::findOrFail($request['id_detail']);
+        $this->authorize('update', $detail);
+
+        $detail->quantity = $request['quantity'];
+        $detail->save();
+    }
 }

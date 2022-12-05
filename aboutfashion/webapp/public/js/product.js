@@ -51,11 +51,12 @@ async function addSize(element) {
 }
 
 async function addToCart(element) {
+    let token = document.getElementsByName('_token')[0].value
     let color = document.getElementById('color').value
     let size = $('input[name=size]:checked').attr('value')
     let product = document.getElementById('id-product').innerText
     const request = new XMLHttpRequest()
-    request.open('post', '/api/shopping-cart/add', true)
+    request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product)
+    request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
 }

@@ -2,6 +2,7 @@
 @section('content')
     <script type="text/javascript" src={{ asset('js/product.js') }} defer></script>
     <span id="id-product" style="display: none">{{ $product->id }}</span>
+    @csrf
 
     <head>
         <ol class="breadcrumb p-3 pb-1">
