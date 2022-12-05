@@ -68,6 +68,11 @@ DROP TRIGGER IF EXISTS before_report_insert ON report CASCADE;
 DROP FUNCTION IF EXISTS order_parameters CASCADE;
 DROP TRIGGER IF EXISTS check_order_parameters ON user_order CASCADE;
 
+DROP FUNCTION IF EXISTS check_num_shopping_cart CASCADE;
+DROP TRIGGER IF EXISTS check_num_shopping_cart ON user_order CASCADE;
+
+
+
 CREATE TYPE admin_type AS ENUM ('Collaborator', 'Technician');
 CREATE TYPE order_state_type AS ENUM (
     'Shopping Cart',
@@ -348,6 +353,24 @@ CREATE TRIGGER update_avg_classification_product
 AFTER INSERT ON review
 FOR EACH ROW
 EXECUTE PROCEDURE update_avg_classification_product(); 
+
+-- Number Shopping Carts
+
+create function check_num_shopping_cart()
+returns trigger as
+$$BEGIN
+    if (select count(*) from user_order where id_user = new.id_user and status = 'Shopping Cart') >= 1
+    THEN
+        RAISE EXCEPTION 'A user cannot have two active carts';
+    end if;
+    return new;
+END; $$
+LANGUAGE plpgsql;
+
+create trigger check_num_shopping_cart
+before insert on user_order
+for each row
+EXECUTE PROCEDURE check_num_shopping_cart();
 
 -- Verify card
 
