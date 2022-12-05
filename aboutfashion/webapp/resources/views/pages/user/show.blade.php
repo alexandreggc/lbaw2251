@@ -174,9 +174,11 @@
             <div class="cards_flex">
                 @foreach ($user->reviews as $review)
                     <div class="card border-primary mb-3" style="max-width: 25rem;">
-                        <div class="card-header">Review #{{ $review['id'] }}</div>
+                        <div class="card-header">Review #{{ $review['id'] }}</div> 
                         <div class="card-body">
-                            <h4 class="card-title">Title {{ $review['title'] }}</h4>
+                            <h4 class="card-title d-flex justify-content-between align-items-center">{{ $review['title'] }}
+                                <div> {{count($review->like)}} <span class="far fa-thumbs-up"></span></div>
+                            </h4>
                             <p class="text-muted"> 
                                 <i class="fas fa-quote-left pe-2" aria-hidden="true"></i>
                                 {{ $review['description']}} </p>
