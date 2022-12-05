@@ -157,4 +157,5 @@ function hideSpinner() {
 
 function showSpinner() {
     document.getElementById('spinner').style.display = 'block';
+    document.getElementById('data-output').innerHTML = '';
 }
