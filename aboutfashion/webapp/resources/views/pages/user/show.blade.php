@@ -171,6 +171,7 @@
         </div>
         <div class="tab-pane fade" id="reviews" role="tabpanel">
             <h2>My Reviews</h2>
+            <a class="btn btn-primary add_item" href="{{ route('reviewCreateForm') }}" role="button">New Review</a>
             <div class="cards_flex">
                 @foreach ($user->reviews as $review)
                     <div class="card border-primary mb-3" style="max-width: 25rem;">
