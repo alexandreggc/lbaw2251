@@ -21,7 +21,7 @@ class Detail extends Model
         return $this->belongsTo('\App\Models\Size','id_size');
     }
 
-    public function orders(){
+    public function order(){
         return $this->belongsTo('\App\Models\Order', 'id_order');
     }
 }
