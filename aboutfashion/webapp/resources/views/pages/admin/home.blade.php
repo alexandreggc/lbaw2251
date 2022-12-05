@@ -128,6 +128,7 @@
                                 <tr>
                                     <th scope="col">Name</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Edit</th>
                                     <th scope="col">Delete</th>
                                 </tr>
                             </thead>
@@ -161,11 +162,12 @@
                                         <td>{{ $product['price'] }}</td>
                                         <td>
                                             <!--código de form action para delete product-->
-                                            <!--<form action="{{ route('deleteProductAdmin', array('id'=>$product['id'])) }}" method="post">
-                                                @method('delete')
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger btn-sm">delete</button>
-                                            </form>-->
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="fa-regular fa-pencil"></i>
+                                                edit
+                                            </button>
+                                        <td>
+                                            <!--código de form action para delete product-->
                                             <button type="submit" class="btn btn-danger btn-sm">delete</button>
                                         </td>
                                     </tr>
