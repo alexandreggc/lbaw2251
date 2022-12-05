@@ -8,19 +8,19 @@ use App\Models\Order;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 
-
 class ShoppingCartController extends Controller{
     public function show(){
-        
-        return view('pages.user.shopping_cart');
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('pages.user.shopping_cart', array('order'=>null));   
+        }
+        return view('pages.user.shopping_cart', array('order' => $user->orders->where('status', 'Shopping Cart')->first()));
     }
 
-    public function __construct(){
-        $this->middleware('auth:web');
-    }
 
     private function createShoppingCart(int $id_user){
         $shoppingCart = Order::where('id_user',$id_user)->where('status', 'Shopping Cart')->first();

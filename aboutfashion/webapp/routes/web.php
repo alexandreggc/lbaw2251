@@ -50,8 +50,8 @@ Route::get('/products/{id}', 'ProductController@show')->name('productView');
 Route::get('/api/products/', 'PageController@homePage')->name('homePageAPI');
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
-Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart');
-Route::post('/api/shopping-cart/delete', 'ShoppingController@deleteProductCart')->name('deleteProductCart');
-Route::post('/api/shopping-cart/update', 'ShoppingController@updateProductCart')->name('updateProductCart');
+Route::post('/api/shopping-cart/add', 'ShoppingController@addProductCart')->name('addProductCart')->middleware('auth:web');
+Route::post('/api/shopping-cart/delete', 'ShoppingController@deleteProductCart')->name('deleteProductCart')->middleware('auth:web');;
+Route::post('/api/shopping-cart/update', 'ShoppingController@updateProductCart')->name('updateProductCart')->middleware('auth:web');;
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
