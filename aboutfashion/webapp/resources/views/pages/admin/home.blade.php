@@ -87,13 +87,20 @@
                                             <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
                                                 @method('patch')
                                                 @csrf
-                                                <button type="submit" class="btn btn-primary btn-sm">block</button>
+                                                <button type="submit" class="btn btn-warning btn-sm">
+                                                    <i class="fa-regular fa-user-lock"></i>
+                                                    block
+                                                </button>
                                             </form>
                                             @else
                                             <form action="{{ route('blockUser', array('id'=>$user['id'])) }}" method="post">
                                                 @method('patch')
                                                 @csrf
-                                                <button type="submit" class="btn btn-outline-primary btn-sm">unblock</button>
+                                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fa-regular fa-user-unlock"></i>
+                                                    <i class="fa-regular fa-unlock"></i>
+                                                    unblock
+                                                </button>
                                             </form>
                                             @endif
                                         </td>
@@ -101,7 +108,10 @@
                                             <form action="{{ route('deleteUserAdmin', array('id'=>$user['id'])) }}" method="post">
                                                 @method('delete')
                                                 @csrf
-                                                <button type="submit" class="btn btn-danger btn-sm">delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fa-regular fa-user-xmark"></i>
+                                                    delete
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -168,7 +178,10 @@
                                             </button>
                                         <td>
                                             <!--código de form action para delete product-->
-                                            <button type="submit" class="btn btn-danger btn-sm">delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fa-regular fa-xmark"></i>
+                                                delete
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
