@@ -56,7 +56,9 @@
                 </ul>
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h5 class="card-title">Profile Picture</h5>
+                        <h5 class="card-title d-flex justify-content-between">Profile Picture
+                            <a class="fas fa-edit" href="{{ url('/editPicture') }}" data-bs-toggle="modal" data-bs-target="#editPicture"></a>
+                        </h5>
                     </div>
                     <img src={{ $user->photo['file'] }} id="profilePic" width="300px" height="300px" />
                 </div>
@@ -68,6 +70,32 @@
                     @method('delete')
                     @csrf
                 </form>
+            </div>
+            <div class="modal fade" id="editPicture" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">New Profile Picture</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <form method="POST" action="{{ route('editPicture', ['id' => $user['id']]) }}">
+                            <div class="modal-body">
+                                {{ csrf_field() }}
+                                <div class="form-group">
+                                    <label for="formFile" class="form-label mt-4">Picture input file</label>
+                                    <input class="form-control" type="file" id="formFile">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane fade" id="addresses" role="tabpanel">

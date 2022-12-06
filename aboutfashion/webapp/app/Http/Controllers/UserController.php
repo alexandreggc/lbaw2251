@@ -15,9 +15,8 @@ class UserController extends Controller{
     }
 
     public function index(){
-        return view('users.index', ['users' => User::all()]); 
+        return view('users.index', ['users' => User::all()]);
     }
-
 
     public function show($id){
         $user = User::find($id);
@@ -98,4 +97,21 @@ class UserController extends Controller{
         else
             return redirect()->back(); // Adicionar mensagens de erro
     }
+
+    public function editPicture(Request $request, $id){
+        $user = User::find($id);
+        if(is_null($user)){
+            return abort('404');
+        }
+        $validator = Validator::make($request->all(),[
+            'file' => 'required|string|max:255',
+        ]);
+
+        if($validator->fails()){
+            return redirect()->back(); // Adicionar as mensagens de erro
+        }
+ 
+        return Redirect::route('userView', array('id' => $user->id));
+    }
+
 }
