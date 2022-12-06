@@ -263,7 +263,7 @@ CREATE TABLE details(
 CREATE TABLE password_resets(
     email TEXT PRIMARY KEY,
     token TEXT NOT NULL,
-    created_at DATE NOT NULL
+    created_at TIMESTAMP
 );
 -----------------------------------------------------------------------------------------------
 
