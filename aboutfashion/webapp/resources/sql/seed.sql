@@ -107,6 +107,7 @@ CREATE TABLE authenticated_user (
     birth_date DATE,
     gender TEXT,
     blocked BOOLEAN NOT NULL DEFAULT FALSE,
+    remember_token TEXT,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 CREATE TABLE admin(
@@ -118,6 +119,7 @@ CREATE TABLE admin(
     birth_date DATE,
     gender TEXT,
     id_image INTEGER REFERENCES image(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    remember_token TEXT,
     role admin_type NOT NULL
 );
 CREATE TABLE notification(
