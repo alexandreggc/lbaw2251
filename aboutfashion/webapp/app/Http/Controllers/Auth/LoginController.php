@@ -39,7 +39,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('guest:admin')->except('logout');
+        $this->middleware('guest:admin')->except('adminLogout');
     }
 
     public function showAdminLoginForm()
@@ -54,9 +54,32 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+        $remember = $request->has('remember') ? true : false; 
+
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
 
             return redirect()->intended('/admin-panel');
+        }
+        return back()->withInput($request->only('email', 'remember'));
+    }
+
+    public function adminLogout(){
+        Auth::guard('admin')->logout();
+        return redirect()->route('home');
+    }
+
+    public function userLogin(Request $request){
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+    
+        ]);
+    
+        $remember = $request->has('remember') ? true : false;
+    
+        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password], $remember))
+        {
+            return redirect()->intended('/');
         }
         return back()->withInput($request->only('email', 'remember'));
     }
