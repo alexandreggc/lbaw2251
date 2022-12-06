@@ -18,12 +18,10 @@ div#myTabContent.tab-content {
 
 #personalInfo{
     display: flex;
-    justify-content:space-between;
-    flex-flow: row
 }
 #personalInfo ul.list-group{
     margin: auto 0;
-    flex-grow: 1;
+    width: 35em;
 }
 #personalInfo div.card.mb-3{
     margin-left: 1em;
@@ -68,10 +66,58 @@ div#myTabContent.tab-content {
 .bottom_buttons{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+}
+
+.bottom_buttons a{
+    margin-right: 1em;
 }
 
 .add_item{
     margin-top: 1em;
     margin-bottom: 1em;
+}
+
+.profile-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-flex #profile-tab{
+    margin-top: 1.5em;
+}
+
+.evaluation {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.evaluation:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.evaluation:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.evaluation:not(:checked) > label:before {
+    content: '★ ';
+}
+.evaluation > input:checked ~ label {
+    color: #ffc700;    
+}
+.evaluation:not(:checked) > label:hover,
+.evaluation:not(:checked) > label:hover ~ label {
+    color: #deb217;  
+}
+.evaluation > input:checked + label:hover,
+.evaluation > input:checked + label:hover ~ label,
+.evaluation > input:checked ~ label:hover,
+.evaluation > input:checked ~ label:hover ~ label,
+.evaluation > label:hover ~ input:checked ~ label {
+    color: #c59b08;
 }

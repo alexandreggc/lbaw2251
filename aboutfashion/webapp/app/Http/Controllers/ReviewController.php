@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Review;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller{
@@ -37,7 +43,7 @@ class ReviewController extends Controller{
     public function listByProduct($id_product){
         //lista de reviews de um user
         //verificar nome da view
-        return view('reviews.list_by_product', 
+        return view('reviews.list_by_product',
         ['reviews' => Review::where('id_product', $id_product)->get()]);
     }
 
@@ -47,8 +53,16 @@ class ReviewController extends Controller{
      * @return Response
      */
     public function create(Request $request){
-        $review = store($request);
-        return view('reviews.create', ['review' => $review]);
+        $user = Auth::user();
+        $products = array();
+        foreach($user->orders as $order){
+            foreach($order->details as $detail){
+                if ($order['status'] === 'Completed'){
+                    array_push($products, $detail->product);
+                }
+            }
+        }
+        return view('pages.reviews.create', compact('products'));
     }
 
     /**
@@ -63,17 +77,30 @@ class ReviewController extends Controller{
         //verificar se é possível criar a review
         //de acordo com as business rules definidas
         $review = new Review();
-        $user = User::find($request->input('id_user'));
+        $user = Auth::user();
         $product = Product::find($request->input('id_product'));
-        $this->authorize('store', $user, $product);
+        //$this->authorize('store', $user, $product);
 
+        $validator = Validator::make($request->all(),[
+            'title'=> 'required|string|max:30',
+            'description' => 'required|string|max:100',
+            'evaluation' => 'required|integer',
+            'id_product' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return redirect()->back(); // adicionar mensagens de erro
+        }
+        $mytime = Carbon::now();
         //guardar os dados da nova review
-        $review->id_user = $request->input('id_user');
-        $review->id_product = $request->input('id_product');
-        $review->rating = $request->input('rating');
-        $review->description = $request->input('description');
+        $review->id_user = $user['id'];
+        $review->id_product = $request['id_product'];
+        $review->evaluation = $request['evaluation'];
+        $review->description = $request['description'];
+        $review->title = $request['title'];
+        $review->date = $mytime->toDateTimeString();
         $review->save();
-        return $review;
+        return Redirect::route('userView', array('id'=>Auth::user()));
     }
 
     /**
@@ -93,9 +120,13 @@ class ReviewController extends Controller{
      * @param  Request  $request
      * @return Response
      */
-    public function edit(Request $request){
-        $review = update($request);
-        return view('reviews.edit', ['review' => $review]);    
+    public function edit($id){
+        $review = Review::find($id);
+        $this->authorize('update', $review);
+        if(is_null($review)){
+            return abort('404');
+          }
+        return view('pages.reviews.edit', ['review' => $review]);    
     }
 
     /**
@@ -104,20 +135,30 @@ class ReviewController extends Controller{
      * @param  Request  $request
      * @return Response
      */
-    public function update(Request $request){
+    public function update(Request $request, $id){
         //rever forma de chamar as policies
 
         //verificar se é possível editar a review
         //de acordo com as business rules definidas
-        $user = User::find($request->input('id_user'));
-        $review = Review::find($request->input('id'));
+        $user = Auth::user();
+        $review = Review::find($id);
         $this->authorize('update', $user, $review);
 
+        $validator = Validator::make($request->all(),[
+            'title'=> 'required|string|max:30',
+            'description' => 'required|string|max:100',
+            'evaluation' => 'required|integer',
+          ]);
+        if($validator->fails()){
+            return redirect()->back(); // adicionar mensagens de erro
+        }
+
         //atualizar os dados da review editada
-        $review->rating = $request->input('rating');
-        $review->description = $request->input('description');
+        $review['evaluation'] = $request->input('evaluation');
+        $review['title'] = $request->input('title');
+        $review['description'] = $request->input('description');
         $review->save();
-        return $review;
+        return Redirect::route('userView', array('id'=>Auth::user()));
     }
 
     /**
@@ -137,6 +178,6 @@ class ReviewController extends Controller{
 
         //eliminar a review
         $review->delete();
-        return $review;
+        return Redirect::route('userView', array('id'=>Auth::user()));
     }
 }
