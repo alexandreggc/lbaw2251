@@ -13,9 +13,14 @@ Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+//Forgot Password
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordForm')->name('forgot.password.view');
+Route::post('/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordForm')->name('forgot.password.action');
+Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('password.reset');
+Route::post('/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password.action');
 
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');

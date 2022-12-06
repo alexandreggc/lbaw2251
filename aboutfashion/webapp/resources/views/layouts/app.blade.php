@@ -33,7 +33,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
                 <div class="container-fluid">
-                    
+
                     <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
@@ -133,7 +133,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="button button-outline me-auto"
-                                        href="{{ route('userRegister') }}">Forgot password</a> <!-- meter 'home' -->
+                                        href="{{ route('forgot.password.view') }}">Forgot password</a> <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary"><a
                                             class="button button-outline nav-link" href="{{ route('userRegister') }}"
@@ -222,7 +222,7 @@
         </section>
 
         <footer
-            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto" >
+            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"

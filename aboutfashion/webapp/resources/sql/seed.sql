@@ -30,6 +30,8 @@ DROP TABLE IF EXISTS details CASCADE;
 DROP TABLE IF EXISTS user_order CASCADE;
 DROP TABLE IF EXISTS order_details CASCADE;
 DROP TABLE IF EXISTS user_like CASCADE;
+DROP TABLE IF EXISTS password_resets CASCADE;
+
 
 DROP INDEX IF EXISTS user_order_idx  CASCADE;
 DROP INDEX IF EXISTS product_stock_idx  CASCADE;
@@ -258,6 +260,11 @@ CREATE TABLE details(
     id_order INTEGER NOT NULL REFERENCES user_order(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE password_resets(
+    email TEXT PRIMARY KEY,
+    token TEXT NOT NULL,
+    created_at DATE NOT NULL
+);
 -----------------------------------------------------------------------------------------------
 
 -- Index na tabela user_order no atributo id_user

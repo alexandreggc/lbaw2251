@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable
 {
@@ -21,18 +22,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password', 'birth_date', 'gender', 'blocked', 'id_image'
-    ];
-
-    protected $casts = [
-        'id' => 'integer',
-        'first_name' => 'string',
-        'last_name' => 'string',
-        'email' => 'string',
-        'password' => 'string',
-        'birth_date' => 'date',
-        'gender' => 'string',
-        'blocked' => 'boolean',
-        'id_image' => 'integer',
     ];
 
     /**
