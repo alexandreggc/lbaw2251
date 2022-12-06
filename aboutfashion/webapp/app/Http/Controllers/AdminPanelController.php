@@ -8,7 +8,8 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Report;
 
-class PageController extends Controller{
+
+class AdminPanelController extends Controller{
 
     public function homePageAdmin(){
         //por default /admin-panel aparecerá a página de users
@@ -16,6 +17,11 @@ class PageController extends Controller{
         $users = User::all();
         return view('pages.admin.home', ['users'=>$users]);
     }
+
+    /*public function usersPageAdmin(){
+        $users = User::all();
+        return view('pages.admin.users', ['users'=>$users]);
+    }*/
 
     public function productsPageAdmin(){
         $products = Product::all();
@@ -40,18 +46,5 @@ class PageController extends Controller{
     public function reportsPageAdmin(){
         $reports = Report::all();
         return view('pages.admin.reports', ['reports'=>$reports]);
-    }
-
-    public function homePage(){
-        $promotions = Promotion::all();
-        return view('pages.home',['promotions'=>$promotions]);
-    }
-
-    public function aboutPage(){
-        return view('pages.about');
-    }
-
-    public function contactsPage(){
-        return view('pages.contacts');
     }
 }
