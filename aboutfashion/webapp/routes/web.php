@@ -5,7 +5,7 @@ Route::get('/', 'PageController@homePage')->name('home');
 Route::get('/about', 'PageController@aboutPage')->name('aboutUs');
 Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 
-/*
+
 //Admin Pages
 Route::get('/admin-panel','AdminPanelController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
 //Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel')->middleware('auth:admin');
@@ -14,7 +14,7 @@ Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel')->middleware('auth:admin');
 Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel')->middleware('auth:admin');
 Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name('reportsAdminPanel')->middleware('auth:admin');
-*/
+/*
 Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
 //Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel')->middleware('auth:admin');
 Route::get('/admin-panel/products','PageController@productsPageAdmin')->name('productsAdminPanel')->middleware('auth:admin');
@@ -22,7 +22,7 @@ Route::get('/admin-panel/promotions','PageController@promotionsPageAdmin')->name
 Route::get('/admin-panel/orders','PageController@ordersPageAdmin')->name('ordersAdminPanel')->middleware('auth:admin');
 Route::get('/admin-panel/reviews','PageController@reviewsPageAdmin')->name('reviewsAdminPanel')->middleware('auth:admin');
 Route::get('/admin-panel/reports','PageController@reportsPageAdmin')->name('reportsAdminPanel')->middleware('auth:admin');
-
+*/
 
 
 //User 

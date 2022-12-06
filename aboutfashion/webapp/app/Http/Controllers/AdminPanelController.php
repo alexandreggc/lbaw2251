@@ -8,9 +8,9 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Report;
 
+use Illuminate\Http\Request;
 
 class AdminPanelController extends Controller{
-
     public function homePageAdmin(){
         //por default /admin-panel aparecerá a página de users
         // ver se é melhor fazer um redirect para /admin-panel/users e criar uma nova página de admin home para n ser direto
