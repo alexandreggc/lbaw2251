@@ -13052,7 +13052,7 @@ insert into authenticated_user (id, first_name, last_name, email, password, birt
 
 -- Admin
 
-insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (DEFAULT, 'Charlotte', 'Muggach', 'cmuggach0@wikia.com', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '1955-08-11 03:23:05', 'F', 3279, 'Technician');
+insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (DEFAULT, 'Charlotte', 'Muggach', 'up202006562@up.pt', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '1955-08-11 03:23:05', 'F', 3279, 'Technician');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (DEFAULT, 'Wash', 'Yeskov', 'wyeskov1@reuters.com', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '1994-08-27 07:33:55', null, 3280, 'Technician');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (DEFAULT, 'Kara', 'Grishanov', 'kgrishanov2@twitter.com', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '1951-08-20 16:31:43', null, 3281, 'Collaborator');
 insert into admin (id, first_name, last_name, email, password, birth_date, gender, id_image, role) values (DEFAULT, 'Rodrique', 'Gerred', 'rgerred3@bloglovin.com', '$2a$10$/kzN2lY/1E8GTITQ9NoA7uX4jDcdiip0mjIPxpUDpe4IL2KZdHblq', '2000-03-08 22:33:12', null, 3282, 'Collaborator');
