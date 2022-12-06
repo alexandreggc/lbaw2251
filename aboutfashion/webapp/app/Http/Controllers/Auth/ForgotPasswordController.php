@@ -27,7 +27,10 @@ class ForgotPasswordController extends Controller
         $status = Password::sendResetLink(
             $request->only('email')
         );
-        return $status === Password::RESET_LINK_SENT
+        $status2 = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+        return ($status === Password::RESET_LINK_SENT || $status2 === Password::RESET_LINK_SENT)
                     ? back()->with(['status' => __($status)])
                     : back()->withErrors(['email' => __($status)]);
     }
@@ -43,40 +46,22 @@ class ForgotPasswordController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ]);
-
-        $tokenData = DB::table('password_resets')->where('email', $request->email)->first();
-        echo $request['token'];
-        echo '<br>';
-        echo (Hash::make($request['token']));
-        echo '<br>';
-        echo $tokenData->token;
-        echo '<br>';
-        if(bcrypt($request['token']) == $tokenData->token){
-            echo 1;
-        }
-        else{
-            echo 0;
-        }
-
-        
-
+    
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ])->setRememberToken(Str::random(60));
-                
+    
                 $user->save();
     
                 event(new PasswordReset($user));
             }
         );
-        echo '<br>';
-        echo $status;
-
-        /*return $status === Password::PASSWORD_RESET
+    
+        return $status === Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('status', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);*/
+                    : back()->withErrors(['email' => [__($status)]]);
     }
 }
