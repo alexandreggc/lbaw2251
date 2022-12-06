@@ -132,6 +132,10 @@
                             </form>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-primary m-3 ms-0">
+                        <i class="fa-regular fa-plus"></i>
+                        Add new product
+                    </button>
                     <div id="producstList">
                         <table class="table">
                             <thead>
