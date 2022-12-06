@@ -16,6 +16,7 @@ Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('picture', 'UserController@editPicture')->name('editPicture');
 
 //Reviews
 Route::get('/review/{id}/edit', 'ReviewController@edit')->name('reviewEditForm');
