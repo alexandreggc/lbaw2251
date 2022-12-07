@@ -15,6 +15,7 @@ class ForgotPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('guest:admin');
     }
 
     public function showForgetPasswordForm(){
@@ -26,10 +27,7 @@ class ForgotPasswordController extends Controller
         $status = Password::sendResetLink(
             $request->only('email')
         );
-        $status2 = Password::broker('admins')->sendResetLink(
-            $request->only('email')
-        );
-        return ($status === Password::RESET_LINK_SENT || $status2 === Password::RESET_LINK_SENT)
+        return $status === Password::RESET_LINK_SENT
                     ? back()->with(['status' => __($status)])
                     : back()->withErrors(['email' => __($status)]);
     }
@@ -59,8 +57,40 @@ class ForgotPasswordController extends Controller
                 event(new PasswordReset($user));
             }
         );
+            
+        return $status === Password::PASSWORD_RESET
+                    ? redirect()->route('home')->with('status', __($status))
+                    : back()->withErrors(['email' => [__($status)]]);
+    }
 
-        $status2 = Password::broker('admins')->reset(
+    public function showForgetPasswordAdminForm(){
+        return view('auth.forgot-password');
+    }
+
+    public function submitForgetPasswordAdminForm(Request $request){
+        $request->validate(['email' => 'required|email']);
+        $status = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+        return $status === Password::RESET_LINK_SENT
+                    ? back()->with(['status' => __($status)])
+                    : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function showResetPasswordAdminForm($token){
+        return view('auth.reset-password', ['token' => $token]);
+
+    }
+
+    public function submitResetPasswordAdminForm(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::broker('admins')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
@@ -73,7 +103,7 @@ class ForgotPasswordController extends Controller
             }
         );
             
-        return ($status === Password::PASSWORD_RESET || $status2 === Password::PASSWORD_RESET)
+        return $status === Password::PASSWORD_RESET
                     ? redirect()->route('home')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
     }
