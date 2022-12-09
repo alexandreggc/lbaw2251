@@ -7,204 +7,134 @@
     </ol>
 </head>
 <body>
-<div class="container px-3 my-5 clearfix">
-    <!-- Shopping cart table -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Shopping Cart</h2>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered m-0">
+@if (is_null($order))
+<section class="pb-5">
+  <div class="container">
+    <h3 class="display-5 mt-3 mb-5 text-left">SHOPPING CART</h3>
+    <div class="row w-100">
+        <div class="col-lg-8 col-md-8 col-8">
+            <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
                 <thead>
-                  <tr>
-                    <!-- Set columns width -->
-                    <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
-                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
-                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
-                    <th class="text-right py-3 px-4" style="width: 100px;">Total</th>
-                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
-                  </tr>
+                    <tr>
+                        <th style="width:56%">Product</th>
+                        <th style="width:12%">Price</th>
+                        <th style="width:12%">Discount</th>
+                        <th style="width:8%">Quantity</th>
+                        <th style="width:10%"></th>
+                    </tr>
                 </thead>
                 <tbody>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 1</a>
-                          <small>
-                            <span class="text-muted">Color:</span>
-                            <span class="ui-product-color ui-product-color-sm align-text-bottom" style="background:#e81e2c;"></span> &nbsp;
-                            <span class="text-muted">Size: </span> EU 37 &nbsp;
-                            <span class="text-muted">Ships from: </span> China
-                          </small>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$57.55</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="2"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$115.1</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 2</a>
-                          <small>
-                            <span class="text-muted">Color:</span>
-                            <span class="ui-product-color ui-product-color-sm align-text-bottom" style="background:#000;"></span> &nbsp;
-                            <span class="text-muted">Storage: </span> 32GB &nbsp;
-                            <span class="text-muted">Warranty: </span> Standard - 1 year &nbsp;
-                            <span class="text-muted">Ships from: </span> China
-                          </small>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$1049.00</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="1"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$1049.00</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 3</a>
-                          <small>
-                            <span class="text-muted">Ships from: </span> Germany
-                          </small>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$20.55</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="1"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$20.55</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
                 </tbody>
-              </table>
+            </table>
+          <a href="#" class="mt-5"><i class="fas fa-arrow-left mr-2"></i> Continue Shopping</a>
+            
+        </div>
+        <div class=" col-lg-4 col-md-4 col-4">
+          <div class=" card mt-5" style="border-color: #dee2e6;border-radius: 0;">
+            <h4 class="mt-5 mx-5" style="">OVERVIEW</h4>
+            <div class="col mx-5 mb-5 my-2">
+              <div class="d-flex justify-content-between my-3 information"><span>Subtotal</span><span>$3020.00</span></div>
+              <div class="d-flex justify-content-between my-3 information"><span>Discount</span><span>$3020.00</span></div>
+              <div class="d-flex justify-content-between my-3 information"><span>Total</span><span>$3020.00</span></div>
+              <button class="btn btn-primary btn-block d-flex mx-auto mt-5" style="background-color:rgba(0,0,0,.9);" type="button"><span>Checkout</span></button>
             </div>
-            <!-- / Shopping cart table -->
-        
-            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
-              <div class="mt-4">
-                <label class="text-muted font-weight-normal">Promocode</label>
-                <input type="text" placeholder="ABC" class="form-control">
-              </div>
-              <div class="d-flex">
-                <div class="text-right mt-4 mr-5">
-                  <label class="text-muted font-weight-normal m-0">Discount</label>
-                  <div class="text-large"><strong>$20</strong></div>
-                </div>
-                <div class="text-right mt-4">
-                  <label class="text-muted font-weight-normal m-0">Total price</label>
-                  <div class="text-large"><strong>$1164.65</strong></div>
-                </div>
-              </div>
-            </div>
-        
-            <div class="float-right">
-              <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Back to shopping</button>
-              <button type="button" class="btn btn-lg btn-primary mt-2">Checkout</button>
-            </div>
-        
           </div>
-      </div>
-  </div>
+        </div>
+    </div>
+   
+</div>
+</section>
+@else
+<section class="pb-5">
+  <div class="container">
+    <h3 class="display-5 mt-3 mb-5 text-left">SHOPPING CART</h3>
+    <div class="row w-100">
+        <div class="col-lg-8 col-md-8 col-8">
+            <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
+                <thead>
+                    <tr>
+                        <th style="width:56%">Product</th>
+                        <th style="width:12%">Price</th>
+                        <th style="width:12%">Discount</th>
+                        <th style="width:8%">Quantity</th>
+                        <th style="width:10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  @foreach ($order->details as $detail)
+                    <tr>
+                        <td class=" align-middle " data-th="Product">
+                            <div class="row">
+                                <div class="col-md-3 text-left">
+                                    <img src="{{$detail->product->images[0]['file']}}" alt="" class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                </div>
+                                <div class="col-md-9  align-middle text-left mt-sm-2">
+                                    <h4>{{$detail->product['name']}}</h4>
+                                    <p class="font-weight-light">Size: {{$detail->size['name']}} <br> Color: {{$detail->color['name']}} </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class=" align-middle " data-th="Price">
+                          <div class=" mt-sm-2">
+                            @php
+                                $finalPrice = $detail->product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                            @endphp
+                            <p class="font-weight-light">{{ $finalPrice }}€
+                            @if ($finalPrice == $detail->product['price'])
+                            </p>
+                            @else
+                            <small class="dis-price" style="color: #888;text-decoration: line-through;">{{$detail->product['price']}}€</small> </p>
+                            @endif
+                            
+                          </div>
+                        </td>
+                        <td class=" align-middle text-center" data-th="Discount">
+                          @if ($finalPrice == $detail->product['price'])
+                          -
+                          @else
+                          {{ $detail->product->getPromotion(date('Y-m-d H:i:s'))->discount }}%
+                          @endif
+                          
+                        </td>
+                        <td class=" align-middle " data-th="Quantity ">
+                            <input type="number" class="form-control form-control-sm text-center" value="1">
+                        </td>
+                        <td class="actions align-middle " data-th="">
+                            <div class="text-right justify-content-center">
+                                <button class="btn btn-white d-flex mx-auto bg-white btn-md ">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    
+                </tbody>
+            </table>
+
+            <a href="#" class="mt-5"><i class="fas fa-arrow-left mr-2"></i> Continue Shopping</a>
+            
+        </div>
+        <div class=" col-lg-4 col-md-4 col-4">
+          <div class=" card mt-5" style="border-color: #dee2e6;border-radius: 0;">
+            <h4 class="mt-5 mx-5" style="">OVERVIEW</h4>
+            <div class="col mx-5 mb-5 my-2">
+              <div class="d-flex justify-content-between my-3 information"><span>Subtotal</span><span>$3020.00</span></div>
+              <div class="d-flex justify-content-between my-3 information"><span>Discount</span><span>$3020.00</span></div>
+              <div class="d-flex justify-content-between my-3 information"><span>Total</span><span>$3020.00</span></div>
+              <button class="btn btn-primary btn-block d-flex mx-auto mt-5" style="background-color:rgba(0,0,0,.9);" type="button"><span>Checkout</span></button>
+
+            </div>
+
+          </div>
+        </div>
+    </div>
+   
+</div>
+</section>
+
+@endif
     
 </body>
+
 @endsection
-<div class="container">
-        <div class="row">
-            <div class="col m-3 ms-0">
-                <h1>Shopping Cart</h1>
-            </div>
-        </div>
-        @if (count($cart) > 0)
-        <div class="row">
-            <div class="col">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <!--<th scope="col">Image</th>-->
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($cart as $item)
-                        <tr>
-                            <!-- <td>{{$item->product->image}}</td> VER ESTA HIPOTESE -- Não funciona assim -->
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->price}}€</td>
-                            <td>{{$item->color}}</td>
-                            <td>{{$item->size}}</td>
-                            <td>{{$item->quantity}}</td>
-                            <td>{{$item->price * $item->$quantity }}€</td>
-                            <td><i class="fa-solid fa-trash" href="/remove/{{$item->id}}" styles="color: $danger"></i></td> <!-- a cor não está a associar -->
-                        </tr>
-                        @endforeach
-                        <!--  
-                        exemplo para ver como ficam os elementos
-                        <tr>
-                            <td>zip up bomber jacket</td>
-                            <td>50€</td>
-                            <td>Black</td>
-                            <td>S</td>
-                            <td>
-                                <input type="number" class="form-control" aria-label="Example text with button addon" 
-                                    aria-describedby="button-addon1" value={{$q}}>
-                            </td>
-                            <td>{{ 50 * 4 }}€</td>
-                            <td><i class="fa-solid fa-trash" styles="color:red"></i></td>
-                        </tr>
-                        -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <h3>Total: {{$total}}</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-1">
-                <a href="/checkout">
-                    <button type="button" class="btn btn-primary m-3 ms-0">Checkout</button>
-                </a>
-            </div>
-            <div class="col-md-2">
-                <a href="/products">
-                    <button type="button" class="btn btn-outline-primary m-3 ms-0">Continue Shopping</button>
-                </a>
-            </div>
-        </div>
-        @else
-        <div class="row">
-            <div class="col">
-                <p class="text-info">There are no products in your shopping cart</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <a href="/products">
-                    <button type="button" class="btn btn-outline-primary m-3 ms-0">Discover our products</button>
-                </a>
-            </div>
-        </div>
-        @endif
-    </div>
