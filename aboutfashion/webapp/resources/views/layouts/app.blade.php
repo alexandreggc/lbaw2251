@@ -82,7 +82,7 @@
                                         style="font-size:24px;"></i></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
+                                <a class="nav-link mx-2" href="{{route('shoppingCartView')}}">
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
                             </li>
