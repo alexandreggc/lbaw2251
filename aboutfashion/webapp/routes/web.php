@@ -1,4 +1,6 @@
 <?php
+use App\Http\Controllers\ShoppingCartController;
+use Illuminate\Http\Resources\DelegatesToResource;
 
 // Static Pages
 Route::get('/', 'PageController@homePage')->name('home');
@@ -61,8 +63,10 @@ Route::get('/products/{id}', 'ProductController@show')->name('productView');
 //API
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');
-Route::post('/api/shopping-cart', 'ShoppingCartController@add')->name('addProductCart');
-Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('deleteProductCart');
-Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart');
+Route::post('/api/shopping-cart', 'ShoppingCartController@add')->name('addProductCart')->middleware('auth:web');
+Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('deleteProductCart')->middleware('auth:web');
+Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart')->middleware('auth:web');
+
+Route::get('/teste/shopping-cart/delete', 'ShoppingCartController@delete');
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');

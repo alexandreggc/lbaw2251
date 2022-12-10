@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Detail;
-use App\Models\User;
 use App\Models\Order;
-
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 
 class ShoppingCartController extends Controller{
+
+
     public function show(){
         $user = Auth::user(); 
         if(is_null($user)){
@@ -78,7 +78,6 @@ class ShoppingCartController extends Controller{
 
         $detail = Detail::findOrFail($request['id_detail']);
         $this->authorize('delete', $detail);
-
         $detail->delete();
     }
 
