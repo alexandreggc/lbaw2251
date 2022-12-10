@@ -1,3 +1,4 @@
+//TODO Adicionar mensagens de erro
 attachEvents()
 
 function attachEvents() {
@@ -14,6 +15,14 @@ function deleteProduct(elem) {
     request.open('delete', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_detail=' + detail + '&_token=' + token)
+
+    request.onload = function () {
+        if (request.status == 200) {
+            (document.getElementById('row-' + detail)).remove()
+        } else {
+            console.log('ERROR!')
+        }
+    }
 }
 
 function updateQuantity(elem) {

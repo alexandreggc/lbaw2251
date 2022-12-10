@@ -75,7 +75,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($order->details as $detail)
-                                        <tr>
+                                        <tr id="row-{{ $detail->id }}">
                                             <td class=" align-middle " data-th="Product">
                                                 <div class="row">
                                                     <div class="col-md-3 text-left">

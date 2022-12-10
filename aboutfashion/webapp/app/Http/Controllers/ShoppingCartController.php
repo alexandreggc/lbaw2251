@@ -63,8 +63,16 @@ class ShoppingCartController extends Controller{
 
         $shoppingCart = $this->createShoppingCart($user->id);
         $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
+        if(is_null($detail)){
+            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
+        }
         $detail->quantity += 1;
-        $detail->save();    
+        
+        if($detail->save()){
+            return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!'),200);
+        }else{
+            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
+        } 
     }
 
     public function delete(Request $request){
@@ -76,9 +84,17 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $detail = Detail::findOrFail($request['id_detail']);
+        $detail = Detail::find($request['id_detail']);
+        if(is_null($detail)){
+            return Response::json(array('status' => 'error', 'message' => 'Product detail not found!'), 404);
+        }
+        
         $this->authorize('delete', $detail);
-        $detail->delete();
+        if($detail->delete()){
+            return Response::json(array('status'=>'success','message' => 'The product has been deleted from your cart!'),200);
+        }else{
+            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to delete the product from your cart!'),500);
+        }
     }
 
     public function update(Request $request){
@@ -91,14 +107,17 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $detail = Detail::findOrFail($request['id_detail']);
+        $detail = Detail::find($request['id_detail']);
+        if(is_null($detail)){
+            return Response::json(array('status' => 'error', 'message' => 'Product detail not found!'), 404);
+        }
         $this->authorize('update', $detail);
 
         $detail->quantity = $request['quantity'];
         if($detail->save()){
-            return Response::json(array('status'=>'success','message' => 'order accepted'),200);
+            return Response::json(array('status'=>'success','message' => 'The quantity has changed'),200);
         }else{
-            return Response::json(array('status'=>'error','message' => 'there was an error with your order', 'quantity'=>$detail->quantity),400);
+            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to change the quantity', 'quantity'=>$detail->quantity),500);
         }
     }
 }
