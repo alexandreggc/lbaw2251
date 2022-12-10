@@ -67,6 +67,4 @@ Route::post('/api/shopping-cart', 'ShoppingCartController@add')->name('addProduc
 Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('deleteProductCart')->middleware('auth:web');
 Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart')->middleware('auth:web');
 
-Route::get('/teste/shopping-cart/delete', 'ShoppingCartController@delete');
-
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');

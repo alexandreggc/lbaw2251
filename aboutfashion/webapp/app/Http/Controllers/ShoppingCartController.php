@@ -95,6 +95,10 @@ class ShoppingCartController extends Controller{
         $this->authorize('update', $detail);
 
         $detail->quantity = $request['quantity'];
-        $detail->save();
+        if($detail->save()){
+            return Response::json(array('status'=>'success','message' => 'order accepted'),200);
+        }else{
+            return Response::json(array('status'=>'error','message' => 'there was an error with your order', 'quantity'=>$detail->quantity),400);
+        }
     }
 }
