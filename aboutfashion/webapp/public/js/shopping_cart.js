@@ -20,11 +20,11 @@ function deleteProduct(elem) {
     request.onload = function () {
         if (request.status == 200) {
             (document.getElementById('row-' + detail)).remove()
+            updatePrice()
         } else {
             console.log('ERROR!')
         }
     }
-    updatePrice()
 }
 
 function updateQuantity(elem) {
@@ -44,13 +44,13 @@ function updateQuantity(elem) {
             elem.target.value = response['quantity']
             console.log('Error! Bad request!')
         } else if (request.status == 200) {
-            document.getElementById('quantity-'+detail).innerText = quantity
+            document.getElementById('quantity-' + detail).innerText = quantity
             console.log('OK!')
+            updatePrice()
         } else {
             console.log('Error!')
         }
     }
-    updatePrice()
 }
 
 function updatePrice() {
@@ -59,19 +59,17 @@ function updatePrice() {
     let totalElem = document.getElementById('total')
 
     let subtotal = 0
-    let discount = 0
     let total = 0
 
     let ids = document.getElementsByClassName('row-product')
-    for(const idElem of ids){
+    for (const idElem of ids) {
         id = idElem.id.substring(4)
-        quantity = document.getElementById('quantity-'+id).innerText
-        //subtotal += document.getElementById('original-price-'+id).innerText.slice(0,-1) * quantity
-        discount += (document.getElementById('original-price-'+id).innerText.slice(0,-1) - document.getElementById('final-price-'+id).innerText.slice(0,-1)) * quantity
-        total += document.getElementById('final-price-'+id).innerText.slice(0,-1) * quantity
+        quantity = document.getElementById('quantity-' + id).innerText
+        subtotal += document.getElementById('original-price-' + id).innerText * quantity
+        total += document.getElementById('final-price-' + id).innerText * quantity
     }
-    
-    subtotalElem.innerText = subtotal + '€'
-    discountElem.innerText = discount + '€'
-    totalElem.innerText = total + '€'
+
+    subtotalElem.innerText = subtotal.toFixed(2) + '€'
+    discountElem.innerText = (subtotal - total).toFixed(2) + '€'
+    totalElem.innerText = total.toFixed(2) + '€'
 }
