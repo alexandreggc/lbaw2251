@@ -30,7 +30,7 @@
                                 @if (is_null($order))
                                 @else
                                     @foreach ($order->details as $detail)
-                                        <tr id="row-{{ $detail->id }}">
+                                        <tr id="row-{{ $detail->id }}" class="row-product">
                                             <td class=" align-middle " data-th="Product">
                                                 <div class="row">
                                                     <div class="col-md-3 text-left">
@@ -49,13 +49,23 @@
                                                     @php
                                                         $finalPrice = $detail->product->getPriceWithPromotion(date('Y-m-d H:i:s'));
                                                     @endphp
+                                                    
+
+
+
                                                     @if ($finalPrice == $detail->product['price'])
-                                                        <p class="font-weight-light final-price">{{ $finalPrice }}€</p>
-                                                        <span class="original-price" style="display: none"> </span>
+                                                        <p class="font-weight-light" id="final-price-{{ $detail->id }}">
+                                                            {{ $finalPrice }}€</p>
+                                                        <span id="original-price-{{ $detail->id }}"
+                                                            style="display: none">{{ $finalPrice }}€</span>
+                                                        <span id="final-price-{{$detail->id}}" style="display: none">{{$finalPrice}}</span>
                                                     @else
-                                                        <p class="font-weight-light final-price">{{ $finalPrice }}€
-                                                            <small class="dis-price original-price"
-                                                                style="color: #888;text-decoration: line-through;">{{ $detail->product['price'] }}€</small>
+                                                        <p class="font-weight-light" id="final-price-{{ $detail->id }}">
+                                                            {{ $finalPrice }}€
+                                                            <small class="dis-price"
+                                                                style="color: #888;text-decoration: line-through;"
+                                                                id="original-price-{{ $detail->id }}">
+                                                                {{ $detail->product['price'] }}€</small>
                                                         </p>
                                                     @endif
 
@@ -73,6 +83,8 @@
                                                 <input type="number"
                                                     class="form-control form-control-sm text-center update-quantity"
                                                     value="{{ $detail->quantity }}" min="1" id={{ $detail->id }}>
+                                                <span id="quantity-{{ $detail->id }}"
+                                                    style="display: none">{{ $detail->quantity }}</span>
                                             </td>
                                             <td class="actions align-middle " data-th="">
                                                 <div class="text-right justify-content-center">

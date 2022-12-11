@@ -47,7 +47,7 @@ class Product extends Model{
         $filter = array(['start_date','<=',$date], ['final_date','>=',$date]);
         $promotion = $this->promotions()->where($filter)->orderBy('discount', 'DESC')->first();
         $discount = is_null($promotion) ? 0 : $promotion->discount;
-        return $this->price * (1 - $discount / 100);
+        return round($this->price * (1 - $discount / 100),2);
     }
 
     public function getPromotion(string $date){

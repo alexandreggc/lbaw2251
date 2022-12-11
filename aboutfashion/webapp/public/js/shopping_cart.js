@@ -44,6 +44,7 @@ function updateQuantity(elem) {
             elem.target.value = response['quantity']
             console.log('Error! Bad request!')
         } else if (request.status == 200) {
+            document.getElementById('quantity-'+detail).innerText = quantity
             console.log('OK!')
         } else {
             console.log('Error!')
@@ -57,16 +58,19 @@ function updatePrice() {
     let discountElem = document.getElementById('discount')
     let totalElem = document.getElementById('total')
 
-    subtotal = 0
-    discount = 0
-    total = 0
-    
-    let table = document.getElementsByTagName('table')[0]
-    let rows = table.rows
-    for (const row in rows) {
-        
+    let subtotal = 0
+    let discount = 0
+    let total = 0
 
+    let ids = document.getElementsByClassName('row-product')
+    for(const idElem of ids){
+        id = idElem.id.substring(4)
+        quantity = document.getElementById('quantity-'+id).innerText
+        //subtotal += document.getElementById('original-price-'+id).innerText.slice(0,-1) * quantity
+        discount += (document.getElementById('original-price-'+id).innerText.slice(0,-1) - document.getElementById('final-price-'+id).innerText.slice(0,-1)) * quantity
+        total += document.getElementById('final-price-'+id).innerText.slice(0,-1) * quantity
     }
+    
     subtotalElem.innerText = subtotal + '€'
     discountElem.innerText = discount + '€'
     totalElem.innerText = total + '€'
