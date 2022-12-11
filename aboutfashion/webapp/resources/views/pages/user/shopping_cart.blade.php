@@ -135,8 +135,8 @@
             Shopping</a>
 
         </div>
-        <div class=" col-lg-4 col-md-4 col-4">
-          <div class=" card mt-5" style="border-color: #dee2e6;border-radius: 0;position: fixed;z-index: -1;top: 12rem;left: 55rem;">
+        <div class=" col-lg-3 col-md-3 col-3 " style="position: fixed;z-index: -1;top: 12rem;left: 55rem;">
+          <div class=" card mt-5" style="border-color: #dee2e6;border-radius: 0;">
             <h4 class="mt-5 mx-5" style="">OVERVIEW</h4>
             <div class="col mx-5 mb-5 my-2">
               <div class="d-flex justify-content-between my-3 information"><span>Subtotal</span><span>$3020.00</span></div>
