@@ -99,7 +99,7 @@ function drawProducts(products) {
                 <div class="product-grid">
                     <div class="product-image shadow">
                         <a href="/products/${val.id}" class="image">
-                            <img src="${val.images[0]}">
+                            <img src="${val.images[0]}" width="227" height="313">
                         </a>
                         <span class="product-discount-label">${havePromo(val.promotion.discount)}</span>
                         <ul class="product-links">
