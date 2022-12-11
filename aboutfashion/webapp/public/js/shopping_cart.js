@@ -1,5 +1,6 @@
 //TODO Adicionar mensagens de erro
 attachEvents()
+updatePrice()
 
 function attachEvents() {
     for (const button of document.getElementsByClassName('delete-detail'))
@@ -23,6 +24,7 @@ function deleteProduct(elem) {
             console.log('ERROR!')
         }
     }
+    updatePrice()
 }
 
 function updateQuantity(elem) {
@@ -47,6 +49,25 @@ function updateQuantity(elem) {
             console.log('Error!')
         }
     }
+    updatePrice()
+}
 
+function updatePrice() {
+    let subtotalElem = document.getElementById('subtotal')
+    let discountElem = document.getElementById('discount')
+    let totalElem = document.getElementById('total')
 
+    subtotal = 0
+    discount = 0
+    total = 0
+    
+    let table = document.getElementsByTagName('table')[0]
+    let rows = table.rows
+    for (const row in rows) {
+        
+
+    }
+    subtotalElem.innerText = subtotal + '€'
+    discountElem.innerText = discount + '€'
+    totalElem.innerText = total + '€'
 }
