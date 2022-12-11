@@ -1,6 +1,4 @@
 <?php
-use App\Http\Controllers\ShoppingCartController;
-use Illuminate\Http\Resources\DelegatesToResource;
 
 // Static Pages
 Route::get('/', 'PageController@homePage')->name('home');
