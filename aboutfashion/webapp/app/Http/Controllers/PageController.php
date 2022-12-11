@@ -10,7 +10,7 @@ use App\Models\Report;
 
 class PageController extends Controller{
 
-    public function homePageAdmin(){
+    /*public function homePageAdmin(){
         //por default /admin-panel aparecerá a página de users
         // ver se é melhor fazer um redirect para /admin-panel/users e criar uma nova página de admin home para n ser direto
         $users = User::all();
@@ -40,7 +40,7 @@ class PageController extends Controller{
     public function reportsPageAdmin(){
         $reports = Report::all();
         return view('pages.admin.reports', ['reports'=>$reports]);
-    }
+    }*/
 
     public function homePage(){
         $promotions = Promotion::all();
