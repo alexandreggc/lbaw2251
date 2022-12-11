@@ -105,7 +105,7 @@
                                 <span>Discount</span><span id="discount"></span>
                             </div>
                             <div class="d-flex justify-content-between my-3 information">
-                                <span>Total</span><span id="total"></span>
+                                <span>Total</span><span id="total" style="padding: 0;"></span>
                             </div>
                             <button class="btn btn-primary btn-block d-flex mx-auto mt-5"
                                 style="background-color:rgba(0,0,0,.9);" type="button"><span>Checkout</span></button>
