@@ -25,6 +25,7 @@ Route::get('/admin-panel/reports','PageController@reportsPageAdmin')->name('repo
 */
 
 
+
 //User 
 Route::post('login', 'Auth\LoginController@login')->name('userLogin');
 Route::get('/users/{id}', 'UserController@show')->name('userView')->middleware();
