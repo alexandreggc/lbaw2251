@@ -31,7 +31,7 @@
 <body class="d-flex flex-column min-vh-100">
     <main>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
 
                     <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION</a>
@@ -41,7 +41,7 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
 
-                    <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class=" collapse navbar-collapse" id="navbarNavDropdown" >
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="/products"><i class="fa-solid fa-magnifying-glass"
@@ -56,7 +56,7 @@
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-regular fa-user" style="font-size:24px;"></i>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"  style=" z-index: 18;">
                                     @if (Auth::check())
                                         <li><span class="dropdown-item">Hello {{ Auth::user()->first_name }} !</span>
                                         </li>
@@ -81,12 +81,33 @@
                                 <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
                                         style="font-size:24px;"></i></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="{{route('shoppingCartView')}}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
-                            </li>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style=" z-index: 0;">
+                                    @if (Auth::check())
+                                        <li><span class="dropdown-item">Hello {{ Auth::user()->first_name }} !</span>
+                                        </li>
+                                        <li><a class="button dropdown-item"
+                                                href="{{ route('userView', ['id' => Auth::user()->id]) }}"> See
+                                                Profile </a></li>
+                                        <li><a class="button dropdown-item" href="{{ route('logout') }}"> Logout </a>
+                                        </li>
+                                    @endif
+                                    @if (!Auth::check())
+                                        <li><a class="button dropdown-item" href="{{ url('/login') }}"
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop1"> Sign In </a>
+                                        </li>
+                                        <li><a class="button dropdown-item" href="{{ url('/register') }}"
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
+                                        </li>
+                                    @endif
 
+                                </div>
+                            </li>
+                            
                         </ul>
                     </div>
                 </div>
@@ -216,13 +237,12 @@
             </div>
 
         </header>
-
         <section id="content">
             @yield('content')
         </section>
 
         <footer
-            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto">
+            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto" style="z-index: 200;">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"
