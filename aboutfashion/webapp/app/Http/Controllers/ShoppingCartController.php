@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detail;
 use App\Models\Order;
+use App\Models\Stock;
 
+use App\Models\Detail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ShoppingCartController extends Controller{
 
@@ -21,6 +22,9 @@ class ShoppingCartController extends Controller{
         return view('pages.user.shopping_cart', array('order' => $user->orders->where('status', 'Shopping Cart')->first()));
     }
 
+    private function checkCombination(int $id_product, int $id_color, int $id_size){
+        return count(Stock::where('id_product', $id_product)->where('id_size', $id_size)->where('id_color', $id_color)->get()) != 0;
+    }
 
     private function createShoppingCart(int $id_user){
         $shoppingCart = Order::where('id_user',$id_user)->where('status', 'Shopping Cart')->first();
@@ -48,6 +52,15 @@ class ShoppingCartController extends Controller{
         return $detail;
     }
 
+    private function searchArray(int $id_product, int $id_color, int $id_size, array $cart){
+        for($i = 0 ; $i < count($cart); $i++){
+            if($cart[$i]['id_product'] == $id_product && $cart[$i]['id_color'] == $id_color && $cart[$i]['id_size'] == $id_size){
+                return $i;
+            }
+        }
+        return -1;
+    }
+
     public function add(Request $request){
         $validator = Validator::make($request->all(), [
            'id_color' => 'required|integer',
@@ -61,18 +74,40 @@ class ShoppingCartController extends Controller{
 
         $user = Auth::user();
 
-        $shoppingCart = $this->createShoppingCart($user->id);
-        $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
-        if(is_null($detail)){
-            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
+        if($user){
+            $shoppingCart = $this->createShoppingCart($user->id);
+            $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
+            if(is_null($detail)){
+                return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
+            }
+            $detail->quantity += 1;
+            
+            if($detail->save()){
+                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!'),200);
+            }else{
+                return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
+            } 
         }
-        $detail->quantity += 1;
-        
-        if($detail->save()){
-            return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!'),200);
-        }else{
-            return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
-        } 
+        else{
+            if(!$this->checkCombination($request['id_product'], $request['id_color'], $request['id_size'])){
+                return Response::json(array('status' => 'error', 'message => The product, color and size combination you want does not exist!'), 404);
+            }
+            if(count($cart = $request->session()->get('cart')) != 0){
+                $i = $this->searchArray($request['id_product'], $request['id_color'], $request['id_size'], $cart);
+                if($i === -1){
+                    array_push($cart, array('id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
+                }else{
+                    $cart[$i]['quantity']++;
+                }
+            }else{
+                $cart = array();
+                array_push($cart, array('id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
+            }            
+            $request->session()->put('cart', $cart);
+            
+            return Response::json(array('status' => 'success', 'message' => 'The product has been added from your cart!'), 200);
+        }
+
     }
 
     public function delete(Request $request){
