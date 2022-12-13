@@ -59,4 +59,9 @@ async function addToCart(element) {
     request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
+    var dropdown = document.getElementById('dropdown');
+    var event;
+    event = document.createEvent('MouseEvents');
+    event.initMouseEvent('mousedown', true, true, document);
+    dropdown.dispatchEvent(event);
 }
