@@ -72,3 +72,4 @@ Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartV
 Route::get('/shopping-cart/test/add', 'ShoppingCartController@add');
 Route::get('/shopping-cart/test/view', 'ShoppingCartController@showTest');
 Route::get('/shopping-cart/test/delete', 'ShoppingCartController@delete');
+Route::get('/shopping-cart/test/update', 'ShoppingCartController@update');
