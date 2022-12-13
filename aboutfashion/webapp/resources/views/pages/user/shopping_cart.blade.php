@@ -89,7 +89,7 @@
                     @endforeach
                 @else
                     @foreach ($guestCart as $detail)
-                        <tr id="row-" class="row-product">
+                        <tr id="row-{{ $detail['id'] }}" class="row-product">
                             <td class=" align-middle " data-th="Product">
                                 <div class="row">
                                     <div class="col-md-3 text-left">
@@ -116,9 +116,9 @@
                                         style="color: #888;text-decoration: line-through;">{{ $detail['product']->price }}€</small>
                                     </p>
                     @endif
-                    <span id="original-price-"
+                    <span id="original-price-{{ $detail['id'] }}"
                         style="display: none">{{ $detail['product']->price }}</span>
-                    <span id="final-price-" style="display: none">{{ $finalPrice }}</span>
+                    <span id="final-price-{{ $detail['id'] }}" style="display: none">{{ $finalPrice }}</span>
 
                 </div>
                 </td>
@@ -132,13 +132,14 @@
                 </td>
                 <td class=" align-middle " data-th="Quantity ">
                     <input type="number" class="form-control form-control-sm text-center update-quantity"
-                        value="{{ $detail['quantity'] }}" min="1" id="todo">
-                    <span id="quantity-" style="display: none"></span>
+                        value="{{ $detail['quantity'] }}" min="1" id="{{ $detail['id'] }}">
+                    <span id="quantity-{{ $detail['id'] }}" style="display: none">{{ $detail['quantity'] }}</span>
                 </td>
                 <td class="actions align-middle " data-th="">
                     <div class="text-right justify-content-center">
-                        <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail " id="22">
-                            <i class="fas fa-trash" id="11"></i>
+                        <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                            id="{{ $detail['id'] }}">
+                            <i class="fas fa-trash" id="{{ $detail['id'] }}"></i>
                         </button>
                     </div>
                 </td>
