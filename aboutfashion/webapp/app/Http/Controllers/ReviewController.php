@@ -83,8 +83,12 @@ class ReviewController extends Controller{
      * @return Response
      */
     public function show($id){
-        $review = Review::find($id);
-        return view('reviews.show', ['review' => $review]);
+        $user = Auth::user();
+        $review = Review::find($id); 
+        if(is_null($user)){
+            return view('reviews.show',['review' => $review, 'order'=>null]);   
+        }
+        return view('reviews.show',[ 'review' => $review, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
     }
 
     /**

@@ -20,12 +20,18 @@ class UserController extends Controller{
 
 
     public function show($id){
+        
         $user = User::find($id);
         if(is_null($user)){
             return abort('404');
         }
         $this->authorize('view', $user);
-        return view('pages.user.show', ['user' => $user, 'countries'=>Country::all()]);
+        $userauth = Auth::user(); 
+        if(is_null($userauth)){
+            return view('pages.user.show',['user' => $user, 'countries'=>Country::all(), 'order'=>null]);   
+        }
+        return view('pages.user.show',[ 'user' => $user, 'countries'=>Country::all(),'order' => $userauth->orders->where('status', 'Shopping Cart')->first()]);
+        
     }
 
     public function edit($id){

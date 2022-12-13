@@ -82,32 +82,86 @@
                                         style="font-size:24px;"></i></a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink"
+                                <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink2"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style=" z-index: 0;">
-                                    @if (Auth::check())
-                                        <li><span class="dropdown-item">Hello {{ Auth::user()->first_name }} !</span>
-                                        </li>
-                                        <li><a class="button dropdown-item"
-                                                href="{{ route('userView', ['id' => Auth::user()->id]) }}"> See
-                                                Profile </a></li>
-                                        <li><a class="button dropdown-item" href="{{ route('logout') }}"> Logout </a>
-                                        </li>
-                                    @endif
-                                    @if (!Auth::check())
-                                        <li><a class="button dropdown-item" href="{{ url('/login') }}"
-                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop1"> Sign In </a>
-                                        </li>
-                                        <li><a class="button dropdown-item" href="{{ url('/register') }}"
-                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop2"> Register </a>
-                                        </li>
-                                    @endif
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink2" id="dropdown" style="width:27rem;" >
+                                    <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
+                                        <tbody>
+                                            @if (is_null($order))
+                                                <tr>
+                                                    <td>
+                                                        <div class="col-lg-12 col-sm-12 col-12 mb-2 text-center checkout">
+                                                            <p class="font-weight-light" style="font-size:0.8rem;">Shopping cart is empty!</p>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            @else
+                                                @php
+                                                    $n = count($order->details);
+                                                    $detail = $order->details[$n-1];
+                                                @endphp
+                                                    <tr id="row-{{ $detail->id }}" class="row-product">
+                                                        <td class=" align-middle justify-content-center"style="width:8rem;" data-th="Produtoooooooooooooooooo">
+                                                            <div class="row">
+                                                                <div class="col-md-6 text-left">
+                                                                    <img src="{{ $detail->product->images[0]['file'] }}" alt=""
+                                                                        class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                                                </div>
+                                                                <div class="col-md-6  align-middle text-left mt-sm-2 mx-auto">
+                                                                    <h6 style="font-size:0.8em;">{{ $detail->product['name'] }}</h6>
+                                                                    <p class="font-weight-light" style="font-size:0.5rem;">Size: {{ $detail->size['name'] }} <br>
+                                                                        Color: {{ $detail->color['name'] }} </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class=" align-middle justify-content-center"  style="width:2rem;" data-th="preço">
+                                                            <div class=" mt-sm-2">
+                                                                @php
+                                                                    $finalPrice = $detail->product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                                                @endphp
+                                                                <p class="font-weight-light" style="font-size:0.7rem;">{{ $finalPrice }}€
+                                                                    @if ($finalPrice == $detail->product['price'])
+                                                                        </p>
+                                                                    @else
+                                                                        <small class="dis-price" style="color: #888;text-decoration: line-through;">{{ $detail->product['price'] }}€</small>
+                                                                        </p>
+                                                                    @endif
+                                                                <span id="original-price-{{ $detail->id }}" style="display: none">{{ $detail->product['price'] }}</span>
+                                                                <span id="final-price-{{ $detail->id }}" style="display: none">{{ $finalPrice }}</span>
 
+                                                            </div>
+                                                        </td>
+                                                        <td class=" align-middle justify-content-center" style="width:3rem;" data-th="quanti">
+                                                            <input type="number" style="margin:0;" class="form-control form-control-sm text-center update-quantity"
+                                                                value="{{ $detail->quantity }}" min="1" style="padding:0;width:2.5rem;" id={{ $detail->id }}>
+                                                            <span id="quantity-{{ $detail->id }}" style="display: none">{{ $detail->quantity }}</span>
+                                                        </td>
+                                                        <td class="actions align-middle "  style="width:2rem" data-th="">
+                                                            <div class="text-right justify-content-center">
+                                                                <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                                                                    id={{ $detail->id }}>
+                                                                    <i class="fas fa-trash" id={{ $detail->id }}></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-12 mb-2 text-center checkout">
+                                            <a href="#">
+                                                <button class="btn btn-primary btn-block" style="background-color:rgba(0,0,0,.9);border-color:rgba(0,0,0,.9);">View shopping cart</button>
+                                            </a>
+                                            
+                                        </div>
+                                    </div>
                                 </div>
                             </li>
-                            
                         </ul>
                     </div>
                 </div>
