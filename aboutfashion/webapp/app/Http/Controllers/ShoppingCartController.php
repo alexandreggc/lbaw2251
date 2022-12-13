@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\Color;
+use App\Models\Size;
+
 
 use App\Models\Detail;
 use Illuminate\Http\Request;
@@ -14,24 +17,30 @@ use Illuminate\Support\Facades\Validator;
 
 class ShoppingCartController extends Controller{
 
+    public function __construct(){
+        $this->middleware('web');
+        $this->middleware('guest');
+    }
+
     public function showTest(Request $request){
         return Response::json($request->session()->get('cart'),200);
     }
 
 
     public function show(Request $request){
-        $user = Auth::user(); 
-        if(is_null($user)){
+        if(!Auth::check()){
             $details = array();
             $cart = $request->session()->get('cart');
             foreach($cart as $productCart){
-                $product = Product::find();
-                $color = Color::find();
-                $
+                $product = Product::find($productCart['id_product']);
+                $color = Color::find($productCart['id_color']);
+                $size = Size::find($productCart['id_size']);
+                array_push($details, array('product' => $product, 'color' => $color, 'size' => $size, 'quantity' => $productCart['quantity']));
             }
-            return view('pages.user.shopping_cart', array('order'=>null));   
+            return view('pages.user.shopping_cart', array('guestCart'=>$details, 'order'=>null));   
+        }else{
+            return view('pages.user.shopping_cart', array('order' => Auth::user()->orders->where('status', 'Shopping Cart')->first(), 'guestCart' => null));
         }
-        return view('pages.user.shopping_cart', array('order' => $user->orders->where('status', 'Shopping Cart')->first()));
     }
 
     private function checkCombination(int $id_product, int $id_color, int $id_size){
