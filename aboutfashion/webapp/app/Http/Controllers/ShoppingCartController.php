@@ -65,6 +65,20 @@ class ShoppingCartController extends Controller{
         return -1;
     }
 
+    public function addProductAuth(int $id_product, int $id_color, int $id_size, int $quantity){
+        $id_user = Auth::user()->id;
+        $shoppingCart = $this->createShoppingCart($id_user);
+        $detail = $this->createDetail($shoppingCart->id, $id_product,$id_color,$id_size);
+        if(is_null($detail)){
+            return false;
+        }
+        $detail->quantity += $quantity;
+        if ($detail->save()) {
+            return true;
+        }
+        return false;
+    }
+
     public function add(Request $request){
         $validator = Validator::make($request->all(), [
            'id_color' => 'required|integer',
@@ -76,21 +90,12 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        $user = Auth::user();
-
-        if($user){
-            $shoppingCart = $this->createShoppingCart($user->id);
-            $detail = $this->createDetail($shoppingCart->id, $request['id_product'],$request['id_color'],$request['id_size']);
-            if(is_null($detail)){
-                return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
-            }
-            $detail->quantity += 1;
-            
-            if($detail->save()){
+        if(Auth::user()){
+            if($this->addProductAuth($request['id_product'],$request['id_color'],$request['id_size'], 1)){
                 return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!'),200);
             }else{
                 return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
-            } 
+            }
         }
         else{
             if(!$this->checkCombination($request['id_product'], $request['id_color'], $request['id_size'])){
@@ -169,7 +174,7 @@ class ShoppingCartController extends Controller{
             return Response::json(array('status'=>'error','message'=>'Bad request!'),400);
         }
 
-        if(isset($request['id_detail']) && Auth::check() && is_null($request['quantity']) && is_null($request['id_color']) && is_null($request['id_size']) && is_null($request['id_product'])){
+        if(isset($request['id_detail']) && Auth::check() && is_null($request['id_color']) && is_null($request['id_size']) && is_null($request['id_product'])){
             $detail = Detail::find($request['id_detail']);
             if(is_null($detail)){
                 return Response::json(array('status' => 'error', 'message' => 'Product detail not found!'), 404);
