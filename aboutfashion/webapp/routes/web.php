@@ -67,4 +67,8 @@ Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updat
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 
-Route::get('/shopping-cart/test', 'ShoppingCartController@add');
+
+//Test
+Route::get('/shopping-cart/test/add', 'ShoppingCartController@add');
+Route::get('/shopping-cart/test/view', 'ShoppingCartController@showTest');
+Route::get('/shopping-cart/test/delete', 'ShoppingCartController@delete');
