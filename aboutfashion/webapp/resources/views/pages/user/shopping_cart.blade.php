@@ -132,14 +132,14 @@
                 </td>
                 <td class=" align-middle " data-th="Quantity ">
                     <input type="number" class="form-control form-control-sm text-center update-quantity"
-                        value="{{ $detail['quantity'] }}" min="1" id="{{ $detail['id'] }}">
+                        value="{{ $detail['quantity'] }}" min="1" id={{ $detail['id'] }}>
                     <span id="quantity-{{ $detail['id'] }}" style="display: none">{{ $detail['quantity'] }}</span>
                 </td>
                 <td class="actions align-middle " data-th="">
                     <div class="text-right justify-content-center">
                         <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
-                            id="{{ $detail['id'] }}">
-                            <i class="fas fa-trash" id="{{ $detail['id'] }}"></i>
+                            id={{ $detail['id'] }}>
+                            <i class="fas fa-trash" id={{ $detail['id'] }}></i>
                         </button>
                     </div>
                 </td>
