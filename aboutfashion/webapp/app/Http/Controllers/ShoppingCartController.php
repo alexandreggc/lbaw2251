@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Stock;
 
 use App\Models\Detail;
@@ -21,6 +22,13 @@ class ShoppingCartController extends Controller{
     public function show(Request $request){
         $user = Auth::user(); 
         if(is_null($user)){
+            $details = array();
+            $cart = $request->session()->get('cart');
+            foreach($cart as $productCart){
+                $product = Product::find();
+                $color = Color::find();
+                $
+            }
             return view('pages.user.shopping_cart', array('order'=>null));   
         }
         return view('pages.user.shopping_cart', array('order' => $user->orders->where('status', 'Shopping Cart')->first()));
