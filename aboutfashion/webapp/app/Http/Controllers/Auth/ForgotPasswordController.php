@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Auth;
+
 
 class ForgotPasswordController extends Controller
 {
@@ -19,7 +21,11 @@ class ForgotPasswordController extends Controller
     }
 
     public function showForgetPasswordForm(){
-        return view('auth.forgot-password');
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('auth.forgot-password',['order'=>null]);   
+        }
+        return view('auth.forgot-password',[ 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
     }
 
     public function submitForgetPasswordForm(Request $request){
@@ -33,7 +39,11 @@ class ForgotPasswordController extends Controller
     }
 
     public function showResetPasswordForm($token){
-        return view('auth.reset-password', ['token' => $token]);
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('auth.reset-password',['order'=>null]);   
+        }
+        return view('auth.reset-password',['token' => $token, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
 
     }
 

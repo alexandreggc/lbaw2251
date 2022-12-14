@@ -9,6 +9,8 @@ function attachEvents() {
     color.addEventListener("change", addSize)
     let dismissDSC = document.getElementById("dismissDSC")
     dismissDSC.addEventListener('click', dismiss_Dsc)
+    let likeIcon = document.getElementById('likeIcon');
+    likeIcon.addEventListener('click', changeLike)
 }
 
 async function addSize(element) {
@@ -88,6 +90,21 @@ function dismiss_Dsc(element) {
     let dropdown = document.getElementById('dropdownSC');
     dropdown.removeAttribute('data-bs-popper');
     dropdown.classList.remove("show");
+    
+    return;
+
+}
+function changeLike(element) {
+    let likeIcon = document.getElementById('likeIcon');
+    let heartIcon = document.getElementById('heartIcon');
+    
+    if(heartIcon.classList.contains('fa-regular')){
+        let out = `<i class="fa-solid fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+        likeIcon.innerHTML = out;
+    }else{
+        let out = `<i class="fa-regular fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+        likeIcon.innerHTML = out;
+    }
     
     return;
 
