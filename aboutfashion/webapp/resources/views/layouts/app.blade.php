@@ -81,12 +81,19 @@
                                 <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
                                         style="font-size:24px;"></i></a>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown " id="shoppingCartTog">
                                 <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink2"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink2" id="dropdown" style="width:27rem;" >
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink2" id="dropdownSC" style="width:27rem;" >
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-12 mb-2 text-end  checkout">
+                                            <button type="button" id="dismissDSC" class="btn-close me-2" data-bs-dismiss="dropdownSC"
+                                            aria-label="Close" style="color:#000;background-color:#000;-webkit-tap-highlight-color:#000;"></button>
+                                            
+                                        </div>
+                                    </div>
                                     <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
                                         <tbody>
                                             @if (is_null($order))

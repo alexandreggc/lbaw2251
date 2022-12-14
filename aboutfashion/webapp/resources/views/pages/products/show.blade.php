@@ -33,7 +33,16 @@
                             <div class="product p-4 mt-3">
 
                                 <div class="mt-4 mb-3">
-                                    <h3 class="text-uppercase ">{{ $product->name }}</h3>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h3 class="text-uppercase ">{{ $product->name }}</h3>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button id="likeIcon" style="border:none;background-color:#fff;margin-top:0.3rem;"><i class="fa-regular fa-heart " id="heartIcon" style="font-size:1.7rem;"></i></button>
+                                        </div>
+                                        
+                                    </div>
+                                    
                                     <div class="price d-flex flex-row align-items-center" id="price">
                                         @php
                                             $finalPrice = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));

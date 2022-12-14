@@ -7,6 +7,10 @@ if (document.getElementById('color').value != 'Select Color') {
 function attachEvents() {
     let color = document.getElementById("color")
     color.addEventListener("change", addSize)
+    let dismissDSC = document.getElementById("dismissDSC")
+    dismissDSC.addEventListener('click', dismiss_Dsc)
+    let likeIcon = document.getElementById('likeIcon');
+    likeIcon.addEventListener('click', changeLike)
 }
 
 async function addSize(element) {
@@ -59,9 +63,49 @@ async function addToCart(element) {
     request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
-    var dropdown = document.getElementById('dropdown');
-    var event;
-    event = document.createEvent('MouseEvents');
-    event.initMouseEvent('mousedown', true, true, document);
-    dropdown.dispatchEvent(event);
+    let dropdownA = document.getElementById('navbarDropdownMenuLink2');
+    let ariaExpandedAttr = dropdownA.getAttribute('aria-expanded');
+    if(ariaExpandedAttr=='false'){
+        dropdownA.setAttribute('aria-expanded','true');
+    };
+    if(dropdownA.classList.contains('show')){
+        dropdownA.classList.add("show");
+    };
+    let dropdown = document.getElementById('dropdownSC');
+    let dataBsPopperAttr = dropdown.hasAttribute('data-bs-popper');
+    if(!(dataBsPopperAttr)){
+        dropdown.setAttribute('data-bs-popper','none');
+    };
+    if(!(dropdown.classList.contains('show'))){
+        dropdown.classList.add("show");
+    };
+    
+    return;
+}
+
+function dismiss_Dsc(element) {
+    let dropdownA = document.getElementById('navbarDropdownMenuLink2');
+    dropdownA.setAttribute('aria-expanded','false');
+    dropdownA.classList.remove("show");
+    let dropdown = document.getElementById('dropdownSC');
+    dropdown.removeAttribute('data-bs-popper');
+    dropdown.classList.remove("show");
+    
+    return;
+
+}
+function changeLike(element) {
+    let likeIcon = document.getElementById('likeIcon');
+    let heartIcon = document.getElementById('heartIcon');
+    
+    if(heartIcon.classList.contains('fa-regular')){
+        let out = `<i class="fa-solid fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+        likeIcon.innerHTML = out;
+    }else{
+        let out = `<i class="fa-regular fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+        likeIcon.innerHTML = out;
+    }
+    
+    return;
+
 }
