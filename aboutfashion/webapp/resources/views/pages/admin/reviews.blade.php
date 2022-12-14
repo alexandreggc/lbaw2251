@@ -58,14 +58,10 @@
                                 <td>{{ $review->description }}</td>
                                 <td>{{ substr($review['date'], 0, 10) }}</td>
                                 <td>
-                                    <form action="{{ route('deleteReviewAdmin', array('id'=>$review['id'])) }}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa-regular fa-user-xmark"></i>
-                                            delete
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa-regular fa-user-xmark"></i>
+                                        delete
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach

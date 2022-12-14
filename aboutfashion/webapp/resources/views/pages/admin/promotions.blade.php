@@ -45,34 +45,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($promotion as $promotion)
-                        <tr>
-                            <td>{{ $promotion['discount'] }}%</td>
-                            <td>{{ substr($promotion['start_date'], 0, 10) }}</td>
-                            <td>{{ substr($promotion['final_date'], 0, 10) }}</td>
-                            <td>
-                                <!--código de form action para delete promotion-->
-                                <form action="{{ route('editPromotion', array('id'=>$promotion['id'])) }}" method="post">
-                                    @method('patch')
-                                    @csrf
+                        @foreach ($promotions as $promotion)
+                            <tr>
+                                <td>{{ $promotion['discount'] }}%</td>
+                                <td>{{ substr($promotion['start_date'], 0, 10) }}</td>
+                                <td>{{ substr($promotion['final_date'], 0, 10) }}</td>
+                                <td>
+                                    <!--código de form action para delete promotion-->
                                     <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="fa-regular fa-pencil"></i>
                                         edit
                                     </button>
-                                </form>
-                            </td>
-                            <td>
-                                <!--código de form action para delete promotion-->
-                                <form action="{{ route('deletePromotion', array('id'=>$promotion['id'])) }}" method="post">
-                                    @method('delete')
-                                    @csrf
+                                </td>
+                                <td>
+                                    <!--código de form action para delete promotion-->
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa-regular fa-xmark"></i>
                                         delete
                                     </button>
-                                </form>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>

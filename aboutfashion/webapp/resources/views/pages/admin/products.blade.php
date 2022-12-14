@@ -50,24 +50,16 @@
                                 <td>{{ $product['price'] }}</td>
                                 <td>
                                     <!--código de form action para edit product-->
-                                    <form action="{{ route('editProduct', array('id'=>$product['id'])) }}" method="post">
-                                        @method('patch')
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa-regular fa-pencil"></i>
-                                            edit
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa-regular fa-pencil"></i>
+                                        edit
+                                    </button>
                                 <td>
                                     <!--código de form action para delete product-->
-                                    <form action="{{ route('deleteProduct', array('id'=>$product['id'])) }}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa-regular fa-xmark"></i>
-                                            delete
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa-regular fa-xmark"></i>
+                                        delete
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach

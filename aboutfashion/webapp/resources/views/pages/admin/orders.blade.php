@@ -74,23 +74,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <form action="{{ route('editOrderAdmin', array('id'=>$order['id'])) }}" method="post">
-                                        @method('put')
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa-regular fa-pencil"></i>
-                                            edit
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa-regular fa-pencil"></i>
+                                        edit
+                                    </button>
                                 <td>
-                                    <form action="{{ route('deleteOrderAdmin', array('id'=>$order['id'])) }}" method="post">
-                                        @method('delete')
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa-regular fa-user-xmark"></i>
-                                            delete
-                                        </button>
-                                    </form>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa-regular fa-user-xmark"></i>
+                                        delete
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
