@@ -11,11 +11,7 @@ class PageController extends Controller{
 
     public function homePage(){
         $promotions = Promotion::all();
-        $user = Auth::user(); 
-        if(is_null($user)){
-            return view('pages.home',['promotions'=>$promotions, 'order'=>null]);   
-        }
-        return view('pages.home',['promotions'=>$promotions, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
+        return view('pages.home',['promotions'=>$promotions]);
     }
 
 
