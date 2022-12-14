@@ -31,4 +31,6 @@ class AddressPolicy{
     public function delete(User $user, Address $address){
         return $user->id == $address->id_user;
     } 
+
+    public function checkout(User $user, Address $)
 }

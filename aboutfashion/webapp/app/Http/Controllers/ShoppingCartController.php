@@ -17,15 +17,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ShoppingCartController extends Controller{
 
-
-    public function showTest(Request $request){
-        return Response::json($request->session()->get('cart'),200);
-    }
-
-    public function clearTest(Request $request){
-        $request->session()->forget('cart');
-    }
-
     public function show(Request $request){
         if(!Auth::check()){
             $details = array();
