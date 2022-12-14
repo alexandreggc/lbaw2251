@@ -26,11 +26,10 @@ class UserController extends Controller{
             return abort('404');
         }
         $this->authorize('view', $user);
-        $userauth = Auth::user(); 
-        if(is_null($userauth)){
-            return view('pages.user.show',['user' => $user, 'countries'=>Country::all(), 'order'=>null]);   
+        if(is_null($user)){
+            return view('pages.user.show',['user' => $user, 'countries'=>Country::all()]);   
         }
-        return view('pages.user.show',[ 'user' => $user, 'countries'=>Country::all(),'order' => $userauth->orders->where('status', 'Shopping Cart')->first()]);
+        return view('pages.user.show',[ 'user' => $user, 'countries'=>Country::all()]);
         
     }
 

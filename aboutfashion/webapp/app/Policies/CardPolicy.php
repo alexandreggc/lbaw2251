@@ -36,4 +36,8 @@ class CardPolicy
     {
         return $user->id == $card->id_user;
     } 
+
+    public function checkout(User $user, Card $card){
+        return $user->id == $card->id_user;
+    }
 }

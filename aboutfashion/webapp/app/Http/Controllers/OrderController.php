@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Stock;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use Psy\Readline\Hoa\Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -70,10 +72,12 @@ class OrderController extends Controller
       return redirect()->back()->with('error', $errors);
     }
 
-    
-
-    
-    
+    try{
+      DB::select('SELECT checkout(?)', array($order->id));
+    }catch(Exception $e){
+      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
+    }
+        
     
   }
 }
