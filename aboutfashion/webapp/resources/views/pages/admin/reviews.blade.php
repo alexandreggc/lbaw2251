@@ -34,12 +34,12 @@
                 </form>
             </div>
             <div id="reviewsList">
-                <table class="table">id, evaluation, title, description, date, id_user, id_product)
+                <table class="table">
                     <thead>
                         <tr>
                             <td>Review ID</td>
-                            <td>Product ID</td>
-                            <td>User ID</td>
+                            <td>Product</td>
+                            <td>User</td>
                             <td>Evaluation</td>
                             <td>Title</td>
                             <td>Description</td>
@@ -51,15 +51,15 @@
                         @foreach ($reviews as $review)
                             <tr>
                                 <td>{{ $review->id }}</td>
-                                <td>{{ $review->id_product }}</td>
-                                <td>{{ $review->id_user }}</td>
+                                <td>{{ $review->product->name }}</td>
+                                <td>{{ $review->user['first_name'] . ' ' . $review->user['last_name'] }}</td>
                                 <td>{{ $review->evaluation }}</td>
                                 <td>{{ $review->title }}</td>
                                 <td>{{ $review->description }}</td>
                                 <td>{{ substr($review['date'], 0, 10) }}</td>
                                 <td>
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-regular fa-user-xmark"></i>
+                                        <i class="fa-regular fa-xmark"></i>
                                         delete
                                     </button>
                                 </td>

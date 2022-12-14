@@ -52,10 +52,7 @@
                                 <th scope="row">{{ $order['id'] }}</th>
                                 <td>
                                     <div class="col">
-                                        <php>
-                                            $user = DB::table('users')->where('id', $order['id_user'])->first();
-                                        </php>
-                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
+                                        {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
                                     </div>
                                 </td>
                                 <td>
@@ -80,7 +77,7 @@
                                     </button>
                                 <td>
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-regular fa-user-xmark"></i>
+                                        <i class="fa-regular fa-xmark"></i>
                                         delete
                                     </button>
                                 </td>
