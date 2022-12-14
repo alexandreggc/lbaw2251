@@ -276,7 +276,6 @@ DECLARE
 BEGIN
 	SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
-
     FOR t_row IN SELECT * FROM details WHERE id_order = $1 LOOP
         IF ((SELECT stock FROM stock WHERE t_row.id_product = id_product AND t_row.id_color = id_color AND t_row.id_size = id_size) < t_row.quantity)
         THEN

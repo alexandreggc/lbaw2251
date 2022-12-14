@@ -38,22 +38,26 @@ class OrderController extends Controller
     $user = Auth::user();
     $order = $user->orders()->where('status','Shopping Cart')->first();
     if(is_null($order)){
-      return redirect()->back()->with('status', 'Shopping Cart Empty!');
+      echo 6;
+      //return redirect()->back()->with('status', 'Shopping Cart Empty!');
     }
 
     $details = $order->details;
     if(count($details) == 0){
-      return redirect()->back()->with('status', 'Shopping Cart Empty!');
+      echo 5;
+      //return redirect()->back()->with('status', 'Shopping Cart Empty!');
     }
 
     $card = Card::find($request['id_card']);
     if($card){
-      return redirect()->back()->with('status', 'Card not found!');
+      echo 4;
+      //return redirect()->back()->with('status', 'Card not found!');
     }
 
     $address = Address::find($request['id_address']);
     if($address){
-      return redirect()->back()->with('status', 'Address not found!');
+      echo 3;
+      //return redirect()->back()->with('status', 'Address not found!');
     }
 
     $this->authorize('checkout', $card);
@@ -69,13 +73,15 @@ class OrderController extends Controller
       }
     }
     if(count($errors)!=0){
-      return redirect()->back()->with('error', $errors);
+      echo 2;
+      //return redirect()->back()->with('error', $errors);
     }
 
     try{
       DB::select('SELECT checkout(?)', array($order->id));
     }catch(Exception $e){
-      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
+      echo 1;
+      //return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
         
     
