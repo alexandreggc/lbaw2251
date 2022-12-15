@@ -26,12 +26,19 @@
                     <a class="nav-link" href="/admin-panel/reports">Reports</a>
                 </li>
             </ul>
-            <div class="col-6"></div>
-            <div class="col-6 mb-3">
-                <form class="d-flex">
-                    <input class="form-control me-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
+            <div class="row pt-3">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary">
+                        <i class="fa-regular fa-plus"></i>
+                    </button>
+                </div>
+                <div class="col-4"></div>
+                <div class="col-6 mb-3">
+                    <form class="d-flex">
+                        <input class="form-control me-sm-2" type="text" placeholder="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
             <div id="productsList">
                 <table class="table">
