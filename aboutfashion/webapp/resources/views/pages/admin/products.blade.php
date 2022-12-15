@@ -26,20 +26,37 @@
                     <a class="nav-link" href="/admin-panel/reports">Reports</a>
                 </li>
             </ul>
-            <div class="row pt-3 pb-3">
-                <div class="col-2">
-                    <button type="button" class="btn btn-primary">
-                        <i class="fa-regular fa-plus"></i>
-                    </button>
-                </div>
-                <div class="col"></div>
-                <div class="col-6 pb-3">
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6">
                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="text" placeholder="Search">
                         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-2">
+                    <button type="button" class="btn btn-primary mb-4">
+                        <i class="fa-regular fa-plus"></i>
+                        Add Product
+                    </button>
+                </div>
+            </div>
+            <!--<div class="row pt-3 pb-3">
+                <div class="col">
+                    <button type="button" class="btn btn-primary">
+                        <i class="fa-regular fa-plus"></i>
+                        Add Product
+                    </button>
+                </div>
+                <div class="col-6 pb-3 me-0">
+                    <form class="d-flex">
+                        <input class="form-control me-sm-2" type="text" placeholder="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>-->
             <!--
             <div id="productsList">
                 <table class="table">
@@ -91,6 +108,7 @@
                                     <br>
                                     <strong>Price: </strong>{{ $product->price }}
                                 </div>
+                                <!--
                                 <div class="col-1 ps-3">
                                     <div class="row pb-3"> 
                                         <a href="#">
@@ -105,14 +123,29 @@
                                         </a>
                                     </div>
                                 </div>
+                                -->
                             </button>
                         </h2>
                         <div id="collapse{{$product->id}}" class="accordion-collapse collapse" 
                             aria-labelledby="heading{{$product->id}}" data-bs-parent="#accordion">
                             <div class="accordion-body">
-                                <strong>Description:</strong> {{ $product->description }}
-                                <br>
-                                <strong>Classification:</strong> {{ $product->avg_classification }}
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Description:</strong> {{ $product->description }}
+                                        <br>
+                                        <strong>Classification:</strong> {{ $product->avg_classification }}
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fa-regular fa-pencil"></i>
+                                            edit
+                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-sm ms-3">
+                                            <i class="fa-regular fa-xmark"></i>
+                                            delete
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
