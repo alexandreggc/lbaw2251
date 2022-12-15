@@ -19,6 +19,10 @@ class Product extends Model{
         return $this->belongsToMany('\App\Models\Image', 'product_image', 'id_product', 'id_image');
     }
 
+    public function wishlist(){
+        return $this->belongsToMany('\App\Models\User', 'wishlist', 'id_product', 'id_user');
+    }
+
     public function reviews(){
         return $this->hasMany('\App\Models\Review', 'id_product');
     }

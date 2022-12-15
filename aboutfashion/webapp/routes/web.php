@@ -58,6 +58,10 @@ Route::get('/admin-panel/logout', 'Auth\LoginController@adminLogout')->name('adm
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
 
+//WishList
+Route::post('/api/wishlist', 'UserController@toggleProductWishlist');
+
+
 //API
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
 Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStockAPI');

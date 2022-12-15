@@ -37,12 +37,22 @@
                                         <div class="col-md-10">
                                             <h3 class="text-uppercase ">{{ $product->name }}</h3>
                                         </div>
-                                        <div class="col-md-1">
-                                            <button id="likeIcon"
-                                                style="border:none;background-color:#fff;margin-top:0.3rem;"><i
-                                                    class="fa-regular fa-heart " id="heartIcon"
-                                                    style="font-size:1.7rem;"></i></button>
-                                        </div>
+                                        @if (!Auth::user())
+                                        @else
+                                            <div class="col-md-1">
+                                                @if ($product->wishlist()->where('id_user', Auth::user()->id)->exists())
+                                                    <button id="likeIcon"
+                                                        style="border:none;background-color:#fff;margin-top:0.3rem;"><i
+                                                            class="fa-solid fa-heart " id="heartIcon"
+                                                            style="font-size:1.7rem;"></i></button>
+                                                @else
+                                                    <button id="likeIcon"
+                                                        style="border:none;background-color:#fff;margin-top:0.3rem;"><i
+                                                            class="fa-regular fa-heart " id="heartIcon"
+                                                            style="font-size:1.7rem;"></i></button>
+                                                @endif
+                                            </div>
+                                        @endif
 
                                     </div>
 
