@@ -27,13 +27,22 @@
                 </li>
             </ul>
             <div class="col-6"></div>
-            <div class="col-6 mb-3">
+            <div class="col-6">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
-            <div id="usersList">
+            <div class="row">
+                <div class="col-2">
+                    <button type="button" class="btn btn-outline-primary mb-4">
+                        <i class="fa-regular fa-plus"></i>
+                        Add Promotion
+                    </button>
+                </div>
+            </div>
+            <!--
+            <div id="promotionsList">
                 <table class="table">
                     <thead>
                         <tr>
@@ -50,16 +59,16 @@
                                 <td>{{ $promotion['discount'] }}%</td>
                                 <td>{{ substr($promotion['start_date'], 0, 10) }}</td>
                                 <td>{{ substr($promotion['final_date'], 0, 10) }}</td>
-                                <td>
+                                <td>-->
                                     <!--código de form action para delete promotion-->
-                                    <button type="submit" class="btn btn-primary btn-sm">
+                                    <!--<button type="submit" class="btn btn-primary btn-sm">
                                         <i class="fa-regular fa-pencil"></i>
                                         edit
                                     </button>
                                 </td>
-                                <td>
+                                <td>-->
                                     <!--código de form action para delete promotion-->
-                                    <button type="submit" class="btn btn-danger btn-sm">
+                                    <!--<button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa-regular fa-xmark"></i>
                                         delete
                                     </button>
@@ -68,6 +77,46 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>-->
+            <div class="accordion" id="accordion">
+                @foreach($promotions as $promotion)
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{$promotion->id}}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#collapse{{$promotion->id}}" aria-expanded="true" 
+                                    aria-controls="collapse{{$promotion->id}}">
+                                <div class="col">
+                                    <strong>Promotion ID: </strong>{{ $promotion->id }}
+                                    <br>
+                                    <br>
+                                    <strong>Discount: </strong>{{ $promotion->discount }} %
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapse{{$promotion->id}}" class="accordion-collapse collapse" 
+                            aria-labelledby="heading{{$promotion->id}}" data-bs-parent="#accordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>Start Date: </strong>{{ substr($promotion['start_date'], 0, 10) }}
+                                        <br>
+                                        <strong>Final Date: </strong>{{ substr($promotion['final_date'], 0, 10) }}
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fa-regular fa-pencil"></i>
+                                            edit
+                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-sm ms-3">
+                                            <i class="fa-regular fa-xmark"></i>
+                                            delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

@@ -26,7 +26,6 @@
                     <a class="nav-link" href="/admin-panel/reports">Reports</a>
                 </li>
             </ul>
-            
             <div class="col-6"></div>
             <div class="col-6 mb-3">
                 <form class="d-flex">
