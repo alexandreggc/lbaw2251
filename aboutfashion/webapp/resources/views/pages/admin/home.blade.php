@@ -57,8 +57,7 @@
                                 <div class="col-1">
                                     @if ($user->blocked == 1)
                                     <a href="#">
-                                        <i class="fa-regular fa-lock-open" data-bs-container="body" data-bs-toggle="popover" 
-                                           data-bs-placement="left" data-bs-original-title="Popover Title">
+                                        <i class="fa-regular fa-lock-open">
                                         </i>
                                     </a>
                                     @else
