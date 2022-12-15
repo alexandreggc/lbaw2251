@@ -121,7 +121,8 @@
                                     <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
                                     <p class="text-muted">
                                         <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
+                                        {{$product->reviews[$j]['description']}} 
+                                        <i class="fa-solid fa-quote-right ps-2"></i>
                                     </p>
                                     <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
                                         @for ($t = 1; $t < 6; $t++)
