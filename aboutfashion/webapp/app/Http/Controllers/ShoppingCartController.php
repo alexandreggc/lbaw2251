@@ -128,7 +128,7 @@ class ShoppingCartController extends Controller{
 
         if(Auth::user()){
             if($detail = $this->addProductAuth($request['id_product'],$request['id_color'],$request['id_size'], 1)){
-                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!', 'product'=>$this->getDetailJSON($detail->id)),200);
+                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!', 'product'=>$this->getDetailJSON($detail->id), 'id_detail'=>$detail->id),200);
             }else{
                 return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
             }
@@ -152,7 +152,7 @@ class ShoppingCartController extends Controller{
             }            
             $request->session()->put('cart', $cart);
             
-            return Response::json(array('status' => 'success', 'message' => 'The product has been added from your cart!', 'product' =>  $this->getDetailJSON($i)), 200);
+            return Response::json(array('status' => 'success', 'message' => 'The product has been added from your cart!', 'product' =>  $this->getDetailJSON($i), 'id_detail'=>$i), 200);
         }
 
     }
