@@ -27,9 +27,9 @@
                 </li>
             </ul>
         </div>
-        <div class="row">
+        <div class="row pb-3">
             <div class="col-6"></div>
-            <div class="col-6 mb-3">
+            <div class="col-6 pb-3">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
