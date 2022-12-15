@@ -54,6 +54,7 @@
                                         {{$user['first_name'] . ' ' . $user['last_name']}}
                                     </div>
                                 @endif
+                                <!--
                                 <div class="col-1">
                                     @if ($user->blocked == 1)
                                     <a href="#">
@@ -69,16 +70,38 @@
                                         <i class="fa-regular fa-trash ps-5"></i>
                                     </a>
                                 </div>
+                                -->
                             </button>
                         </h2>
                         <div id="collapse{{$user->id}}" class="accordion-collapse collapse" 
                             aria-labelledby="heading{{$user->id}}" data-bs-parent="#accordion">
                             <div class="accordion-body">
-                                <strong>E-mail:</strong> {{$user['email']}}
-                                <br>
-                                <strong>Birth date:</strong> {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined'}}
-                                <br>
-                                <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
+                                <div class="row">
+                                    <div class="col">
+                                        <strong>E-mail:</strong> {{$user['email']}}
+                                        <br>
+                                        <strong>Birth date:</strong> {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined'}}
+                                        <br>
+                                        <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
+                                    </div>
+                                    <div class="col-1">
+                                        @if ($user['blocked'] == 0)
+                                            <button type="submit" class="btn btn-warning btn-sm mb-3">
+                                                <i class="fa-regular fa-user-lock"></i>
+                                                block
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-outline-primary btn-sm mb-3">
+                                                <i class="fa-regular fa-user-unlock"></i>
+                                                unblock
+                                            </button>
+                                        @endif
+                                        <button type="submit" class="btn btn-danger btn-sm pe-1">
+                                            <i class="fa-regular fa-user-xmark"></i>
+                                            delete
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -124,7 +147,6 @@
                                     @else
                                         <button type="submit" class="btn btn-outline-primary btn-sm">
                                             <i class="fa-regular fa-user-unlock"></i>
-                                            <i class="fa-regular fa-unlock"></i>
                                             unblock
                                         </button>
                                     @endif
