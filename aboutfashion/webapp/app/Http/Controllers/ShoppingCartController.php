@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\Stock;
-use App\Models\Color;
 use App\Models\Size;
-
-
+use App\Models\Color;
+use App\Models\Order;
+use App\Models\Stock;
 use App\Models\Detail;
+
+
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -81,13 +82,37 @@ class ShoppingCartController extends Controller{
         $shoppingCart = $this->createShoppingCart($id_user);
         $detail = $this->createDetail($shoppingCart->id, $id_product,$id_color,$id_size);
         if(is_null($detail)){
-            return false;
+            return null;
         }
         $detail->quantity += $quantity;
         if ($detail->save()) {
-            return true;
+            return $detail;
         }
-        return false;
+        return null;
+    }
+
+    private function getDetailJSON(int $id_detail){
+        if(Auth::user()){
+            $detail = Detail::find($id_detail);
+            $product = $detail->product();
+            $color = $detail->color->name;
+            $size = $detail->size->name;
+            $quantity = $detail->quantity;
+        }else{
+            $productCart = Session::get('cart')[$id_detail];
+            $product = Product::find($productCart['id_product']);
+            $color = Color::find($productCart['id_color'])->name;
+            $size = Size::find($productCart['id_size'])->name;
+            $quantity = $productCart['quantity'];
+        }
+        
+        $productName = $product->name;
+        $productImage = $product->images[0]->file;
+        $priceWithPromotion = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+        $priceWithoutPromotion = $product->price;
+        
+        return array('name' => $productName, 'image' => $productImage, 'price_with_promotion' => $priceWithPromotion, 'price_without_promotion' => $priceWithoutPromotion, 'quantity' => $quantity, 'color' => $color, 'size' => $size);
+        
     }
 
     public function add(Request $request){
@@ -102,8 +127,8 @@ class ShoppingCartController extends Controller{
         }
 
         if(Auth::user()){
-            if($this->addProductAuth($request['id_product'],$request['id_color'],$request['id_size'], 1)){
-                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!'),200);
+            if($detail = $this->addProductAuth($request['id_product'],$request['id_color'],$request['id_size'], 1)){
+                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!', 'product'=>$this->getDetailJSON($detail->id)),200);
             }else{
                 return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
             }
@@ -114,18 +139,20 @@ class ShoppingCartController extends Controller{
             }
             if($cart = $request->session()->get('cart')){
                 $i = $this->searchArray($request['id_product'], $request['id_color'], $request['id_size'], $cart);
-                if($i === -1){     
-                    array_push($cart, array('id' => end($cart)['id'] + 1, 'id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
+                if($i === -1){
+                    $i = end($cart)['id'] + 1;
+                    array_push($cart, array('id' => $i, 'id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
                 }else{
                     $cart[$i]['quantity']++;
                 }
             }else{
+                $i = 0;
                 $cart = array();
-                array_push($cart, array('id' => 0, 'id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
+                array_push($cart, array('id' => $i, 'id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
             }            
             $request->session()->put('cart', $cart);
             
-            return Response::json(array('status' => 'success', 'message' => 'The product has been added from your cart!'), 200);
+            return Response::json(array('status' => 'success', 'message' => 'The product has been added from your cart!', 'product' =>  $this->getDetailJSON($i)), 200);
         }
 
     }

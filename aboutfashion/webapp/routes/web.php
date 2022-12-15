@@ -74,3 +74,4 @@ Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartV
 
 //Test
 Route::get('/shopping-cart/checkout', 'OrderController@checkout');
+Route::get('/test', 'ShoppingCartController@add');
