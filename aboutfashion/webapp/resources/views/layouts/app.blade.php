@@ -30,7 +30,9 @@
 
 <body class="d-flex flex-column min-vh-100">
     @php
-        if (
+        if (!Auth::user()) {
+            $order = null; // TODO modificar
+        } elseif (
             !($order = Auth::user()
                 ->orders()
                 ->where('status', 'Shopping Cart')

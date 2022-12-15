@@ -64,10 +64,14 @@ class ProductController extends Controller{
     public function show($id){
         $product = Product::findOrFail($id);
         $user = Auth::user(); 
-        if(is_null($user)){
-            return view('pages.products.show',['product' => $product, 'order'=>null]);   
+        if(isset($user)){
+            if(count($user->wishlist()->where('id_product', $id)->get()) != 0){
+                return view('pages.products.show',['product' => $product, 'wishlist'=>true]);
+            }else{
+                return view('pages.products.show',['product' => $product, 'wishlist'=>false]);
+            }
         }
-        return view('pages.products.show',[ 'product' => $product, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
+        return view('pages.products.show',[ 'product' => $product]);
     }
 
     /**
