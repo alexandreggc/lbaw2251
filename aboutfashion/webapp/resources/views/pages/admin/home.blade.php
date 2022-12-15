@@ -27,7 +27,7 @@
                 </li>
             </ul>
         </div>
-        <div class="row pb-3">
+        <div class="row">
             <div class="col-6"></div>
             <div class="col-6 pb-3">
                 <form class="d-flex">

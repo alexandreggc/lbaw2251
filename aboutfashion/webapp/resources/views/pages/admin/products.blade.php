@@ -26,18 +26,16 @@
                     <a class="nav-link" href="/admin-panel/reports">Reports</a>
                 </li>
             </ul>
-            <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <form class="d-flex">
-                        <input class="form-control me-sm-2" type="text" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div>
+            <div class="col-6"></div>
+            <div class="col-6">
+                <form class="d-flex">
+                    <input class="form-control me-sm-2" type="text" placeholder="Search">
+                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>
             </div>
             <div class="row">
                 <div class="col-2">
-                    <button type="button" class="btn btn-primary mb-4">
+                    <button type="button" class="btn btn-outline-primary mb-4">
                         <i class="fa-regular fa-plus"></i>
                         Add Product
                     </button>
