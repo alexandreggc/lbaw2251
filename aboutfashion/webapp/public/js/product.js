@@ -10,7 +10,9 @@ function attachEvents() {
     let dismissDSC = document.getElementById("dismissDSC")
     dismissDSC.addEventListener('click', dismiss_Dsc)
     let likeIcon = document.getElementById('likeIcon');
-    likeIcon.addEventListener('click', changeLike)
+    if (likeIcon != null || likeIcon != undefined) {
+        likeIcon.addEventListener('click', changeLike)
+    }
 }
 
 async function addSize(element) {

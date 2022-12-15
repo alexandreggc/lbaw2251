@@ -46,13 +46,11 @@ class OrderController extends Controller
       return redirect()->back()->with('status', 'Shopping Cart Empty!');
     }
 
-    $card = Card::find($request['id_card']);
-    if($card){
+    if(!$card = Card::find($request['id_card'])){
       return redirect()->back()->with('status', 'Card not found!');
     }
 
-    $address = Address::find($request['id_address']);
-    if($address){
+    if(!$address = Address::find($request['id_address'])){
       return redirect()->back()->with('status', 'Address not found!');
     }
 
@@ -74,7 +72,7 @@ class OrderController extends Controller
     try{
       DB::select('SELECT checkout(?)', array($order->id));
     }catch(Exception $e){
-      echo 1;      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
+      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
         
     
