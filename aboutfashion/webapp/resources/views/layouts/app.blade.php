@@ -212,7 +212,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Sign In</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">SIGN IN</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -249,6 +249,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="button button-outline me-auto"
+                                        href="{{ url('/forgot-password') }}"  data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Forgot password?</a><a class="button button-outline me-auto"
                                         href="{{ route('forgot.password.view') }}">Forgot password</a>
                                     <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
@@ -269,7 +270,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">REGISTER</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -331,6 +332,45 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">FORGOTTEN PASSWORD</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row text-center mb-3">
+                                <p>If you've forgotten your password, please enter your registered email address. <br>
+                                     We'll send you a link to reset your password.</p>
+                            </div>
+                            
+                           
+                            <form method="POST" action="{{ route('forgot.password.action') }}">
+                                {{ csrf_field() }}
+                                <div class="form-group mb-4">
+                                    @if ($errors->has('email'))
+                                        <span class="error">
+                                            {{ $errors->first('email') }}
+                                        </span>
+                                    @else
+                                    @endif
+                                    <input id="email" type="email" name="email" value="" style="width:100%;" required>
+                                </div>
+                                
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn mx-auto btn-primary reg">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         </header>
         <section id="content">
