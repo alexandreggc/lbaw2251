@@ -102,10 +102,6 @@ function drawProducts(products) {
                             <img src="${val.images[0]}" width="227" height="313">
                         </a>
                         <span class="product-discount-label">${havePromo(val.promotion.discount)}</span>
-                        <ul class="product-links">
-                            <li><a href="#"><i class="fa fa-search"></i></a></li>
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                        </ul>
                     </div>
                     <div class="product-content shadow">
                         <h3 class="title"><a href="/products/${val.id}">${val.name}</a></h3>
