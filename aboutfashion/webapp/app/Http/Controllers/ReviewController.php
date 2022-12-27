@@ -68,8 +68,10 @@ class ReviewController extends Controller{
         $this->authorize('store', $user, $product);
 
         //guardar os dados da nova review
+        $review->id = $request->input('id');
         $review->id_user = $request->input('id_user');
         $review->id_product = $request->input('id_product');
+        $review->date = $request->input('date');
         $review->rating = $request->input('rating');
         $review->description = $request->input('description');
         $review->save();
