@@ -49,6 +49,7 @@
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
                                             <span class="badge bg-success ms-3">Completed</span>
                                         </div>
+                                        <!-- COLOCAR PARA ESTADO CANCELLED-->
                                     @else
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
