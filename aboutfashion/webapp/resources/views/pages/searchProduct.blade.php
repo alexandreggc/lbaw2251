@@ -19,7 +19,7 @@
                             <fieldset>
                                 <div class="card-group ">
 
-                                    <legend class="text-start ms-4">Categories</legend>
+                                    <h5 class="text-start ms-4">CATEGORIES</h5>
                                     <fieldset class="form-group mx-3" style="width:100%;">
                                         <select class="form-select" id="category" name="id_category">
                                             <option selected>Select category</option>
@@ -32,7 +32,7 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4  ">
-                                    <legend class="text-start ms-4">Size</legend>
+                                    <h5 class="text-start ms-4">SIZE</h5>
                                     <fieldset class="form-group mx-3" style="width:100%;">
                                         <select class="form-select" name="id_size" id="size">
                                             <option selected>Select size</option>
@@ -45,7 +45,7 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4  ">
-                                    <legend class="text-start ms-4">Color</legend>
+                                    <h5 class="text-start ms-4">COLOR</h5>
                                     <fieldset class="form-group mx-3" style="width:100%;">
                                         <select class="form-select" id="color" name="id_color">
                                             <option selected>Select color</option>
@@ -60,7 +60,7 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4 ">
-                                    <legend class="text-start ms-4">Price</legend>
+                                    <h5 class="text-start ms-4">PRICE</h5>
                                     <div class="container" id="c1">
                                         <div class="row1 mx-auto">
                                             <div id="pmd-slider-value-range" class="pmd-range-slider" min="0"
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="card-group mt-4 ">
-                                    <legend class="text-start ms-4">Classification</legend>
+                                    <h5 class="text-start ms-4">CLASSIFICATION</h5>
                                     <input type="range" class="form-range mx-auto" name="min_classification"
                                         style="width:60%;display:block;" min="0" max="5" step="1"
                                         id="myRange" value="0">
