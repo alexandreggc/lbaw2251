@@ -41,43 +41,6 @@
                     </button>
                 </div>
             </div>
-            <!--
-            <div id="promotionsList">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Discount</th>
-                            <th scope="col">Start Date</th>
-                            <th scope="col">End Date</th>
-                            <th scope="col">Edit</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($promotions as $promotion)
-                            <tr>
-                                <td>{{ $promotion['discount'] }}%</td>
-                                <td>{{ substr($promotion['start_date'], 0, 10) }}</td>
-                                <td>{{ substr($promotion['final_date'], 0, 10) }}</td>
-                                <td>-->
-                                    <!--código de form action para delete promotion-->
-                                    <!--<button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fa-regular fa-pencil"></i>
-                                        edit
-                                    </button>
-                                </td>
-                                <td>-->
-                                    <!--código de form action para delete promotion-->
-                                    <!--<button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-regular fa-xmark"></i>
-                                        delete
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>-->
             <div class="accordion" id="accordion">
                 @foreach($promotions as $promotion)
                     <div class="accordion-item">
