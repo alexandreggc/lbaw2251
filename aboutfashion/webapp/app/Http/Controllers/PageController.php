@@ -8,6 +8,8 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Report;
 
+use Illuminate\Support\Facades\Auth;
+
 class PageController extends Controller{
 
     /*public function homePageAdmin(){
@@ -47,11 +49,25 @@ class PageController extends Controller{
         return view('pages.home',['promotions'=>$promotions]);
     }
 
+
+    public function homePageAdmin(){
+        $users = User::all();
+        return view('pages.admin.home', ['users'=>$users]);
+    }
+
     public function aboutPage(){
-        return view('pages.about');
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('pages.about',['order'=>null]);   
+        }
+        return view('pages.about',[ 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
     }
 
     public function contactsPage(){
-        return view('pages.contacts');
-    }
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('pages.contacts',['order'=>null]);   
+        }
+        return view('pages.contacts',[ 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
+    } 
 }

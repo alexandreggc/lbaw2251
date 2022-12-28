@@ -29,11 +29,23 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+    @php
+        if (!Auth::user()) {
+            $order = null; // TODO modificar
+        } elseif (
+            !($order = Auth::user()
+                ->orders()
+                ->where('status', 'Shopping Cart')
+                ->first())
+        ) {
+            $order = null;
+        }
+    @endphp
     <main>
         <header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
-                    
+
                     <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
@@ -56,7 +68,8 @@
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-regular fa-user" style="font-size:24px;"></i>
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"
+                                    style=" z-index: 18;">
                                     @if (Auth::check())
                                         <li><span class="dropdown-item">Hello {{ Auth::user()->first_name }} !</span>
                                         </li>
@@ -81,14 +94,117 @@
                                 <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
                                         style="font-size:24px;"></i></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="#">
+                            <li class="nav-item dropdown " id="shoppingCartTog">
+                                <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink2" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <ion-icon name="cart-outline" style="font-size:28px;"></ion-icon>
                                 </a>
-                            </li>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink2"
+                                    id="dropdownSC" style="width:27rem;">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-12 mb-2 text-end  checkout">
+                                            <button type="button" id="dismissDSC" class="btn-close me-2"
+                                                data-bs-dismiss="dropdownSC" aria-label="Close"
+                                                style="color:#000;background-color:#000;-webkit-tap-highlight-color:#000;"></button>
 
-                        </ul>
+                                        </div>
+                                    </div>
+                                    <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
+                                        <tbody>
+                                            @if (is_null($order))
+                                                <tr>
+                                                    <td>
+                                                        <div
+                                                            class="col-lg-12 col-sm-12 col-12 mb-2 text-center checkout">
+                                                            <p class="font-weight-light" style="font-size:0.8rem;">
+                                                                Shopping cart is empty!</p>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            @else
+                                                @php
+                                                    $n = count($order->details);
+                                                    $detail = $order->details[$n - 1];
+                                                @endphp
+                                                <tr id="row-{{ $detail->id }}" class="row-product">
+                                                    <td class=" align-middle justify-content-center"style="width:8rem;"
+                                                        data-th="Produtoooooooooooooooooo">
+                                                        <div class="row">
+                                                            <div class="col-md-6 text-left">
+                                                                <img src="{{ $detail->product->images[0]['file'] }}"
+                                                                    alt=""
+                                                                    class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                                            </div>
+                                                            <div
+                                                                class="col-md-6  align-middle text-left mt-sm-2 mx-auto">
+                                                                <h6 style="font-size:0.8em;">
+                                                                    {{ $detail->product['name'] }}</h6>
+                                                                <p class="font-weight-light"
+                                                                    style="font-size:0.5rem;">Size:
+                                                                    {{ $detail->size['name'] }} <br>
+                                                                    Color: {{ $detail->color['name'] }} </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class=" align-middle justify-content-center"
+                                                        style="width:2rem;" data-th="preço">
+                                                        <div class=" mt-sm-2">
+                                                            @php
+                                                                $finalPrice = $detail->product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                                            @endphp
+                                                            <p class="font-weight-light" style="font-size:0.7rem;">
+                                                                {{ $finalPrice }}€
+                                                                @if ($finalPrice == $detail->product['price'])
+                                                            </p>
+                                                        @else
+                                                            <small class="dis-price"
+                                                                style="color: #888;text-decoration: line-through;">{{ $detail->product['price'] }}€</small>
+                                                            </p>
+                                            @endif
+                                            <span id="original-price-{{ $detail->id }}"
+                                                style="display: none">{{ $detail->product['price'] }}</span>
+                                            <span id="final-price-{{ $detail->id }}"
+                                                style="display: none">{{ $finalPrice }}</span>
+
+                                </div>
+                                </td>
+                                <td class=" align-middle justify-content-center" style="width:3rem;"
+                                    data-th="quanti">
+                                    <input type="number" style="margin:0;"
+                                        class="form-control form-control-sm text-center update-quantity"
+                                        value="{{ $detail->quantity }}" min="1"
+                                        style="padding:0;width:2.5rem;" id={{ $detail->id }}>
+                                    <span id="quantity-{{ $detail->id }}"
+                                        style="display: none">{{ $detail->quantity }}</span>
+                                </td>
+                                <td class="actions align-middle " style="width:2rem" data-th="">
+                                    <div class="text-right justify-content-center">
+                                        <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                                            id={{ $detail->id }}>
+                                            <i class="fas fa-trash" id={{ $detail->id }}></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                </tr>
+
+                                @endif
+                                </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-lg-12 col-sm-12 col-12 mb-2 text-center checkout">
+                                        <a href="{{ route('shoppingCartView') }}">
+                                            <button class="btn btn-primary btn-block"
+                                                style="background-color:rgba(0,0,0,.9);border-color:rgba(0,0,0,.9);">View
+                                                shopping cart</button>
+                                        </a>
+
+                                    </div>
+                                </div>
                     </div>
+                    </li>
+                    </ul>
+                </div>
                 </div>
             </nav>
             <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -96,7 +212,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Sign In</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">SIGN IN</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -133,7 +249,9 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="button button-outline me-auto"
-                                        href="{{ route('userRegister') }}">Forgot password</a> <!-- meter 'home' -->
+                                        href="{{ url('/forgot-password') }}"  data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Forgot password?</a><a class="button button-outline me-auto"
+                                        href="{{ route('forgot.password.view') }}">Forgot password</a>
+                                    <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary"><a
                                             class="button button-outline nav-link" href="{{ route('userRegister') }}"
@@ -152,7 +270,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Register</h5>
+                            <h5 class="modal-title" id="staticBackdropLabel">REGISTER</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -215,14 +333,53 @@
                 </div>
             </div>
 
-        </header>
+            <div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">FORGOTTEN PASSWORD</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row text-center mb-3">
+                                <p>If you've forgotten your password, please enter your registered email address. <br>
+                                     We'll send you a link to reset your password.</p>
+                            </div>
+                            
+                           
+                            <form method="POST" action="{{ route('forgot.password.action') }}">
+                                {{ csrf_field() }}
+                                <div class="form-group mb-4">
+                                    @if ($errors->has('email'))
+                                        <span class="error">
+                                            {{ $errors->first('email') }}
+                                        </span>
+                                    @else
+                                    @endif
+                                    <input id="email" type="email" name="email" value="" style="width:100%;" required>
+                                </div>
+                                
 
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn mx-auto btn-primary reg">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </header>
         <section id="content">
             @yield('content')
         </section>
 
         <footer
-            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto" >
+            class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto"
+            style="z-index: 200;">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"

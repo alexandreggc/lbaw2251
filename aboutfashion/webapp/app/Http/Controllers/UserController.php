@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller{
@@ -19,12 +22,17 @@ class UserController extends Controller{
     }
 
     public function show($id){
+        
         $user = User::find($id);
         if(is_null($user)){
             return abort('404');
         }
         $this->authorize('view', $user);
-        return view('pages.user.show', ['user' => $user, 'countries'=>Country::all()]);
+        if(is_null($user)){
+            return view('pages.user.show',['user' => $user, 'countries'=>Country::all()]);   
+        }
+        return view('pages.user.show',[ 'user' => $user, 'countries'=>Country::all()]);
+        
     }
 
     public function edit($id){
@@ -114,4 +122,27 @@ class UserController extends Controller{
         return Redirect::route('userView', array('id' => $user->id));
     }
 
+    public function toggleProductWishlist(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id_product' => 'required|int',
+        ]); 
+
+        if($validator->fails()){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+
+        if(!$product = Product::find($request['id_product'])){
+            return Response::json(array('status' => 'error', 'message'=>'Product not found!'),404);
+        }
+
+        $user = Auth::user();
+        if($user->wishlist()->where('id_product',$product->id)->exists()){
+            $user->wishlist()->detach($product);
+        }else{
+            $user->wishlist()->attach($product);
+        }
+        return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        
+    }
+    
 }

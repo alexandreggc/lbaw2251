@@ -33,7 +33,29 @@
                             <div class="product p-4 mt-3">
 
                                 <div class="mt-4 mb-3">
-                                    <h3 class="text-uppercase ">{{ $product->name }}</h3>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h3 class="text-uppercase ">{{ $product->name }}</h3>
+                                        </div>
+                                        @if (!Auth::user())
+                                        @else
+                                            <div class="col-md-1">
+                                                @if ($product->wishlist()->where('id_user', Auth::user()->id)->exists())
+                                                    <button id="likeIcon"
+                                                        style="border:none;background-color:#fff;margin-top:0.3rem;"><i
+                                                            class="fa-solid fa-heart " id="heartIcon"
+                                                            style="font-size:1.7rem;"></i></button>
+                                                @else
+                                                    <button id="likeIcon"
+                                                        style="border:none;background-color:#fff;margin-top:0.3rem;"><i
+                                                            class="fa-regular fa-heart " id="heartIcon"
+                                                            style="font-size:1.7rem;"></i></button>
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                    </div>
+
                                     <div class="price d-flex flex-row align-items-center" id="price">
                                         @php
                                             $finalPrice = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));
@@ -88,217 +110,211 @@
                 </div>
             </div>
         </div>
-        @if (count($product->reviews)>0)
-        <div class=" d-flex justify-content-center align-items-center text-center mx-auto mt-5 mb-5" style="width: 200px;">
-            <h3 class="mx-auto" style="">Reviews</h3>
-        </div>
-        @php
-            $n = ceil(count($product->reviews) / 3);
-            $j = 0;
-        @endphp
-        <div id="carouselExampleControls" class="carousel slide carousel-dark text-center mx-3 mb-5"
-            data-bs-ride="carousel">
-            <div class="carousel-inner">
-                @for ($i = 0; $i < $n; $i++)
-                    @if ($i== 0)
-                    <div class="carousel-item active">
-                        <div class="container">
-                            <div class="row align-items-center">
-                                <div class="col-lg-4 mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]->user->first_name}} {{$product->reviews[$j]->user->last_name}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                                @if($j==count($product->reviews))  
-                                    </div>
-                                    </div>
-                                    </div>
-                                    @break
-                                @endif
-                                <div class="col-lg-4 mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                                @if($j==count($product->reviews))  
-                                    </div>
-                                    </div>
-                                    </div>
-                                    @break
-                                @endif
-                                <div class="col-lg-4 mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-
-                            </div>
-                        </div>
-                    </div>
-                    @else
-                    <div class="carousel-item">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-4 mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                                @if($j==count($product->reviews))  
-                                    </div>
-                                    </div>
-                                    </div>
-                                    @break
-                                @endif
-                                <div class="col-lg-4  mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                                @if($j==count($product->reviews))  
-                                    </div>
-                                    </div>
-                                    </div>
-                                    @break
-                                @endif
-                                <div class="col-lg-4  mx-auto">
-                                    <img class="rounded-circle shadow-1-strong mb-4"
-                                        src="{{$product->reviews[$j]->user->photo['file']}}"
-                                        alt="avatar" style="width: 150px;" />
-                                    <h5 class="mb-3">{{$product->reviews[$j]['id_user']}}</h5>
-                                    <p>{{str_replace("-","/",strrev(substr($product->reviews[$j]['date'], 0 ,10)))}}</p>
-                                    <p class="text-muted">
-                                        <i class="fas fa-quote-left pe-2"></i>
-                                        {{$product->reviews[$j]['description']}}
-                                    </p>
-                                    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
-                                        @for ($t = 1; $t < 6; $t++)
-                                            @if($t>$product->reviews[$j]['evaluation'])
-                                            <li><i class="far fa-star fa-sm"></i></li>
-                                            @else
-                                            <li><i class="fas fa-star fa-sm"></i></li>
-                                            @endif
-                                        
-                                        @endfor
-                                    </ul>
-                                </div>
-                                @php
-                                $j= $j+1;
-                                @endphp
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                @endfor
+        @if (count($product->reviews) > 0)
+            <div class=" d-flex justify-content-center align-items-center text-center mx-auto mt-5 mb-5"
+                style="width: 200px;">
+                <h3 class="mx-auto" style="">Reviews</h3>
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            @php
+                $n = ceil(count($product->reviews) / 3);
+                $j = 0;
+            @endphp
+            <div id="carouselExampleControls" class="carousel slide carousel-dark text-center mx-3 mb-5"
+                data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for ($i = 0; $i < $n; $i++)
+                        @if ($i == 0)
+                            <div class="carousel-item active">
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 mx-auto">
+                                            <img class="rounded-circle shadow-1-strong mb-4"
+                                                src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                                                style="width: 150px;" />
+                                            <h5 class="mb-3">{{ $product->reviews[$j]->user->first_name }}
+                                                {{ $product->reviews[$j]->user->last_name }}</h5>
+                                            <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}
+                                            </p>
+                                            <p class="text-muted">
+                                                <i class="fas fa-quote-left pe-2"></i>
+                                                {{ $product->reviews[$j]['description'] }}
+                                                <i class="fa-solid fa-quote-right ps-2"></i>
+                                            </p>
+                                            <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                                                @for ($t = 1; $t < 6; $t++)
+                                                    @if ($t > $product->reviews[$j]['evaluation'])
+                                                        <li><i class="far fa-star fa-sm"></i></li>
+                                                    @else
+                                                        <li><i class="fas fa-star fa-sm"></i></li>
+                                                    @endif
+                                                @endfor
+                                            </ul>
+                                        </div>
+                                        @php
+                                            $j = $j + 1;
+                                        @endphp
+                                        @if ($j == count($product->reviews))
+                                    </div>
+                                </div>
+                            </div>
+                        @break
+                    @endif
+                    <div class="col-lg-4 mx-auto">
+                        <img class="rounded-circle shadow-1-strong mb-4"
+                            src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                            style="width: 150px;" />
+                        <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
+                        <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
+                        <p class="text-muted">
+                            <i class="fas fa-quote-left pe-2"></i>
+                            {{ $product->reviews[$j]['description'] }}
+                        </p>
+                        <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                            @for ($t = 1; $t < 6; $t++)
+                                @if ($t > $product->reviews[$j]['evaluation'])
+                                    <li><i class="far fa-star fa-sm"></i></li>
+                                @else
+                                    <li><i class="fas fa-star fa-sm"></i></li>
+                                @endif
+                            @endfor
+                        </ul>
+                    </div>
+                    @php
+                        $j = $j + 1;
+                    @endphp
+                    @if ($j == count($product->reviews))
+            </div>
         </div>
-        @endif
-    </body>
+        </div>
+    @break
+@endif
+<div class="col-lg-4 mx-auto">
+    <img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+        alt="avatar" style="width: 150px;" />
+    <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
+    <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
+    <p class="text-muted">
+        <i class="fas fa-quote-left pe-2"></i>
+        {{ $product->reviews[$j]['description'] }}
+    </p>
+    <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+        @for ($t = 1; $t < 6; $t++)
+            @if ($t > $product->reviews[$j]['evaluation'])
+                <li><i class="far fa-star fa-sm"></i></li>
+            @else
+                <li><i class="fas fa-star fa-sm"></i></li>
+            @endif
+        @endfor
+    </ul>
+</div>
+@php
+    $j = $j + 1;
+@endphp
 
+</div>
+</div>
+</div>
+@else
+<div class="carousel-item">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mx-auto">
+                <img class="rounded-circle shadow-1-strong mb-4"
+                    src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                    style="width: 150px;" />
+                <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
+                <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
+                <p class="text-muted">
+                    <i class="fas fa-quote-left pe-2"></i>
+                    {{ $product->reviews[$j]['description'] }}
+                </p>
+                <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                    @for ($t = 1; $t < 6; $t++)
+                        @if ($t > $product->reviews[$j]['evaluation'])
+                            <li><i class="far fa-star fa-sm"></i></li>
+                        @else
+                            <li><i class="fas fa-star fa-sm"></i></li>
+                        @endif
+                    @endfor
+                </ul>
+            </div>
+            @php
+                $j = $j + 1;
+            @endphp
+            @if ($j == count($product->reviews))
+        </div>
+    </div>
+</div>
+@break
+@endif
+<div class="col-lg-4  mx-auto">
+<img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+    alt="avatar" style="width: 150px;" />
+<h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
+<p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
+<p class="text-muted">
+    <i class="fas fa-quote-left pe-2"></i>
+    {{ $product->reviews[$j]['description'] }}
+</p>
+<ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+    @for ($t = 1; $t < 6; $t++)
+        @if ($t > $product->reviews[$j]['evaluation'])
+            <li><i class="far fa-star fa-sm"></i></li>
+        @else
+            <li><i class="fas fa-star fa-sm"></i></li>
+        @endif
+    @endfor
+</ul>
+</div>
+@php
+    $j = $j + 1;
+@endphp
+@if ($j == count($product->reviews))
+</div>
+</div>
+</div>
+@break
+@endif
+<div class="col-lg-4  mx-auto">
+<img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+alt="avatar" style="width: 150px;" />
+<h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
+<p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
+<p class="text-muted">
+<i class="fas fa-quote-left pe-2"></i>
+{{ $product->reviews[$j]['description'] }}
+</p>
+<ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+@for ($t = 1; $t < 6; $t++)
+    @if ($t > $product->reviews[$j]['evaluation'])
+        <li><i class="far fa-star fa-sm"></i></li>
+    @else
+        <li><i class="fas fa-star fa-sm"></i></li>
+    @endif
+@endfor
+</ul>
+</div>
+@php
+    $j = $j + 1;
+@endphp
+</div>
+</div>
+</div>
+@endif
+@endfor
+</div>
+
+<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+@endif
+</body>
 @endsection

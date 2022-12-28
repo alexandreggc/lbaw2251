@@ -9,6 +9,7 @@ use App\Models\Color;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductController extends Controller{
@@ -62,7 +63,15 @@ class ProductController extends Controller{
 
     public function show($id){
         $product = Product::findOrFail($id);
-        return view('pages.products.show', ['product' => $product]);
+        $user = Auth::user(); 
+        if(isset($user)){
+            if(count($user->wishlist()->where('id_product', $id)->get()) != 0){
+                return view('pages.products.show',['product' => $product, 'wishlist'=>true]);
+            }else{
+                return view('pages.products.show',['product' => $product, 'wishlist'=>false]);
+            }
+        }
+        return view('pages.products.show',[ 'product' => $product]);
     }
 
     /**
@@ -205,6 +214,10 @@ class ProductController extends Controller{
         $categories = Category::all();
         $sizes = Size::all();
         $colors = Color::all();
-        return view('pages.searchProduct',['categories'=>$categories, 'sizes'=>$sizes, 'colors'=>$colors]);
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('pages.searchProduct',['order'=>null, 'categories'=>$categories, 'sizes'=>$sizes, 'colors'=>$colors]);   
+        }
+        return view('pages.searchProduct',[ 'categories'=>$categories, 'sizes'=>$sizes, 'colors'=>$colors, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
     }
 }

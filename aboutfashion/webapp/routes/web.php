@@ -27,12 +27,11 @@ Route::get('/admin-panel/reports','PageController@reportsPageAdmin')->name('repo
 
 
 //User 
-Route::post('login', 'Auth\LoginController@login')->name('userLogin');
-Route::get('/users/{id}', 'UserController@show')->name('userView')->middleware();
+Route::post('/login', 'Auth\LoginController@userLogin')->name('userLogin');
+Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('userRegisterForm');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::post('picture', 'UserController@editPicture')->name('editPicture');
@@ -44,6 +43,18 @@ Route::patch('/review/{id}', 'ReviewController@update')->name('reviewUpdate');
 Route::get('/review/create', 'ReviewController@create')->name('reviewCreateForm');
 Route::put('/review/create', 'ReviewController@store')->name('reviewCreate');
 
+
+//Forgot Password
+Route::get('/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordForm')->name('forgot.password.view');
+Route::post('/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordForm')->name('forgot.password.action');
+Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('password.reset');
+Route::post('/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password.action');
+
+
+Route::get('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordAdminForm')->name('forgot.password.view');
+Route::post('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordAdminForm')->name('forgot.password.action');
+Route::get('/admin-panel/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordAdminForm')->name('password.reset');
+Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordAdminForm')->name('reset.password.action');
 
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
@@ -68,11 +79,16 @@ Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('ad
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
 Route::delete('/admin-panel/users/{id}', 'AdminController@deleteUser')->name('deleteUserAdmin');
 Route::patch('/admin-panel/users/{id}/block', 'AdminController@blockUser')->name('blockUser');
+Route::get('/admin-panel/logout', 'Auth\LoginController@adminLogout')->name('adminLogout');
 
 
 //Products
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
+
+//WishList
+Route::post('/api/wishlist', 'UserController@toggleProductWishlist');
+
 
 //API
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');
@@ -82,3 +98,8 @@ Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('dele
 Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart');
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
+
+
+//Test
+Route::get('/shopping-cart/checkout', 'OrderController@checkout');
+Route::get('/test', 'ShoppingCartController@add');

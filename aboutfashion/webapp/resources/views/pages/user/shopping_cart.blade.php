@@ -1,116 +1,178 @@
 @extends('layouts.app')
 @section('content')
-<head>
-    <ol class="breadcrumb p-3 pb-1">
-        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item active">Shopping Cart</li>
-    </ol>
-</head>
-<body>
-<div class="container px-3 my-5 clearfix">
-    <!-- Shopping cart table -->
-    <div class="card">
-        <div class="card-header">
-            <h2>Shopping Cart</h2>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered m-0">
-                <thead>
-                  <tr>
-                    <!-- Set columns width -->
-                    <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
-                    <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
-                    <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
-                    <th class="text-right py-3 px-4" style="width: 100px;">Total</th>
-                    <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
-                  </tr>
-                </thead>
-                <tbody>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 1</a>
-                          <small>
-                            <span class="text-muted">Color:</span>Blue &nbsp;
-                            <span class="text-muted">Size: </span> EU 37 &nbsp;
-                          </small>
-                        </div>
-                      </div>
+    @csrf
+    <script type="text/javascript" src={{ asset('js/shopping_cart.js') }} defer></script>
+
+    <head>
+        <ol class="breadcrumb p-3 pb-1">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item active">Shopping Cart</li>
+        </ol>
+    </head>
+
+    <body>
+        <section class="pb-5">
+            <div class="container">
+                <h3 class="display-5 mt-3 mb-5 text-left">SHOPPING CART</h3>
+                <div class="row w-100">
+                    <div class="col-lg-8 col-md-8 col-8">
+                        <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
+                            <thead>
+                                <tr>
+                                    <th style="width:56%">Product</th>
+                                    <th style="width:12%">Price</th>
+                                    <th style="width:12%">Discount</th>
+                                    <th style="width:8%">Quantity</th>
+                                    <th style="width:10%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (is_null($order) and is_null($guestCart))
+                                @elseif (is_null($guestCart))
+                                    @foreach ($order->details as $detail)
+                                        <tr id="row-{{ $detail->id }}" class="row-product">
+                                            <td class=" align-middle " data-th="Product">
+                                                <div class="row">
+                                                    <div class="col-md-3 text-left">
+                                                        <img src="{{ $detail->product->images[0]['file'] }}" alt=""
+                                                            class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                                    </div>
+                                                    <div class="col-md-9  align-middle text-left mt-sm-2">
+                                                        <h4>{{ $detail->product['name'] }}</h4>
+                                                        <p class="font-weight-light">Size: {{ $detail->size['name'] }} <br>
+                                                            Color: {{ $detail->color['name'] }} </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class=" align-middle " data-th="Price">
+                                                <div class=" mt-sm-2">
+                                                    @php
+                                                        $finalPrice = $detail->product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                                    @endphp
+                                                    <p class="font-weight-light">{{ $finalPrice }}€
+                                                        @if ($finalPrice == $detail->product['price'])
+                                                    </p>
+                                                @else
+                                                    <small class="dis-price"
+                                                        style="color: #888;text-decoration: line-through;">{{ $detail->product['price'] }}€</small>
+                                                    </p>
+                                    @endif
+                                    <span id="original-price-{{ $detail->id }}"
+                                        style="display: none">{{ $detail->product['price'] }}</span>
+                                    <span id="final-price-{{ $detail->id }}"
+                                        style="display: none">{{ $finalPrice }}</span>
+
+                    </div>
                     </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$57.55</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="2"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$115.1</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip text-decoration-none close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar6.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 2</a>
-                          <small>
-                            <span class="text-muted">Color:</span>Blue &nbsp;
-                            <span class="text-muted">Size: </span> EU 37 &nbsp;
-                          </small>
-                        </div>
-                      </div>
+                    <td class=" align-middle text-center" data-th="Discount">
+                        @if ($finalPrice == $detail->product['price'])
+                            -
+                        @else
+                            {{ $detail->product->getPromotion(date('Y-m-d H:i:s'))->discount }}%
+                        @endif
+
                     </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$1049.00</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="1"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$1049.00</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip text-decoration-none close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
-                  <tr>
-                    <td class="p-4">
-                      <div class="media align-items-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="d-block ui-w-40 ui-bordered mr-4" alt="">
-                        <div class="media-body">
-                          <a href="#" class="d-block text-dark">Product 3</a>
-                          <small>
-                            <span class="text-muted">Color:</span>Blue &nbsp;
-                            <span class="text-muted">Size: </span> EU 37 &nbsp;
-                          </small>
-                        </div>
-                      </div>
+                    <td class=" align-middle " data-th="Quantity ">
+                        <input type="number" class="form-control form-control-sm text-center update-quantity"
+                            value="{{ $detail->quantity }}" min="1" id={{ $detail->id }}>
+                        <span id="quantity-{{ $detail->id }}" style="display: none">{{ $detail->quantity }}</span>
                     </td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$20.55</td>
-                    <td class="align-middle p-4"><input type="text" class="form-control text-center" value="1"></td>
-                    <td class="text-right font-weight-semibold align-middle p-4">$20.55</td>
-                    <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip text-decoration-none close float-none text-danger" title="" data-original-title="Remove">×</a></td>
-                  </tr>
-        
+                    <td class="actions align-middle " data-th="">
+                        <div class="text-right justify-content-center">
+                            <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                                id={{ $detail->id }}>
+                                <i class="fas fa-trash" id={{ $detail->id }}></i>
+                            </button>
+                        </div>
+                    </td>
+                    </tr>
+                    @endforeach
+                @else
+                    @foreach ($guestCart as $detail)
+                        <tr id="row-{{ $detail['id'] }}" class="row-product">
+                            <td class=" align-middle " data-th="Product">
+                                <div class="row">
+                                    <div class="col-md-3 text-left">
+                                        <img src="{{ $detail['product']->images[0]['file'] }}" alt=""
+                                            class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                    </div>
+                                    <div class="col-md-9  align-middle text-left mt-sm-2">
+                                        <h4>{{ $detail['product']->name }}</h4>
+                                        <p class="font-weight-light">Size: {{ $detail['size']->name }} <br>
+                                            Color: {{ $detail['color']->name }} </p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class=" align-middle " data-th="Price">
+                                <div class=" mt-sm-2">
+                                    @php
+                                        $finalPrice = $detail['product']->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                    @endphp
+                                    <p class="font-weight-light">{{ $finalPrice }}€
+                                        @if ($finalPrice == $detail['product']->price)
+                                    </p>
+                                @else
+                                    <small class="dis-price"
+                                        style="color: #888;text-decoration: line-through;">{{ $detail['product']->price }}€</small>
+                                    </p>
+                    @endif
+                    <span id="original-price-{{ $detail['id'] }}"
+                        style="display: none">{{ $detail['product']->price }}</span>
+                    <span id="final-price-{{ $detail['id'] }}" style="display: none">{{ $finalPrice }}</span>
+
+                </div>
+                </td>
+                <td class=" align-middle text-center" data-th="Discount">
+                    @if ($finalPrice == $detail['product']->price)
+                        -
+                    @else
+                        {{ $detail['product']->getPromotion(date('Y-m-d H:i:s'))->discount }}%
+                    @endif
+
+                </td>
+                <td class=" align-middle " data-th="Quantity ">
+                    <input type="number" class="form-control form-control-sm text-center update-quantity"
+                        value="{{ $detail['quantity'] }}" min="1" id={{ $detail['id'] }}>
+                    <span id="quantity-{{ $detail['id'] }}" style="display: none">{{ $detail['quantity'] }}</span>
+                </td>
+                <td class="actions align-middle " data-th="">
+                    <div class="text-right justify-content-center">
+                        <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                            id={{ $detail['id'] }}>
+                            <i class="fas fa-trash" id={{ $detail['id'] }}></i>
+                        </button>
+                    </div>
+                </td>
+                </tr>
+                @endforeach
+                @endif
                 </tbody>
-              </table>
-            </div>
-            <!-- / Shopping cart table -->
-        
-            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
-              
-              
-              <div class="mt-4 ">
-                <button type="button" class="btn btn-lg btn-default md-btn-flat text-muted font-weight-normal mt-2 mr-3" style="text-decoration:underline;font-size:1rem;"><< Back to shopping</button>
-              </div>
-              <div class="mx-auto mt-4 ">
-                <button type="button" class="btn btn-lg btn-primary mt-2" style="background-color:rgba(0,0,0,.9);">Checkout</button>
-              </div>
-              <div class="text-right mt-4 ">
-                <label class="text-muted font-weight-normal m-0">Total price</label>
-                <div class="text-large"><strong>$1164.65</strong></div>
-              </div>
+                </table>
+                <a href="{{ route('searchProductView') }}" class="mt-5"><i class="fas fa-arrow-left mr-2"></i>Continue
+                    Shopping</a>
 
             </div>
-        
-            
-        
-          </div>
-      </div>
-  </div>
-    
-</body>
+            <div class=" col-lg-4 col-md-4 col-4">
+                <div class=" card mt-5" style="border-color: #dee2e6;border-radius: 0;">
+                    <h4 class="mt-5 mx-5" style="">OVERVIEW</h4>
+                    <div class="col mx-5 mb-5 my-2">
+                        <div class="d-flex justify-content-between my-3 information">
+                            <span>Subtotal</span><span id="subtotal"></span>
+                        </div>
+                        <div class="d-flex justify-content-between my-3 information">
+                            <span>Discount</span><span id="discount"></span>
+                        </div>
+                        <div class="d-flex justify-content-between my-3 information">
+                            <span>Total</span><span id="total" style="padding: 0;"></span>
+                        </div>
+                        <button class="btn btn-primary btn-block d-flex mx-auto mt-5"
+                            style="background-color:rgba(0,0,0,.9);" type="button"><span>Checkout</span></button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            </div>
+        </section>
+    </body>
 @endsection
