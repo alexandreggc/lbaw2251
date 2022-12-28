@@ -93,12 +93,12 @@ class ReviewController extends Controller{
         }
         $mytime = Carbon::now();
         //guardar os dados da nova review
-        $review->id_user = $user['id'];
-        $review->id_product = $request['id_product'];
-        $review->evaluation = $request['evaluation'];
-        $review->description = $request['description'];
-        $review->title = $request['title'];
-        $review->date = $mytime->toDateTimeString();
+        $review->id = $request->input('id');
+        $review->id_user = $request->input('id_user');
+        $review->id_product = $request->input('id_product');
+        $review->date = $request->input('date');
+        $review->rating = $request->input('rating');
+        $review->description = $request->input('description');
         $review->save();
         return Redirect::route('userView', array('id'=>Auth::user()));
     }

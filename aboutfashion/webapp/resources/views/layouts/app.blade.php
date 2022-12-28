@@ -249,8 +249,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a class="button button-outline me-auto"
-                                        href="{{ url('/forgot-password') }}"  data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Forgot password?</a><a class="button button-outline me-auto"
-                                        href="{{ route('forgot.password.view') }}">Forgot password</a>
+                                        href="{{ url('/forgot-password') }}"  data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Forgot password?</a>
                                     <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary"><a
@@ -347,8 +346,6 @@
                                 <p>If you've forgotten your password, please enter your registered email address. <br>
                                      We'll send you a link to reset your password.</p>
                             </div>
-                            
-                           
                             <form method="POST" action="{{ route('forgot.password.action') }}">
                                 {{ csrf_field() }}
                                 <div class="form-group mb-4">

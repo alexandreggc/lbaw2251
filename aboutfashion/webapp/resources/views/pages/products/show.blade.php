@@ -128,6 +128,8 @@
                                 <div class="container">
                                     <div class="row align-items-center">
                                         <div class="col-lg-4 mx-auto">
+                                            <p class="text-end"><a href=""><button id=""
+                                            style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                                             <img class="rounded-circle shadow-1-strong mb-4"
                                                 src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
                                                 style="width: 150px;" />
@@ -160,6 +162,8 @@
                         @break
                     @endif
                     <div class="col-lg-4 mx-auto">
+                        <p class="text-end"><a href=""><button id=""
+                        style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                         <img class="rounded-circle shadow-1-strong mb-4"
                             src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
                             style="width: 150px;" />
@@ -189,6 +193,8 @@
     @break
 @endif
 <div class="col-lg-4 mx-auto">
+    <p class="text-end"><a href=""><button id=""
+    style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
     <img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
         alt="avatar" style="width: 150px;" />
     <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
@@ -219,6 +225,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mx-auto">
+                <p class="text-end"><a href=""><button id=""
+                style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                 <img class="rounded-circle shadow-1-strong mb-4"
                     src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
                     style="width: 150px;" />
@@ -248,6 +256,8 @@
 @break
 @endif
 <div class="col-lg-4  mx-auto">
+<p class="text-end"><a href=""><button id=""
+style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
 <img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
     alt="avatar" style="width: 150px;" />
 <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
@@ -276,6 +286,8 @@
 @break
 @endif
 <div class="col-lg-4  mx-auto">
+<p class="text-end"><a href=""><button id=""
+style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
 <img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
 alt="avatar" style="width: 150px;" />
 <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>

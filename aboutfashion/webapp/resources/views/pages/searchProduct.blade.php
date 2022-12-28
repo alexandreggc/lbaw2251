@@ -19,10 +19,10 @@
                             <fieldset>
                                 <div class="card-group ">
 
-                                    <legend class="text-start ms-4">Categories</legend>
-                                    <fieldset class="form-group mx-3" style="width:100%;">
-                                        <select class="form-select" id="category" name="id_category">
-                                            <option selected>Select category</option>
+                                    <h5 class="text-start ms-2">CATEGORIES</h5>
+                                    <fieldset class="form-group mx-3" style="width:100%; margin-top:1rem;">
+                                        <select class="form-select select " id="category" name="id_category">
+                                            <option selected >Select category</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category['id'] }}">
                                                     {{ $category['name'] }}
@@ -32,9 +32,9 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4  ">
-                                    <legend class="text-start ms-4">Size</legend>
-                                    <fieldset class="form-group mx-3" style="width:100%;">
-                                        <select class="form-select" name="id_size" id="size">
+                                    <h5 class="text-start ms-2">SIZE</h5>
+                                    <fieldset class="form-group mx-3" style="width:100%; margin-top:1rem;">
+                                        <select class="form-select select" name="id_size" id="size">
                                             <option selected>Select size</option>
                                             @foreach ($sizes as $size)
                                                 <option value="{{ $size['id'] }}">
@@ -45,9 +45,9 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4  ">
-                                    <legend class="text-start ms-4">Color</legend>
-                                    <fieldset class="form-group mx-3" style="width:100%;">
-                                        <select class="form-select" id="color" name="id_color">
+                                    <h5 class="text-start ms-2">COLOR</h5>
+                                    <fieldset class="form-group mx-3" style="width:100%; margin-top:1rem;">
+                                        <select class="form-select select" id="color" name="id_color">
                                             <option selected>Select color</option>
                                             <option><i class="fa-solid fa-stop" style="background-color:blue;"></i> Blue
                                             </option>
@@ -60,37 +60,29 @@
                                     </fieldset>
                                 </div>
                                 <div class="card-group mt-4 ">
-                                    <legend class="text-start ms-4">Price</legend>
+                                    <h5 class="text-start ms-2">PRICE</h5>
+                                    <p class="text-center ms-auto me-3 "><span id="value-min"></span> € - <span id="value-max"></span> €</p>
                                     <div class="container" id="c1">
                                         <div class="row1 mx-auto">
                                             <div id="pmd-slider-value-range" class="pmd-range-slider" min="0"
-                                                max="200"></div>
-                                        </div>
-                                        <div class="row mt-4">
-                                            <div class=" text-center ms-5 min col-xs-6 "style="width: 80px;">
-                                                <p>Min :</p>
-                                                <input type="text" id="value-min" name="min_price"
-                                                    style="width: 60px;" />
-                                            </div>
-
-                                            <div class="text-center me-5 ms-auto max col-xs-6" style="width: 80px;">
-                                                <p>Max :</p>
-                                                <input type="text" id="value-max" name="max_price"
-                                                    style="width: 60px;" />
-                                            </div>
+                                                max="200" style="margin-top:1rem;"></div>
                                         </div>
 
 
                                     </div>
                                 </div>
                                 <div class="card-group mt-4 ">
-                                    <legend class="text-start ms-4">Classification</legend>
-                                    <input type="range" class="form-range mx-auto" name="min_classification"
-                                        style="width:60%;display:block;" min="0" max="5" step="1"
-                                        id="myRange" value="0">
-                                    <p class="text-center me-5"><span id="demo"></span> - 5</p>
+                                    <h5 class="text-start ms-2 mt-3 ">CLASSIFICATION</h5> 
+                                    <p class="text-center ms-auto me-4 mt-3"><span id="slider-range-value"></span> - 5</p>
+                                    <div class="container align-middle" id="c1">
+                                    <div class="row1 mx-auto">
+                                            <div id="pmd-slider-value-range2" class="pmd-range-slider" min="0"
+                                                max="200" style="margin-top:1rem;"></div>
+                                    </div>
+                                    </div>
+                                    
                                 </div>
-                                <div class="card-group mt-4  ">
+                                <div class="card-group mt-4 ">
                                     <button type="button" class="btn btn-primary mx-auto" id="filterButton"
                                         style="background-color:#000;">
                                         Search

@@ -12,7 +12,7 @@ class ReviewPolicy{
     use HandlesAuthorization;
 
     public function store(User $user, Product $product){
-      // User can only create items in product they bought
+      // Users can only give reviews of products they bought
       if(Auth::check()){
         $orders = $user->orders;
         foreach($orders as $order){
