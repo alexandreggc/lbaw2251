@@ -8,14 +8,24 @@ use App\Models\Order;
 use App\Models\Review;
 use App\Models\Report;
 
-class PageController extends Controller{
+use Illuminate\Http\Request;
 
-    /*public function homePageAdmin(){
+class AdminPanelController extends Controller{
+
+    public function __construct(){
+        $this->middleware('auth:admin');
+    }
+    public function homePageAdmin(){
         //por default /admin-panel aparecerá a página de users
         // ver se é melhor fazer um redirect para /admin-panel/users e criar uma nova página de admin home para n ser direto
         $users = User::all();
         return view('pages.admin.home', ['users'=>$users]);
     }
+
+    /*public function usersPageAdmin(){
+        $users = User::all();
+        return view('pages.admin.users', ['users'=>$users]);
+    }*/
 
     public function productsPageAdmin(){
         $products = Product::all();
@@ -40,18 +50,5 @@ class PageController extends Controller{
     public function reportsPageAdmin(){
         $reports = Report::all();
         return view('pages.admin.reports', ['reports'=>$reports]);
-    }*/
-
-    public function homePage(){
-        $promotions = Promotion::all();
-        return view('pages.home',['promotions'=>$promotions]);
-    }
-
-    public function aboutPage(){
-        return view('pages.about');
-    }
-
-    public function contactsPage(){
-        return view('pages.contacts');
     }
 }
