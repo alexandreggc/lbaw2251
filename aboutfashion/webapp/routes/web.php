@@ -9,7 +9,10 @@ Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 //Admin Pages
 Route::get('/admin-panel','AdminPanelController@homePageAdmin')->name('homeAdminPanel'); 
 // colocar /admin-panel/{id} ????? como para os users??
+
 Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel');
+Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
+
 Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
