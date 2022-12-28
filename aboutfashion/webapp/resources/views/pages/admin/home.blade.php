@@ -44,6 +44,10 @@
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" 
                                     data-bs-target="#collapse{{$user->id}}" aria-expanded="true" 
                                     aria-controls="collapse{{$user->id}}">
+                                <div class="col-1 pe-3">
+                                    <img src="{{ $user->photo['file'] }}" alt="user photo" 
+                                        class="img-fluid">
+                                </div>
                                 @if ($user->blocked == 1)
                                     <div class="col">
                                         {{$user['first_name'] . ' ' . $user['last_name']}}
@@ -54,23 +58,6 @@
                                         {{$user['first_name'] . ' ' . $user['last_name']}}
                                     </div>
                                 @endif
-                                <!--
-                                <div class="col-1">
-                                    @if ($user->blocked == 1)
-                                    <a href="#">
-                                        <i class="fa-regular fa-lock-open">
-                                        </i>
-                                    </a>
-                                    @else
-                                    <a href="#">
-                                        <i class="fa-regular fa-user-lock"></i>
-                                    </a>
-                                    @endif
-                                    <a href="#">
-                                        <i class="fa-regular fa-trash ps-5"></i>
-                                    </a>
-                                </div>
-                                -->
                             </button>
                         </h2>
                         <div id="collapse{{$user->id}}" class="accordion-collapse collapse" 
