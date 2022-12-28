@@ -71,6 +71,7 @@
                                     <div class="col-1">
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fa-regular fa-xmark"></i>
+                                            &nbsp;
                                             delete
                                         </button>
                                     </div>

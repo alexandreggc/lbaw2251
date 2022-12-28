@@ -65,15 +65,21 @@
                                         <br>
                                         <strong>Final Date: </strong>{{ substr($promotion['final_date'], 0, 10) }}
                                     </div>
-                                    <div class="col-2">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa-regular fa-pencil"></i>
-                                            edit
-                                        </button>
-                                        <button type="submit" class="btn btn-danger btn-sm ms-3">
-                                            <i class="fa-regular fa-xmark"></i>
-                                            delete
-                                        </button>
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                                <i class="fa-regular fa-pencil"></i>
+                                                &nbsp;
+                                                edit
+                                            </button>
+                                        </div>
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-danger btn-sm pe-1">
+                                                <i class="fa-regular fa-xmark"></i>
+                                                &nbsp;
+                                                delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

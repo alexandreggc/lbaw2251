@@ -72,21 +72,37 @@
                                         <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
                                     </div>
                                     <div class="col-1">
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                                <i class="fa-regular fa-bag-shopping"></i>
+                                                &nbsp;
+                                                history
+                                            </button>
+                                        </div>
                                         @if ($user['blocked'] == 0)
+                                        <div class="row">
                                             <button type="submit" class="btn btn-warning btn-sm mb-3">
                                                 <i class="fa-regular fa-user-lock"></i>
+                                                &nbsp;
                                                 block
                                             </button>
+                                        </div>
                                         @else
+                                        <div class="row">
                                             <button type="submit" class="btn btn-outline-primary btn-sm mb-3">
                                                 <i class="fa-regular fa-user-unlock"></i>
+                                                &nbsp;
                                                 unblock
                                             </button>
+                                        </div>
                                         @endif
-                                        <button type="submit" class="btn btn-danger btn-sm pe-1">
-                                            <i class="fa-regular fa-user-xmark"></i>
-                                            delete
-                                        </button>
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-danger btn-sm pe-1">
+                                                <i class="fa-regular fa-user-xmark"></i>
+                                                &nbsp;
+                                                delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -94,62 +110,6 @@
                     </div>
                 @endforeach
             </div>
-            <!--
-            <div id="usersList">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col">Birth Date</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Block Status</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>
-                                    @if ($user['blocked'] == 1)
-                                    <div class="col">
-                                    {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                        <span class="badge bg-danger ms-3">Blocked</span>
-                                    </div>
-                                    @else
-                                    <div class="col">
-                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                    </div>
-                                    @endif
-                                </td>
-                                <td>{{ $user['email'] }}</td>
-                                <td>{{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined' }}</td>
-                                <td>{{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}</td>
-                                <td>
-                                    @if ($user['blocked'] == 0)
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            <i class="fa-regular fa-user-lock"></i>
-                                            block
-                                        </button>
-                                    @else
-                                        <button type="submit" class="btn btn-outline-primary btn-sm">
-                                            <i class="fa-regular fa-user-unlock"></i>
-                                            unblock
-                                        </button>
-                                    @endif
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-regular fa-user-xmark"></i>
-                                        delete
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            -->
         </div>
     </div>
 @endsection
