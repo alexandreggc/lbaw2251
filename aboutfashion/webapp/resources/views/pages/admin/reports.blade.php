@@ -8,7 +8,7 @@
         <div class="row mb-5">
             <ul class="nav nav-pills m-3">
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel">Users</a>
+                    <a class="nav-link" href="/admin-panel/users">Users</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin-panel/products">Products</a>
@@ -57,14 +57,10 @@
                                     <td>{{ $report->created_at }}</td>
                                     <td><span class="badge bg-warning">Open</span></td>
                                     <td>
-                                        <form action="{{ route('blockUser', array('id'=>$report['id'])) }}" method="post">
-                                            @method('patch')
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm">
-                                                <i class="fa-regular fa-envelope"></i>
-                                                Close
-                                            </button>
-                                        </form>
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fa-regular fa-envelope"></i>
+                                            Close
+                                        </button>
                                     </td>
                                 </tr>
                             @else ( $report->resolved == true)
@@ -76,14 +72,10 @@
                                     <td>{{ substr($report['created_at'], 0, 10) }}</td>
                                     <td><span class="badge bg-success">Closed</span></td>
                                     <td>
-                                        <form action="{{ route('blockUser', array('id'=>$report['id'])) }}" method="post">
-                                            @method('patch')
-                                            @csrf
-                                            <button type="submit" class="btn btn-outline-primary btn-sm">
-                                                <i class="fa-regular fa-envelope-open"></i>
-                                                Close
-                                            </button>
-                                        </form>
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-regular fa-envelope-open"></i>
+                                            Close
+                                        </button>
                                     </td>
                                 </tr>
                             @endif

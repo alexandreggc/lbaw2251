@@ -7,22 +7,17 @@ Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 
 
 //Admin Pages
-Route::get('/admin-panel','AdminPanelController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
-//Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name('reportsAdminPanel')->middleware('auth:admin');
-/*
-Route::get('/admin-panel','PageController@homePageAdmin')->name('homeAdminPanel')->middleware('auth:admin');
-//Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/products','PageController@productsPageAdmin')->name('productsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/promotions','PageController@promotionsPageAdmin')->name('promotionsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/orders','PageController@ordersPageAdmin')->name('ordersAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/reviews','PageController@reviewsPageAdmin')->name('reviewsAdminPanel')->middleware('auth:admin');
-Route::get('/admin-panel/reports','PageController@reportsPageAdmin')->name('reportsAdminPanel')->middleware('auth:admin');
-*/
+Route::get('/admin-panel','AdminPanelController@homePageAdmin')->name('homeAdminPanel'); 
+// colocar /admin-panel/{id} ????? como para os users??
+
+Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel');
+Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
+
+Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
+Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
+Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
+Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel');
+Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name('reportsAdminPanel');
 
 
 
