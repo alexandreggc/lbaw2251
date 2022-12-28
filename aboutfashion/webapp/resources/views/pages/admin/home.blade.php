@@ -8,7 +8,7 @@
         <div class="row mb-3">
             <ul class="nav nav-pills m-3">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/admin-panel">Users</a>
+                    <a class="nav-link" href="/admin-panel/users">Users</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin-panel/products">Products</a>
@@ -28,87 +28,40 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-6"></div>
-            <div class="col-6 pb-3">
-                <form class="d-flex">
-                    <input class="form-control me-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="accordion" id="accordion">
-                @foreach($users as $user)
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{$user->id}}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
-                                    data-bs-target="#collapse{{$user->id}}" aria-expanded="true" 
-                                    aria-controls="collapse{{$user->id}}">
-                                <div class="col-1 pe-3">
-                                    <img src="{{ $user->photo['file'] }}" alt="user photo" 
-                                        class="img-fluid">
-                                </div>
-                                @if ($user->blocked == 1)
-                                    <div class="col">
-                                        {{$user['first_name'] . ' ' . $user['last_name']}}
-                                        <span class="badge bg-danger ms-3">Blocked</span>
-                                    </div>
-                                @else
-                                    <div class="col">
-                                        {{$user['first_name'] . ' ' . $user['last_name']}}
-                                    </div>
-                                @endif
-                            </button>
-                        </h2>
-                        <div id="collapse{{$user->id}}" class="accordion-collapse collapse" 
-                            aria-labelledby="heading{{$user->id}}" data-bs-parent="#accordion">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <strong>E-mail:</strong> {{$user['email']}}
-                                        <br>
-                                        <strong>Birth date:</strong> {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined'}}
-                                        <br>
-                                        <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
-                                    </div>
-                                    <div class="col-1">
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
-                                                <i class="fa-regular fa-bag-shopping"></i>
-                                                &nbsp;
-                                                history
-                                            </button>
-                                        </div>
-                                        @if ($user['blocked'] == 0)
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-warning btn-sm mb-3">
-                                                <i class="fa-regular fa-user-lock"></i>
-                                                &nbsp;
-                                                block
-                                            </button>
-                                        </div>
-                                        @else
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-outline-primary btn-sm mb-3">
-                                                <i class="fa-regular fa-user-unlock"></i>
-                                                &nbsp;
-                                                unblock
-                                            </button>
-                                        </div>
-                                        @endif
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-danger btn-sm pe-1">
-                                                <i class="fa-regular fa-user-xmark"></i>
-                                                &nbsp;
-                                                delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <h2>Personal Information</h2>
+            <div id="personalInfo">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Social title
+                        <span>{{ $admin['first_name'] . ' ' . $admin['last_name'] }} </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        First name
+                        <span>{{ $admin['first_name'] }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Second name
+                        <span>{{ $admin['last_name'] }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Gender
+                        <span>{{ $admin['gender'] }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Email
+                        <span>{{ $admin['email'] }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Birth Date
+                        <span>{{ substr($admin['birth_date'], 0, 10) }}</span>
+                    </li>
+                </ul>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Profile Picture</h5>
                     </div>
-                @endforeach
+                    <img src={{ $admin->photo['file'] }} id="profilePic" width="300px" height="300px" />
+                </div>
             </div>
         </div>
     </div>

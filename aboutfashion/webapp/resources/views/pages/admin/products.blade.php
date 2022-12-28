@@ -8,7 +8,7 @@
         <div class="row mb-5">
             <ul class="nav nav-pills m-3">
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel">Users</a>
+                    <a class="nav-link" href="/admin-panel/users">Users</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="/admin-panel/products">Products</a>

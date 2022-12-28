@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Admin;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Promotion;
@@ -15,17 +16,20 @@ class AdminPanelController extends Controller{
     public function __construct(){
         $this->middleware('auth:admin');
     }
-    public function homePageAdmin(){
-        //por default /admin-panel aparecerá a página de users
-        // ver se é melhor fazer um redirect para /admin-panel/users e criar uma nova página de admin home para n ser direto
-        $users = User::all();
-        return view('pages.admin.home', ['users'=>$users]);
+
+    public function homePageAdmin($id){
+        $admin = Admin::find($id);
+        if(is_null($admin)){
+            return abort('404');
+        }
+        //$this->authorize('view', $admin); VER POLICY
+        return view('pages.admin.home');
     }
 
-    /*public function usersPageAdmin(){
+    public function usersPageAdmin(){
         $users = User::all();
         return view('pages.admin.users', ['users'=>$users]);
-    }*/
+    }
 
     public function productsPageAdmin(){
         $products = Product::all();
