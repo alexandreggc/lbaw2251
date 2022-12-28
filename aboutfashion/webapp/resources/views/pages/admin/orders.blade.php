@@ -36,6 +36,7 @@
             <div class="row-12">
                 <div class="accordion" id="accordion">
                     @foreach($orders as $order)
+                        @if (in_array($order->status, ["Completed", "Pending", "Cancelled", "In Progress"]))
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading{{$order->id}}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" 
@@ -49,12 +50,23 @@
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
                                             <span class="badge bg-success ms-3">Completed</span>
                                         </div>
-                                        <!-- COLOCAR PARA ESTADO CANCELLED-->
-                                    @else
+                                    @elseif ($order->status == "Pending")
+                                        <div class="col-3">
+                                            {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
+                                            <span class="badge bg-warning ms-3">Completed</span>
+                                        </div>
+                                    @elseif ($order->status == "Cancelled")
+                                        <div class="col-3">
+                                            {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
+                                            <span class="badge bg-danger ms-3">Completed</span>
+                                        </div>
+                                    @elseif ($order->status == "In Progress")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
                                             <span class="badge bg-info ms-3">{{$order->status }}</span>
                                         </div>
+                                    @else <!-- $order->status == "Shopping Cart" -->
+                                        @continue
                                     @endif
                                 </button>
                             </h2>
@@ -99,6 +111,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     @endforeach
                 </div>
                 <!--
