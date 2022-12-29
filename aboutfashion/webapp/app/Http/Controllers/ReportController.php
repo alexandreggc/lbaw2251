@@ -49,9 +49,9 @@ class ReportController extends Controller{
         $user = Auth::user();
         $report = Report::find($id); 
         if(is_null($user)){
-            return view('reports.show',['report' => $report]);   
+            return view('pages.report',['report' => $report]);   
         }
-        return view('report.show',[ 'report' => $report]);
+        return view('pages.report',[ 'report' => $report]);
     }
 
     /**
