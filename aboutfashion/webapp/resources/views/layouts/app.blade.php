@@ -223,6 +223,7 @@
                                     <label for="email" class="form-label mt-4">Email address</label>
                                     <input id="email" type="email" name="email" value="{{ old('email') }}"
                                         required autofocus class="form-control" placeholder="Enter email">
+                                    <small>Please enter your email address.</small>
                                     @if ($errors->has('email'))
                                         <span class="error">
                                             {{ $errors->first('email') }}
@@ -233,6 +234,7 @@
                                     <label for="password" class="form-label mt-4">Password</label>
                                     <input type="password" class="form-control" id="password"
                                         placeholder="Password" name="password" required>
+                                    <small>Please enter your password.</small>
                                     @if ($errors->has('password'))
                                         <span class="error">
                                             {{ $errors->first('password') }}
@@ -280,16 +282,19 @@
                                     <label for="first_name" class="form-label mt-4">First Name</label>
                                     <input type="text" class="form-control" id="first_name"
                                         placeholder="First Name" name="first_name" required>
+                                    <small>Please enter your first name.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="last_name" class="form-label mt-4">Last Name</label>
                                     <input type="text" class="form-control" id="last_name"
                                         placeholder="Last Name" name="last_name" required>
+                                    <small>Please enter your last name.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="email1" class="form-label mt-4">Email address</label>
                                     <input id="email1" type="text" name="email" required autofocus
                                         class="form-control" placeholder="Enter email">
+                                    <small>Please enter your email address.</small>
                                     @if ($errors->has('email'))
                                         <span class="error">
                                             {{ $errors->first('email') }}
@@ -300,11 +305,13 @@
                                     <label for="password" class="form-label mt-4">Password</label>
                                     <input type="password" class="form-control" id="password1"
                                         placeholder="Password" name="password" required>
+                                    <small>Please enter your password.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="password" class="form-label mt-4">Confirm Password</label>
                                     <input type="password" class="form-control" id="password2"
                                         placeholder="Password" name="password" required>
+                                    <small>Please enter your password again.</small>
                                 </div>
 
                                 <div class="form-group">
@@ -316,11 +323,13 @@
                                         <option value="M">MALE</option>
                                         <option value="O">OTHER</option>
                                     </select>
+                                    <small>Please choose your gender.</small>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-5">
                                     <div class=" me-auto"></div>
                                     <label for="birthdate" class="form-label mt-4">Birthdate</label>
                                     <input type="date" class="form-control" id="birthdate" name="birthdate">
+                                    <small>Please enter your birthdate.</small>
                                 </div>
                                 <div class="modal-footer">
                                     <span class="error-text me-auto" style="color:red"> </span>
@@ -356,6 +365,7 @@
                                     @else
                                     @endif
                                     <input id="email" type="email" name="email" value="" style="width:100%;" required>
+                                    <small class="mx-auto" style="text-align:center;">Please enter your email address.</small>
                                 </div>
                                 
 
@@ -385,7 +395,7 @@
                 <li class="nav-item"> <a href="/contacts"
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Contacts</a>
                 </li>
-                <li class="nav-item"> <a href=""
+                <li class="nav-item"> <a href="/help"
                         class="nav-link px-2 mx-2 link-primary text-decoration-underline link-primary:hover">Help</a>
                 </li>
                 <li class="nav-item"> <a href=""

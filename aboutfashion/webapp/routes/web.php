@@ -4,6 +4,7 @@
 Route::get('/', 'PageController@homePage')->name('home');
 Route::get('/about', 'PageController@aboutPage')->name('aboutUs');
 Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
+Route::get('/help', 'PageController@helpPage')->name('help');
 
 
 //Admin Pages
