@@ -15,7 +15,7 @@
     <section class="py-3">
       <div class="row">
           <h3> ABOUT FASHION</h3>
-          <p>This is a information system available through the web for for the sale of clothing, accessories and footwear, aimed at adults. This platform allows users to easily keep abreast of items/promotions currently available.This system have operations to consult the information, request and return individual items, make purchases online, register comments for the items, evaluate the ordered items and manage all your data present the personal account.</p>
+          <p>This is a information system available through the web for for the sale of clothing, accessories and footwear, aimed at adults. This platform allows users to easily keep abreast of items/promotions currently available. This system have operations to consult the information, request and return individual items, make purchases online, register comments for the items, evaluate the ordered items and manage all your data present the personal account.</p>
       </div>
     </section>
 
@@ -23,34 +23,32 @@
       <h2 class="my-3">Our Team</h2>
       <hr>
       <div class="row text-center py-3">
-        <div class="col-md-4 d-flex justify-content-center">
-          <div class="card text-center" style="width: 14rem;">
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="card text-center" style="width: 11rem;">
             <div class="card-body">
               <h5 class="card-title">Alexandre Correia</h5>
               <p class="card-text">up202007042</p>
             </div>
           </div>
         </div>
-        <div class="col-md-4 d-flex justify-content-center">
-          <div class="card" style="width: 14rem;">
-            <div class="card-body">
+        <div class="col-md-3 d-flex justify-content-center height: 8rem;">
+          <div class="card " style="width: 11rem;">
+            <div class="card-body my-auto">
               <h5 class="card-title">Ana Sofia Costa</h5>
               <p class="card-text">up202007602</p>
             </div>
           </div>
         </div>
-        <div class="col-md-4 d-flex justify-content-center">
-          <div class="card" style="width: 14rem;">
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="card" style="width: 11rem;">
             <div class="card-body">
               <h5 class="card-title">Daniel Rodrigues</h5>
               <p class="card-text"> up202006562</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row text-center justify-content-center pb-3">
-        <div class="col-md-4 d-flex justify-content-center">
-          <div class="card text-center" style="width: 14rem;">
+        <div class="col-md-3 d-flex justify-content-center">
+          <div class="card text-center" style="width: 11rem;">
             <div class="card-body">
               <h5 class="card-title">Diogo Fonte</h5>
               <p class="card-text">up202004175</p>
@@ -58,6 +56,7 @@
           </div>
         </div>
       </div>
+      
     </section>
   </div>
 @endsection

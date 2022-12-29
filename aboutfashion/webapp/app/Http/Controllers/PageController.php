@@ -31,6 +31,14 @@ class PageController extends Controller{
         return view('pages.about',[ 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
     }
 
+    public function helpPage(){
+        $user = Auth::user(); 
+        if(is_null($user)){
+            return view('pages.help',['order'=>null]);   
+        }
+        return view('pages.help',[ 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
+    }
+
     public function contactsPage(){
         $user = Auth::user(); 
         if(is_null($user)){
