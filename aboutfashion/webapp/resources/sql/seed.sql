@@ -290,9 +290,6 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-select checkout(121);
-
-
 CREATE OR REPLACE FUNCTION cancel_order(input_order Integer) 
 RETURNS void AS $$
 DECLARE t_row record;
