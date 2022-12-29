@@ -73,35 +73,36 @@
                                     </div>
                                     <div class="col-1">
                                         <div class="row">
-                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                            <a type="submit" class="btn btn-secondary btn-sm mb-3" 
+                                                    href="{{ route('userPurchaseHistoryAdminPanel', ['id' => $user->id]) }}">
                                                 <i class="fa-regular fa-bag-shopping"></i>
                                                 &nbsp;
                                                 history
-                                            </button>
+                                            </a>
                                         </div>
                                         @if ($user['blocked'] == 0)
                                         <div class="row">
-                                            <button type="submit" class="btn btn-warning btn-sm mb-3">
+                                            <a type="submit" class="btn btn-warning btn-sm mb-3">
                                                 <i class="fa-regular fa-user-lock"></i>
                                                 &nbsp;
                                                 block
-                                            </button>
+                                            </a>
                                         </div>
                                         @else
                                         <div class="row">
-                                            <button type="submit" class="btn btn-outline-primary btn-sm mb-3">
+                                            <a type="submit" class="btn btn-outline-primary btn-sm mb-3">
                                                 <i class="fa-regular fa-user-unlock"></i>
                                                 &nbsp;
                                                 unblock
-                                            </button>
+                                            </a>
                                         </div>
                                         @endif
                                         <div class="row">
-                                            <button type="submit" class="btn btn-danger btn-sm pe-1">
+                                            <a type="submit" class="btn btn-danger btn-sm pe-1">
                                                 <i class="fa-regular fa-user-xmark"></i>
                                                 &nbsp;
                                                 delete
-                                            </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
