@@ -47,10 +47,10 @@ Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPa
 Route::post('/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password.action');
 
 
-Route::get('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordAdminForm')->name('forgot.password.view');
-Route::post('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordAdminForm')->name('forgot.password.action');
-Route::get('/admin-panel/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordAdminForm')->name('password.reset');
-Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordAdminForm')->name('reset.password.action');
+Route::get('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordAdminForm')->name('forgot.password.admin.view');
+Route::post('/admin-panel/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordAdminForm')->name('forgot.password.admin.action');
+Route::get('/admin-panel/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordAdminForm')->name('password.admin.reset');
+Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordAdminForm')->name('reset.password.admin.action');
 
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');

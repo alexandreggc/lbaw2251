@@ -21,20 +21,10 @@
                     @else
                     @endif
                     <div class="form-group text-start">
-                      <label for="email" class="form-label mt-4 ">Email address</label>
-                      <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus class="form-control"  placeholder="Enter email">
-                      @if ($errors->has('email'))
-                        <span class="error">
-                          {{ $errors->first('email') }}
-                        </span>
-                      @endif
-                    </div>
-                    <div class="form-group text-start">
                         <label for="password">Password</label>
                         <input name="password" type="password" id="password" placeholder="Password" required>
                     </div>
-
-                    <div class="form-check mt-4 text-start">
+                    <div class="form-group mt-4 text-start">
                         <label for="password">Confirm Password</label>
                         <input name="password_confirmation" type="password" id="password-confirm" placeholder="Confirm Password" required>
                         <input type="hidden" name="token" value="{{ $token }}">
