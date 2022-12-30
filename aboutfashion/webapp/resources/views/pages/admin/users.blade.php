@@ -41,7 +41,7 @@
                 @foreach ($users as $user)
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading{{ $user->id }}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{ $user->id }}" aria-expanded="true"
                                 aria-controls="collapse{{ $user->id }}">
                                 <div class="col-1 pe-3">
