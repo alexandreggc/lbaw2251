@@ -68,13 +68,15 @@
                                     <br>
                                     <strong>Date:</strong> {{ substr($review['date'], 0, 10) }}
                                 </div>
-                                <div class="col-1">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa-regular fa-xmark"></i>
-                                        &nbsp;
-                                        delete
-                                    </button>
-                                </div>
+                                @if (Auth::guard('admin')->user()->role == 'Technician')
+                                    <div class="col-1">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fa-regular fa-xmark"></i>
+                                            &nbsp;
+                                            delete
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

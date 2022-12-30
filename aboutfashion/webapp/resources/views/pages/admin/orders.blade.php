@@ -6,6 +6,7 @@
         <h2 class="p-3">Orders</h2>
     </div>
     <div class="row mb-5">
+        <!--
         <ul class="nav nav-pills m-3">
             <li class="nav-item">
                 <a class="nav-link" href="/admin-panel/users">Users</a>
@@ -26,6 +27,7 @@
                 <a class="nav-link" href="/admin-panel/reports">Reports</a>
             </li>
         </ul>
+        -->
         <div class="col-6"></div>
         <div class="col-6 mb-3">
             <form class="d-flex">
@@ -89,29 +91,31 @@
                                         <br>
                                         <strong>Order date:</strong>  {{ substr($order['date'], 0, 10) }}
                                     </div>
-                                    <div class="col-1">
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-warning btn-sm mb-3">
-                                                <i class="fa-solid fa-pencil"></i>
-                                                &nbsp;
-                                                edit status
-                                            </button>
+                                    @if (Auth::guard('admin')->user()->role == 'Collaborator')
+                                        <div class="col-1">
+                                            <div class="row">
+                                                <button type="submit" class="btn btn-warning btn-sm mb-3">
+                                                    <i class="fa-solid fa-pencil"></i>
+                                                    &nbsp;
+                                                    edit status
+                                                </button>
+                                            </div>
+                                            <div class="row">
+                                                <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                                    <i class="fa-solid fa-pencil"></i>
+                                                    &nbsp;
+                                                    edit
+                                                </button>
+                                            </div>
+                                            <div class="row">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                    &nbsp;
+                                                    delete
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
-                                                <i class="fa-solid fa-pencil"></i>
-                                                &nbsp;
-                                                edit
-                                            </button>
-                                        </div>
-                                        <div class="row">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fa-solid fa-xmark"></i>
-                                                &nbsp;
-                                                delete
-                                            </button>
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

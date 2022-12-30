@@ -67,22 +67,24 @@
                                     <br>
                                     <strong>Final Date: </strong>{{ substr($promotion['final_date'], 0, 10) }}
                                 </div>
-                                <div class="col-1">
-                                    <div class="row">
-                                        <button type="submit" class="btn btn-primary btn-sm mb-3">
-                                            <i class="fa-solid fa-pencil"></i>
-                                            &nbsp;
-                                            edit
-                                        </button>
+                                @if (Auth::guard('admin')->user()->role == 'Collaborator')
+                                    <div class="col-1">
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                                <i class="fa-solid fa-pencil"></i>
+                                                &nbsp;
+                                                edit
+                                            </button>
+                                        </div>
+                                        <div class="row">
+                                            <button type="submit" class="btn btn-danger btn-sm pe-1">
+                                                <i class="fa-solid fa-xmark"></i>
+                                                &nbsp;
+                                                delete
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <button type="submit" class="btn btn-danger btn-sm pe-1">
-                                            <i class="fa-solid fa-xmark"></i>
-                                            &nbsp;
-                                            delete
-                                        </button>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

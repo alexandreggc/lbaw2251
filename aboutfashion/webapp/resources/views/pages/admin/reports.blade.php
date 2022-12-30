@@ -76,22 +76,24 @@
                                             <strong>Report Date:</strong> {{ substr($report['created_at'], 0, 10) }}
                                         @endif
                                     </div>
-                                    <div class="col-3"></div>
-                                    <div class="col-1">
-                                    @if ($report->resolved == false)
-                                        <button type="submit" class="btn btn-info btn-sm">
-                                            <i class="fa-regular fa-envelope"></i>
-                                            &nbsp;
-                                            Close
-                                        </button>
-                                    @elseif ( $report->resolved == true)
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            <i class="fa-regular fa-envelope-open"></i>
-                                            &nbsp;
-                                            Open
-                                        </button>
+                                    @if (Auth::guard('admin')->user()->role == 'Technician')
+                                        <div class="col-3"></div>
+                                        <div class="col-1">
+                                        @if ($report->resolved == false)
+                                            <button type="submit" class="btn btn-info btn-sm">
+                                                <i class="fa-regular fa-envelope"></i>
+                                                &nbsp;
+                                                Close
+                                            </button>
+                                        @elseif ( $report->resolved == true)
+                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                <i class="fa-regular fa-envelope-open"></i>
+                                                &nbsp;
+                                                Open
+                                            </button>
+                                        @endif
+                                        </div>
                                     @endif
-                                    </div>
                                 </div>
                             </div>
                         </div>

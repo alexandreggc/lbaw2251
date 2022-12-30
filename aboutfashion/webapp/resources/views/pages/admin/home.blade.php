@@ -30,7 +30,7 @@
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Social title
-                        <span>{{ $admin['first_name'] . ' ' . $admin['last_name'] }} </span>
+                        <span>{{ $admin['gender']==='M'? 'Mr.' : ($admin['gender']==='F'? 'Ms.' : 'Other')}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         First name

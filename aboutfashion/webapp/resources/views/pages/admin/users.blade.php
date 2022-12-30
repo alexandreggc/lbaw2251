@@ -87,7 +87,7 @@
                                         <div class="row">
                                             <a type="submit" class="btn btn-secondary btn-sm mb-3"
                                                 href="{{ route('userPurchaseHistoryAdminPanel', ['id' => $user->id]) }}">
-                                                <i class="fa-solid fa-bag-shopping"></i>
+                                                <i class="fa-solid fa-cart-shopping"></i>
                                             </a>
                                         </div>
                                         @if (Auth::guard('admin')->user()->role == 'Technician')

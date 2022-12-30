@@ -31,7 +31,7 @@
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Social title
-                        <span>{{ $user['first_name'] . ' ' . $user['last_name'] }} </span>
+                        <span>{{ $user['gender']==='M'? 'Mr.' : ($user['gender']==='F'? 'Ms.' : 'Other')}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         First name
