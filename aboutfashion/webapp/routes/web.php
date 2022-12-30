@@ -8,7 +8,8 @@ Route::get('/help', 'PageController@helpPage')->name('help');
 
 
 //Admin Pages
-Route::get('/admin-panel/admins/{id}','AdminController@show')->name('showAdmin'); 
+Route::get('/admin-panel/admins/{id}','AdminController@show')->name('showAdmin');
+Route::get('/admin-panel/', 'AdminPanelController@homePageAdmin')->name('homeAdminPanel');
 
 Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('usersAdminPanel');
 Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');

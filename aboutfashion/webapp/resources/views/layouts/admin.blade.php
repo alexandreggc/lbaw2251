@@ -31,7 +31,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
-                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">
+                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('homeAdminPanel') }}">
                         ABOUT FASHION - ADMIN PANEL
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
