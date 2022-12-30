@@ -38,71 +38,58 @@
         </div>
         <div class="row">
             <div class="accordion" id="accordion">
-                @foreach($users as $user)
+                @foreach ($users as $user)
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{$user->id}}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
-                                    data-bs-target="#collapse{{$user->id}}" aria-expanded="true" 
-                                    aria-controls="collapse{{$user->id}}">
+                        <h2 class="accordion-header" id="heading{{ $user->id }}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{ $user->id }}" aria-expanded="true"
+                                aria-controls="collapse{{ $user->id }}">
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $user->photo['file'] }}" alt="user photo" 
-                                        class="img-fluid">
+                                    <img src="{{ $user->photo['file'] }}" alt="user photo" class="img-fluid">
                                 </div>
                                 @if ($user->blocked == 1)
                                     <div class="col">
-                                        {{$user['first_name'] . ' ' . $user['last_name']}}
+                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
                                         <span class="badge bg-danger ms-3">Blocked</span>
                                     </div>
                                 @else
                                     <div class="col">
-                                        {{$user['first_name'] . ' ' . $user['last_name']}}
+                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
                                     </div>
                                 @endif
                             </button>
                         </h2>
-                        <div id="collapse{{$user->id}}" class="accordion-collapse collapse" 
-                            aria-labelledby="heading{{$user->id}}" data-bs-parent="#accordion">
+                        <div id="collapse{{ $user->id }}" class="accordion-collapse collapse"
+                            aria-labelledby="heading{{ $user->id }}" data-bs-parent="#accordion">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col">
-                                        <strong>E-mail:</strong> {{$user['email']}}
+                                        <strong>E-mail:</strong> {{ $user['email'] }}
                                         <br>
-                                        <strong>Birth date:</strong> {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined'}}
+                                        <strong>Birth date:</strong>
+                                        {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined' }}
                                         <br>
-                                        <strong>Gender:</strong> {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
+                                        <strong>Gender:</strong>
+                                        {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
                                     </div>
                                     <div class="col-1">
                                         <div class="row">
-                                            <a type="submit" class="btn btn-secondary btn-sm mb-3" 
-                                                    href="{{ route('userPurchaseHistoryAdminPanel', ['id' => $user->id]) }}">
-                                                <i class="fa-regular fa-bag-shopping"></i>
-                                                &nbsp;
-                                                history
+                                            <a type="submit" class="btn btn-secondary btn-sm mb-3"
+                                                href="{{ route('userPurchaseHistoryAdminPanel', ['id' => $user->id]) }}">
+                                                <i class="fa-solid fa-bag-shopping"></i>
                                             </a>
                                         </div>
                                         @if ($user['blocked'] == 0)
-                                        <div class="row">
-                                            <a type="submit" class="btn btn-warning btn-sm mb-3">
-                                                <i class="fa-regular fa-user-lock"></i>
-                                                &nbsp;
-                                                block
-                                            </a>
-                                        </div>
+                                            <div class="row">
+                                                <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock"></button>
+                                            </div>
                                         @else
-                                        <div class="row">
-                                            <a type="submit" class="btn btn-outline-primary btn-sm mb-3">
-                                                <i class="fa-regular fa-user-unlock"></i>
-                                                &nbsp;
-                                                unblock
-                                            </a>
-                                        </div>
+                                            <div class="row">
+                                                <button class="btn btn-warning btn-sm mb-3 fa-solid fa-unlock"></button>
+                                            </div>
                                         @endif
                                         <div class="row">
-                                            <a type="submit" class="btn btn-danger btn-sm pe-1">
-                                                <i class="fa-regular fa-user-xmark"></i>
-                                                &nbsp;
-                                                delete
-                                            </a>
+                                            <button class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1"></button>
                                         </div>
                                     </div>
                                 </div>
