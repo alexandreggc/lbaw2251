@@ -20,12 +20,12 @@ class AdminPanelController extends Controller{
     //Users
 
     public function usersPageAdmin(){
-        $users = User::paginate(10);
+        $users = User::paginate(15);
         return view('pages.admin.users', ['users'=>$users]);
     }
 
     public function userPurchaseHistoryPageAdmin($id){
-        $user = User::find($id);
+        $user = User::paginate(15);
         if(is_null($user)){
             return abort('404');
         }
@@ -35,35 +35,35 @@ class AdminPanelController extends Controller{
     //Products
 
     public function productsPageAdmin(){
-        $products = Product::all();
+        $products = Product::paginate(15);
         return view('pages.admin.products', ['products'=>$products]);
     }
 
     // Promotions
 
     public function promotionsPageAdmin(){
-        $promotions = Promotion::all();
+        $promotions = Promotion::paginate(15);
         return view('pages.admin.promotions', ['promotions'=>$promotions]);
     }
 
     // Orders
 
     public function ordersPageAdmin(){
-        $orders = Order::all();
+        $orders = Order::paginate(15);
         return view('pages.admin.orders', ['orders'=>$orders]);
     }
 
     // Reviews
 
     public function reviewsPageAdmin(){
-        $reviews = Review::all();
+        $reviews = Review::paginate(15);
         return view('pages.admin.reviews', ['reviews'=>$reviews]);
     }
 
     // Reports
 
     public function reportsPageAdmin(){
-        $reports = Report::all();
+        $reports = Report::paginate(15);
         return view('pages.admin.reports', ['reports'=>$reports]);
     }
 }

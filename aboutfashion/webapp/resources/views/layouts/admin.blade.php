@@ -8,7 +8,7 @@
     <!-- CSRF Token  -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>AboutFashion - Admin Panel</title>
 
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -32,7 +32,7 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
 
-                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION</a>
+                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION - ADMIN PANEL</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -43,12 +43,12 @@
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('showAdmin', ['id' => Auth::guard('admin')->user()->id]) }}">
-                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-user" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('adminLogout') }}">
-                                    <i class="fa-regular fa-right-from-bracket" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-right-from-bracket" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <!--

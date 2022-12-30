@@ -66,7 +66,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-user" style="font-size:24px;"></i>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"
                                     style=" z-index: 18;">
