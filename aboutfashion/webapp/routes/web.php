@@ -89,8 +89,8 @@ Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStoc
 Route::post('/api/shopping-cart', 'ShoppingCartController@add')->name('addProductCart');
 Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('deleteProductCart');
 Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart');
-Route::delete('api/admin-panel/users/{id}', 'AdminController@deleteUser');
-Route::patch('api/admin-panel/users/{id}', 'AdminController@blockUser');
+Route::delete('api/admin-panel/users', 'AdminController@deleteUser');
+Route::patch('api/admin-panel/users', 'AdminController@blockUser');
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 

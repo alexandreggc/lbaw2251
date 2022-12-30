@@ -1,32 +1,34 @@
 @extends('layouts.admin')
 
 @section('content')
+    @csrf
+    <script type="text/javascript" src={{ asset('js/users_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
             <h2 class="p-3">Users</h2>
         </div>
         <!--<div class="row mb-3">
-            <ul class="nav nav-pills m-3">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/admin-panel/users">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/products">Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/orders">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/reports">Reports</a>
-                </li>
-            </ul>
-        </div>-->
+                <ul class="nav nav-pills m-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin-panel/users">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/orders">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin-panel/reports">Reports</a>
+                    </li>
+                </ul>
+            </div>-->
         <div class="row">
             <div class="col-6"></div>
             <div class="col-6 pb-3">
@@ -39,7 +41,7 @@
         <div class="row">
             <div class="accordion" id="accordion">
                 @foreach ($users as $user)
-                    <div class="accordion-item">
+                    <div class="accordion-item" id="accordion-item-{{$user->id}}">
                         <h2 class="accordion-header" id="heading-{{ $user->id }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse-{{ $user->id }}" aria-expanded="true"
@@ -87,6 +89,7 @@
                                                 <i class="fa-solid fa-bag-shopping"></i>
                                             </a>
                                         </div>
+                                        @if(Auth::guard('admin')->user()->role == 'Technician')
                                         @if ($user['blocked'] == 0)
                                             <div class="row">
                                                 <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock"></button>
@@ -97,8 +100,11 @@
                                             </div>
                                         @endif
                                         <div class="row">
-                                            <button class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1"></button>
+                                            <button class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1 delete-user"
+                                                id={{ $user->id }}></button>
                                         </div>
+                                        @else
+                                        @endif
                                     </div>
                                 </div>
                             </div>

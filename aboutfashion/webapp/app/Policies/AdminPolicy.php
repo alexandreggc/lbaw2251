@@ -15,14 +15,9 @@ class AdminPolicy
         return $admin->id == $model->id;
     }
 
-    public function deleteUser(Admin $admin)
+    public function updateUser(Admin $admin)
     {
-        return $admin->type == 'Technician';
-    }
-
-    public function blockUser(Admin $admin)
-    {
-        return $admin->type == 'Technician';
+        return $admin->role == 'Technician';
     }
 
    

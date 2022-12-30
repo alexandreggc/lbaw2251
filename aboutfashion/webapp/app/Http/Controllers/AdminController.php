@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -35,8 +36,9 @@ class AdminController extends Controller
         if($validator->fails()){
             return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
         }
-        
-        $this->authorize('deleteUser');
+
+        $admin = Auth::guard('admin')->user();
+        $this->authorize('updateUser', $admin);
         $user = User::find($request['id']);
         if($user->delete()){
             return Response::json(array('status' => 'success', 'message'=>'OK!'),200);

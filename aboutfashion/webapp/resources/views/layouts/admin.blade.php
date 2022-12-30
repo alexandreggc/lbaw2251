@@ -48,7 +48,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('adminLogout') }}">
-                                    <i class="fa-regular fa-right-from-bracket" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-right-from-bracket" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <!--
