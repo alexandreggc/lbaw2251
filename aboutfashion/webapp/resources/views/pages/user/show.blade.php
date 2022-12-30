@@ -43,7 +43,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Gender
-                        <span>{{ $user['gender']==='M'? 'Male' : ($user['gender']==='F'? 'Female' : 'Other')}}</span>
+                        @if (is_null($user['gender']))
+                            <span>Not Defined</span>
+                        @elseif ($user['gender'] == 'M')
+                            <span>Male</span>
+                        @elseif ($user['gender'] == 'F')
+                            <span>Female</span>
+                        @else
+                            <span>Other</span>
+                        @endif
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Email

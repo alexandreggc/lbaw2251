@@ -26,20 +26,19 @@
                 <a class="nav-link" href="/admin-panel/reports">Reports</a>
             </li>
         </ul>-->
-        <div class="col-6"></div>
+        <div class="col-2">
+                <a type="button" class="btn btn-outline-primary mb-4"
+                    href="{{ route('createProduct') }}">
+                    <i class="fa-regular fa-plus"></i>
+                    Add Product
+                </a>
+            </div>
+        <div class="col-4"></div>
         <div class="col-6">
             <form class="d-flex">
                 <input class="form-control me-sm-2" type="text" placeholder="Search">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
             </form>
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <button type="button" class="btn btn-outline-primary mb-4">
-                    <i class="fa-regular fa-plus"></i>
-                    Add Product
-                </button>
-            </div>
         </div>
         <div class="accordion" id="accordion">
             @foreach ($products as $product)
@@ -71,11 +70,12 @@
                                 @if (Auth::guard('admin')->user()->role == 'Collaborator')
                                     <div class="col-1">
                                         <div class="row">
-                                            <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                            <a type="submit" class="btn btn-primary btn-sm mb-3"
+                                                href="{{ route('editProduct', ['id' => $product->id]) }}">
                                                 <i class="fa-solid fa-pencil"></i>
                                                 &nbsp;
                                                 edit
-                                            </button>
+                                            </a>
                                         </div>
                                         <div class="row">
                                             <button type="submit" class="btn btn-danger btn-sm pe-1">

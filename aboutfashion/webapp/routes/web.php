@@ -14,9 +14,17 @@ Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('us
 Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
 
 Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
+Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('editProduct');
+Route::patch('/admin-panel/products/{id}','ProductController@update')->name('productUpdate');
+Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct');
+Route::post('/admin-panel/products','ProductController@store')->name('storeProduct');
+
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
+
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
+
 Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel');
+
 Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name('reportsAdminPanel');
 
 

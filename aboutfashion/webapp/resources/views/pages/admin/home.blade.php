@@ -29,6 +29,10 @@
             <div id="personalInfo">
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Role
+                        <span>{{ $admin['role'] }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         Social title
                         <span>{{ $admin['gender']==='M'? 'Mr.' : ($admin['gender']==='F'? 'Ms.' : 'Other')}}</span>
                     </li>
@@ -42,7 +46,15 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Gender
-                        <span>{{ $admin['gender'] }}</span>
+                        @if (is_null($admin['gender']))
+                            <span>Not Defined</span>
+                        @elseif ($admin['gender'] == 'M')
+                            <span>Male</span>
+                        @elseif ($admin['gender'] == 'F')
+                            <span>Female</span>
+                        @else
+                            <span>Other</span>
+                        @endif
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Email
