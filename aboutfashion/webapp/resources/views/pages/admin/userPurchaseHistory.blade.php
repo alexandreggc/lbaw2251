@@ -3,8 +3,9 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h2 class="p-3">Hi Admin!</h2>
+            <h2 class="p-3">Users</h2>
         </div>
+        <!--
         <div class="row mb-3">
             <ul class="nav nav-pills m-3">
                 <li class="nav-item">
@@ -27,6 +28,7 @@
                 </li>
             </ul>
         </div>
+        -->
         <div class="row pb-3">
             <div class="col-1">
                 <a href="/admin-panel/users">

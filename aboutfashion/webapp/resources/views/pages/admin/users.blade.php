@@ -49,42 +49,38 @@
                                 <div class="col-1 pe-3">
                                     <img src="{{ $user->photo['file'] }}" alt="user photo" class="img-fluid">
                                 </div>
-                                @if ($user->blocked == 1)
-                                    <div class="col">
-                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                        <span class="badge bg-danger ms-3">Blocked</span>
-                                    </div>
-                                @else
-                                    <div class="col">
-                                        {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                    </div>
-                                @endif
-                            </button>
-                        </h2>
-                        <div id="collapse-{{ $user->id }}" class="accordion-collapse collapse"
-                            aria-labelledby="heading-{{ $user->id }}" data-bs-parent="#accordion">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <strong>E-mail:</strong> {{ $user['email'] }}
-                                        <br>
-                                        <strong>Birth date:</strong>
-                                        {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined' }}
-                                        <br>
-                                        <strong>Gender:</strong>
-                                        @if (is_null($user['gender']))
-                                            Not Defined
-                                        @elseif ($user['gender'] == 'M')
-                                            Male
-                                        @elseif ($user['gender'] == 'F')
-                                            Female
-                                        @else
-                                            Other
-                                        @endif
-                                    </div>
-                                    <div class="col-1">
-                                        <div class="row">
-                                            <a type="submit" class="btn btn-secondary btn-sm mb-3"
+                            @else
+                                <div class="col">
+                                    {{ $user['first_name'] . ' ' . $user['last_name'] }}
+                                </div>
+                            @endif
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ $user->id }}" class="accordion-collapse collapse"
+                        aria-labelledby="heading-{{ $user->id }}" data-bs-parent="#accordion">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="col">
+                                    <strong>E-mail:</strong>
+                                    {{ $user['email'] }}
+                                    <br>
+                                    <strong>Birth date:</strong>
+                                    {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined' }}
+                                    <br>
+                                    <strong>Gender:</strong>
+                                    @if (is_null($user['gender']))
+                                        Not Defined
+                                    @elseif ($user['gender'] == 'M')
+                                        Male
+                                    @elseif ($user['gender'] == 'F')
+                                        Female
+                                    @else
+                                        Other
+                                    @endif
+                                </div>
+                                <div class="col-1">
+                                    <div class="row">
+                                        <a type="submit" class="btn btn-secondary btn-sm mb-3" 
                                                 href="{{ route('userPurchaseHistoryAdminPanel', ['id' => $user->id]) }}">
                                                 <i class="fa-solid fa-bag-shopping"></i>
                                             </a>
@@ -110,9 +106,10 @@
                             </div>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
     </div>
-    {{ $users->links() }}
+</div>
+{{ $users->links() }}
 @endsection

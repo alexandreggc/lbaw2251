@@ -1,31 +1,31 @@
 @extends('layouts.admin')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <h2 class="p-3">Products</h2>
-        </div>
-        <div class="row mb-5">
-                    <!--<ul class="nav nav-pills m-3">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/users">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/admin-panel/products">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/orders">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/reports">Reports</a>
-                        </li>
-                    </ul>-->
+<div class="container">
+    <div class="row">
+        <h2 class="p-3">Products</h2>
+    </div>
+    <div class="row mb-5">
+        <!--<ul class="nav nav-pills m-3">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin-panel/users">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin-panel/products">Products</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin-panel/orders">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin-panel/reports">Reports</a>
+            </li>
+        </ul>-->
         <div class="col-6"></div>
         <div class="col-6">
             <form class="d-flex">
@@ -66,7 +66,7 @@
                                 <div class="col">
                                     <strong>Description:</strong> {{ $product->description }}
                                     <br>
-                                    <strong>Classification:</strong> {{ is_null($product->avg_classification) ? 'No reviews yet!' : $product->avg_classification }}
+                                    <strong>Classification:</strong> {{ is_null($product->avg_classification) ? 'No reviews yet' : $product->avg_classification }}
                                 </div>
                                 <div class="col-1">
                                     <div class="row">
@@ -91,6 +91,6 @@
             @endforeach
         </div>
     </div>
-    </div>
-    {{$products->links()}}
+</div>
+{{$products->links()}}
 @endsection
