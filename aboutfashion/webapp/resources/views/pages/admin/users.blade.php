@@ -52,12 +52,13 @@
                                 @if ($user->blocked == 1)
                                     <div class="col">
                                         {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                        <span class="badge bg-danger ms-3">Blocked</span>
+                                        <span class="badge bg-danger ms-3" id="badge-block-{{$user->id}}">Blocked</span>
                                     </div>
                                 @else
                                     <div class="col">
                                         {{ $user['first_name'] . ' ' . $user['last_name'] }}
                                     </div>
+                                    <span class="badge bg-danger ms-3" id="badge-block-{{$user->id}}" style="display: none">Blocked</span>
                                 @endif
                             </button>
                         </h2>
@@ -92,11 +93,11 @@
                                         @if (Auth::guard('admin')->user()->role == 'Technician')
                                             @if ($user['blocked'] == 0)
                                                 <div class="row">
-                                                    <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock"></button>
+                                                    <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock block-user" id="block-{{ $user->id }}"></button>
                                                 </div>
                                             @else
                                                 <div class="row">
-                                                    <button class="btn btn-warning btn-sm mb-3 fa-solid fa-unlock"></button>
+                                                    <button class="btn btn-warning btn-sm mb-3 fa-solid fa-unlock block-user" id="block-{{ $user->id }}"></button>
                                                 </div>
                                             @endif
                                             <div class="row">
