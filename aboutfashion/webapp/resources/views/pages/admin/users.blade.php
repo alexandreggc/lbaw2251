@@ -70,7 +70,15 @@
                                         {{ isset($user['birth_date']) ? substr($user['birth_date'], 0, 10) : 'Not Defined' }}
                                         <br>
                                         <strong>Gender:</strong>
-                                        {{ isset($user['gender']) ? $user['gender'] : 'Not Defined' }}
+                                        @if (is_null($user['gender']))
+                                            Not Defined
+                                        @elseif ($user['gender'] == 'M')
+                                            Male
+                                        @elseif ($user['gender'] == 'F')
+                                            Female
+                                        @else
+                                            Other
+                                        @endif
                                     </div>
                                     <div class="col-1">
                                         <div class="row">
@@ -100,4 +108,5 @@
             </div>
         </div>
     </div>
+    {{ $users->links() }}
 @endsection

@@ -20,7 +20,7 @@ class AdminPanelController extends Controller{
     //Users
 
     public function usersPageAdmin(){
-        $users = User::all();
+        $users = User::paginate(10);
         return view('pages.admin.users', ['users'=>$users]);
     }
 
