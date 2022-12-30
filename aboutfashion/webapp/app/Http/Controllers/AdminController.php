@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Admin;
+use Illuminate\Database\Console\Migrations\ResetCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -40,6 +41,9 @@ class AdminController extends Controller
         $admin = Auth::guard('admin')->user();
         $this->authorize('updateUser', $admin);
         $user = User::find($request['id']);
+        if(is_null($user)){
+            return Response::json(array('status' => 'error', 'message' => 'User not found!'), 404);
+        }
         if($user->delete()){
             return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
         }else{
@@ -55,12 +59,17 @@ class AdminController extends Controller
         if($validator->fails()){
             return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
         }
-        $this->authorize('blockUser');
+        $admin = Auth::guard('admin')->user();
+        $this->authorize('updateUser', $admin);
         
         $user = User::find($request['id']);
+        if(is_null($user)){
+            return Response::json(array('status' => 'error', 'message' => 'User not found!'), 404);
+        }
+        
         $user->blocked = $user->blocked ? 0 : 1;
         if($user->save()){
-            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+            return Response::json(array('status' => 'success', 'message'=>'OK!', 'block'=>$user->blocked),200);
         }else{
             return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
         }      

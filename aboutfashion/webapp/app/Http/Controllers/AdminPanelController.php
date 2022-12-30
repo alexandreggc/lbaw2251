@@ -20,7 +20,7 @@ class AdminPanelController extends Controller{
     //Users
 
     public function usersPageAdmin(){
-        $users = User::paginate(15);
+        $users = User::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.users', ['users'=>$users]);
     }
 
