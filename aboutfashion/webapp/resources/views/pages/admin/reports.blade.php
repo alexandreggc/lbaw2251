@@ -49,10 +49,10 @@
                                 </div>-->
                                 <div class="col">
                                     @if ($report->resolved == false)
-                                        <strong>Report ID: </strong>{{ $report->id }}
+                                        <strong>Report ID: {{ $report->id }}</strong>
                                         <span class="badge bg-warning ms-3">Open</span>
                                     @elseif ( $report->resolved == true)
-                                        <strong>Report ID: </strong>{{ $report->id }}
+                                        <strong>Report ID: {{ $report->id }}</strong>
                                         <span class="badge bg-success ms-3">Closed</span>
                                     @endif
                                     <br>
