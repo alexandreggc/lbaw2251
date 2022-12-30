@@ -6,68 +6,66 @@
 
 @section('content')
     <div class="container">
-        <div class="row mb-3">
-            <ul class="nav nav-pills m-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/users">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/products">Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/orders">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/reports">Reports</a>
-                </li>
-            </ul>
+        <div class="row pt-3">
+            <h2>Welcome {{ $admin['first_name'] . ' ' . $admin['last_name'] }}!</h2>
+            <h4>{{ $admin['role'] }}</h4>
         </div>
-        <h2>Welcome {{ $admin['first_name'] . ' ' . $admin['last_name'] }}!</h2>
-        <h4>{{ $admin['role'] }}</h4>
         <div class="row pt-4">
             <div class="col">
                 <div class="row">
                     <div class="col-4">
                         <div class="row">    
-                            <button type="button" class="btn btn-outline-primary btn-lg">Users</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg" 
+                                    href="{{ route('usersAdminPanel') }}">
+                                Users
+                            </a>
                         </div>
                     </div>
                     <div class="col-2"></div>
                     <div class="col-4">
                         <div class="row">
-                            <button type="button" class="btn btn-outline-primary btn-lg">Products</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg"
+                                    href="{{ route('productsAdminPanel') }}">
+                                Products
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="row pt-3">
                     <div class="col-4">
                         <div class="row">
-                            <button type="button" class="btn btn-outline-primary btn-lg">Promotions</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg"
+                                    href="{{ route('promotionsAdminPanel') }}">
+                                Promotions
+                            </a>
                         </div>
                     </div>
                     <div class="col-2"></div>
                     <div class="col-4">
                         <div class="row">
-                            <button type="button" class="btn btn-outline-primary btn-lg">Orders</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg"
+                                    href="{{ route('ordersAdminPanel') }}">
+                                Orders
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="row pt-3">
                     <div class="col-4">
                         <div class="row">
-                            <button type="button" class="btn btn-outline-primary btn-lg">Reviews</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg"
+                                    href="{{ route('reviewsAdminPanel') }}">
+                                Reviews
+                            </a>
                         </div>
                     </div>
                     <div class="col-2"></div>
                     <div class="col-4">
                         <div class="row">
-                            <button type="button" class="btn btn-outline-primary btn-lg">Reports</button>
+                            <a type="button" class="btn btn-outline-primary btn-lg"
+                                    href="{{ route('reportsAdminPanel') }}">
+                                Reports
+                            </a>
                         </div>
                     </div>
                 </div>

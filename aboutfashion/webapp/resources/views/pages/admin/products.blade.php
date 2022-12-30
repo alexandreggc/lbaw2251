@@ -60,8 +60,8 @@
                                                 </a>
                                             </div>
                                             <div class="row">
-                                                <button class="btn btn-danger btn-smpe-1 fa-solid fa-xmark delete-product"
-                                                    id="{{ $product->id }}">
+                                                <button class="btn btn-danger btn-smpe-1 fa-solid fa-xmark delete-product" 
+                                                        id="{{ $product->id }}">
                                                 </button>
                                             </div>
                                         </div>
