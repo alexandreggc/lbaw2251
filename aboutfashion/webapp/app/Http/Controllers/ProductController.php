@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Size;
 use App\Models\Color;
-
-use Illuminate\Http\Request;
 use App\Models\Product;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
+use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller{
     
@@ -26,12 +26,23 @@ class ProductController extends Controller{
     public function store(Request $request){
     }
 
-    public function delete(Request $request){
-        
-        
+    public function delete($id){
+        if(!is_numeric($id)){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+
+        $product = Product::find($id);
+        if(is_null($product)){
+            return Response::json(array('status' => 'error', 'message' => 'Product not found!'), 404);
+        }
+        $this->authorize('updateProduct', $product);
+
+        if($product->delete()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }
     }
-
-
 
     public function show($id){
         $product = Product::findOrFail($id);

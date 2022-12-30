@@ -11,7 +11,7 @@ class ProductPolicy
 {
     use HandlesAuthorization;
 
-    public function updateProduct(Admin $admin){
+    public function updateProduct(Admin $admin, Product $product){
         return $admin->role == 'Collaborator';
     }
 }

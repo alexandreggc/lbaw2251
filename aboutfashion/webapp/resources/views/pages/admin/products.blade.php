@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
 @section('content')
+    @csrf
+    <script type="text/javascript" src={{ asset('js/product_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
             <h2 class="p-3">Products</h2>
@@ -21,7 +23,7 @@
             </div>
             <div class="accordion" id="accordion">
                 @foreach ($products as $product)
-                    <div class="accordion-item">
+                    <div class="accordion-item" id="accordion-item-{{ $product->id }}">
                         <h2 class="accordion-header" id="heading{{ $product->id }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{ $product->id }}" aria-expanded="true"
@@ -58,10 +60,8 @@
                                                 </a>
                                             </div>
                                             <div class="row">
-                                                <button type="submit" class="btn btn-danger btn-sm pe-1">
-                                                    <i class="fa-solid fa-xmark"></i>
-                                                    &nbsp;
-                                                    delete
+                                                <button class="btn btn-danger btn-smpe-1 fa-solid fa-xmark delete-product"
+                                                    id="{{ $product->id }}">
                                                 </button>
                                             </div>
                                         </div>
@@ -78,4 +78,3 @@
         </div>
     </div>
 @endsection
-
