@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Response;
 
 class AdminController extends Controller
 {
@@ -25,19 +27,41 @@ class AdminController extends Controller
     }
 
 
-    public function deleteUser(Request $request, $id){
-        //$this->authorize('deleteUser');
-        $user = User::find($id);
-        $user->delete();
-        return redirect(route('homeAdminPanel')); 
+    public function deleteUser(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|int',
+        ]); 
+
+        if($validator->fails()){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+        
+        $this->authorize('deleteUser');
+        $user = User::find($request['id']);
+        if($user->delete()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }
     }
 
-    public function blockUser(Request $request, $id){
-        $user = User::find($id);
-        //$this->authorize('blockUser'); //TODO
+    public function blockUser(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|int',
+        ]); 
+
+        if($validator->fails()){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+        $this->authorize('blockUser');
+        
+        $user = User::find($request['id']);
         $user->blocked = $user->blocked ? 0 : 1;
-        $user->save();        
-        return redirect(route('homeAdminPanel'));
+        if($user->save()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }      
     }
     
     public function index()

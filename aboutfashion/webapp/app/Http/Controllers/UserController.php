@@ -144,5 +144,14 @@ class UserController extends Controller{
         return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
         
     }
+
+    public function showWishlist(){
+        $user = Auth::user();
+        if(is_null($wishlist = $user->wishlist)){
+            return Redirect::route('wishlistView', array('wishlist' => null));
+        }else{
+            return Redirect::route('wishlistView', array('wishlist' => $wishlist));
+        }
+    }
     
 }

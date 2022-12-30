@@ -72,8 +72,6 @@ Route::put('/address/create', 'AddressController@store')->name('addressCreate');
 //Admin
 Route::get('/admin-panel/login', 'Auth\LoginController@showLoginForm')->name('adminLoginForm');
 Route::post('/admin-panel/login', 'Auth\LoginController@adminLogin')->name('adminLogin');
-Route::delete('/admin-panel/users/{id}', 'AdminController@deleteUser')->name('deleteUserAdmin');
-Route::patch('/admin-panel/users/{id}/block', 'AdminController@blockUser')->name('blockUser');
 Route::get('/admin-panel/logout', 'Auth\LoginController@adminLogout')->name('adminLogout');
 
 
@@ -91,10 +89,11 @@ Route::get('/api/products/stock', 'StockController@stockAPI')->name('productStoc
 Route::post('/api/shopping-cart', 'ShoppingCartController@add')->name('addProductCart');
 Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('deleteProductCart');
 Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart');
+Route::delete('api/admin-panel/users/{id}', 'AdminController@deleteUser');
+Route::patch('api/admin-panel/users/{id}', 'AdminController@blockUser');
 
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 
 
 //Test
 Route::get('/shopping-cart/checkout', 'OrderController@checkout');
-Route::get('/test', 'ShoppingCartController@add');
