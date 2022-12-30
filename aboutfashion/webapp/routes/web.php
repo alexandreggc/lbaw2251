@@ -14,10 +14,7 @@ Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('us
 Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
 
 Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
-Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('editProduct');
-Route::patch('/admin-panel/products/{id}','ProductController@update')->name('productUpdate');
-Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct');
-Route::post('/admin-panel/products','ProductController@store')->name('storeProduct');
+
 
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
 
@@ -86,6 +83,10 @@ Route::get('/admin-panel/logout', 'Auth\LoginController@adminLogout')->name('adm
 //Products
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
+Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('editProduct')->middleware('auth:admin');
+Route::patch('/admin-panel/products/{id}','ProductController@update')->name('productUpdate')->middleware('auth:admin');
+Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct')->middleware('auth:admin');
+Route::put('/admin-panel/products/create','ProductController@store')->name('storeProduct')->middleware('auth:admin');
 
 //WishList
 Route::post('/api/wishlist', 'UserController@toggleProductWishlist');
@@ -99,9 +100,5 @@ Route::delete('/api/shopping-cart', 'ShoppingCartController@delete')->name('dele
 Route::patch('/api/shopping-cart', 'ShoppingCartController@update')->name('updateProductCart');
 Route::delete('api/admin-panel/users', 'AdminController@deleteUser');
 Route::patch('api/admin-panel/users', 'AdminController@blockUser');
-
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
-
-
-//Test
-Route::get('/shopping-cart/checkout', 'OrderController@checkout');
+Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->middleware('auth:admin');

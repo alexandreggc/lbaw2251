@@ -102,7 +102,9 @@
                 @endforeach
             </div>
         </div>
+        <div style="padding-top:1em;">
+            {{ $orders->links() }}
+        </div>
     </div>
 </div>
-{{$orders->links()}}
 @endsection

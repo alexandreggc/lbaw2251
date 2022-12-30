@@ -63,7 +63,9 @@
                 </div>
             @endforeach
         </div>
+        <div style="padding-top:1em;">
+            {{ $reviews->links() }}
+        </div>
     </div>
 </div>
-{{$reviews->links()}}
 @endsection

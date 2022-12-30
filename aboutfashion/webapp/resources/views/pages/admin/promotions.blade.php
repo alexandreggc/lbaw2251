@@ -69,7 +69,9 @@
                 </div>
             @endforeach
         </div>
+        <div style="padding-top:1em;">
+            {{ $promotions->links() }}
+        </div>
     </div>
 </div>
-{{$promotions->links()}}
 @endsection
