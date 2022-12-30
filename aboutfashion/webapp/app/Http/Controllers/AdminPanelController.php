@@ -25,7 +25,7 @@ class AdminPanelController extends Controller{
     }
 
     public function userPurchaseHistoryPageAdmin($id){
-        $user = User::paginate(15);
+        $user = User::find($id);
         if(is_null($user)){
             return abort('404');
         }
