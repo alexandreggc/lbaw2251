@@ -6,20 +6,18 @@
         <h2 class="p-3">Promotions</h2>
     </div>
     <div class="row mb-5">
-        <div class="col-6"></div>
+        <div class="col-2">
+            <a type="button" class="btn btn-outline-primary mb-4">
+                <i class="fa-solid fa-plus"></i>
+                Add Promotion
+            </a>
+        </div>
+        <div class="col-4"></div>
         <div class="col-6">
             <form class="d-flex">
                 <input class="form-control me-sm-2" type="text" placeholder="Search">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
             </form>
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <button type="button" class="btn btn-outline-primary mb-4">
-                    <i class="fa-solid fa-plus"></i>
-                    Add Promotion
-                </button>
-            </div>
         </div>
         <div class="accordion" id="accordion">
             @foreach ($promotions as $promotion)
