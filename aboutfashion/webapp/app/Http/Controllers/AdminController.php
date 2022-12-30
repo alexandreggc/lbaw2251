@@ -13,6 +13,18 @@ class AdminController extends Controller
         $this->middleware('auth:admin');
     }
 
+    public function show($id)
+    {
+        if(!is_numeric($id)){
+            abort(404);
+        }
+        
+        $admin = Admin::find($id);
+        $this->authorize('view', $admin);
+        return view('pages.admin.home', array('admin'=>$admin));
+    }
+
+
     public function deleteUser(Request $request, $id){
         //$this->authorize('deleteUser');
         $user = User::find($id);
@@ -45,11 +57,7 @@ class AdminController extends Controller
     }
 
 
-    public function show(Admin $admin)
-    {
-        //
-    }
-
+    
     public function edit(Admin $admin)
     {
         //

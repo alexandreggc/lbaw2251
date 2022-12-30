@@ -17,15 +17,6 @@ class AdminPanelController extends Controller{
         $this->middleware('auth:admin');
     }
 
-    public function homePageAdmin($id){
-        $admin = Admin::find($id);
-        if(is_null($admin)){
-            return abort('404');
-        }
-        //$this->authorize('view', $admin); VER POLICY
-        return view('pages.admin.home', array('admin'=>$admin));
-    }
-
     //Users
 
     public function usersPageAdmin(){

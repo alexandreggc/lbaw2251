@@ -42,7 +42,7 @@
                     <div class=" collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
-                                <a class="nav-link mx-2" href="{{ route('homeAdminPanel', ['id' => Auth::guard('admin')->user()->id]) }}">
+                                <a class="nav-link mx-2" href="{{ route('showAdmin', ['id' => Auth::guard('admin')->user()->id]) }}">
                                     <i class="fa-regular fa-user" style="font-size:24px;"></i>
                                 </a>
                             </li>
@@ -67,7 +67,7 @@
                                         </li>
                                         <li>
                                             <a class="button dropdown-item"
-                                                href="{{ route('homeAdminPanel', ['id' => Auth::guard('admin')->user()->id]) }}">
+                                                href="{ route('homeAdminPanel', ['id' => Auth::guard('admin')->user()->id]) }">
                                                 See Profile
                                             </a>
                                         </li>

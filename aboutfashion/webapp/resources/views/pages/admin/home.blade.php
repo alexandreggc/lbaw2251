@@ -2,9 +2,6 @@
 
 @section('content')
     <div class="container">
-        <div class="row">
-            <h2 class="p-3">Hi Admin!</h2>
-        </div>
         <div class="row mb-3">
             <ul class="nav nav-pills m-3">
                 <li class="nav-item">

@@ -10,19 +10,11 @@ class AdminPolicy
 {
     use HandlesAuthorization;
 
-
-    public function view(User $user, Admin $admin)
+    public function view(Admin $admin, Admin $model)
     {
-        //
+        return $admin->id == $model->id;
     }
 
-   
-    public function create(User $user)
-    {
-        //
-    }
-
-   
     public function update(User $user, Admin $admin)
     {
         //
@@ -34,18 +26,5 @@ class AdminPolicy
         //
     }
 
-    
-    public function restore(User $user, Admin $admin)
-    {
-        //
-    }
-
-
-    public function deleteUser(Admin $admin){
-        return $admin->role == 'Technician';
-    }
-
-    public function blockUser(Admin $admin){
-        return $admin->role == 'Technician';
-    }
+   
 }
