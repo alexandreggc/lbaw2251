@@ -43,12 +43,12 @@
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('showAdmin', ['id' => Auth::guard('admin')->user()->id]) }}">
-                                    <i class="fa-solid fa-user" style="font-size:24px;"></i>
+                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('adminLogout') }}">
-                                    <i class="fa-solid fa-right-from-bracket" style="font-size:24px;"></i>
+                                    <i class="fa-regular fa-right-from-bracket" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <!--
