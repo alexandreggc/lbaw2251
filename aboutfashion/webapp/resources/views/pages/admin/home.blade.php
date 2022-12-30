@@ -8,11 +8,12 @@
     <div class="container">
         <div class="row pt-3">
             <h2>Welcome {{ $admin['first_name'] . ' ' . $admin['last_name'] }}!</h2>
-            <h4>{{ $admin['role'] }}</h4>
+            <h4 class="text-info">{{ $admin['role'] }}</h4>
         </div>
         <div class="row pt-4">
             <div class="col">
                 <div class="row">
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">    
                             <a type="button" class="btn btn-outline-primary btn-lg" 
@@ -21,7 +22,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-2"></div>
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">
                             <a type="button" class="btn btn-outline-primary btn-lg"
@@ -32,6 +33,7 @@
                     </div>
                 </div>
                 <div class="row pt-3">
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">
                             <a type="button" class="btn btn-outline-primary btn-lg"
@@ -40,7 +42,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-2"></div>
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">
                             <a type="button" class="btn btn-outline-primary btn-lg"
@@ -51,6 +53,7 @@
                     </div>
                 </div>
                 <div class="row pt-3">
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">
                             <a type="button" class="btn btn-outline-primary btn-lg"
@@ -59,7 +62,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-2"></div>
+                    <div class="col-1"></div>
                     <div class="col-4">
                         <div class="row">
                             <a type="button" class="btn btn-outline-primary btn-lg"
@@ -71,7 +74,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card border-primary mb-3">
+                <div class="card border-primary mb-3" style="max-width: 30rem;">
                     <h3 class="card-header">Notification Center</h3>
                     <div class="card-body">
                         <h5 class="card-title">These are your notifications!</h5>
