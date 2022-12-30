@@ -20,5 +20,10 @@ class AdminPolicy
         return $admin->role == 'Technician';
     }
 
+    public function updateProduct(Admin $admin)
+    {
+        return $admin->role == 'Collaborator';
+    }
+
    
 }

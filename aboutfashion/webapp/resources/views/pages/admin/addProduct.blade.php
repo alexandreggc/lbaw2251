@@ -24,7 +24,7 @@
                     <label for="productSelect" class="form-label mt-4"></label>
                     <select class="form-select" id="categorySelect" name="id_category" onchange="showCategory()"> <!-- ATENÇÃO AO ONCHANGE -->
                         <option>Select a category </option>
-                        @foreach ($categorys as $category)
+                        @foreach ($categories as $category)
                             <option value="{{$category['id']}}">{{$category['name']}}</option>
                         @endforeach
                     </select>

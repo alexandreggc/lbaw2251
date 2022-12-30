@@ -16,8 +16,9 @@ class ProductController extends Controller{
     
 
     public function create(Request $request){
-        $this->authorize('updateProduct');
-        return view('pages.products.create');
+        $this->authorize('updateProduct', Auth::guard('admin')->user());
+        $categories = Category::all();
+        return view('pages.admin.addProduct', array('categories' => $categories));
     }
 
     public function update(Request $request){
@@ -31,11 +32,11 @@ class ProductController extends Controller{
             return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
         }
 
+        $this->authorize('updateProduct', Auth::guard('admin')->user());
         $product = Product::find($id);
         if(is_null($product)){
             return Response::json(array('status' => 'error', 'message' => 'Product not found!'), 404);
         }
-        $this->authorize('updateProduct', $product);
 
         if($product->delete()){
             return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
