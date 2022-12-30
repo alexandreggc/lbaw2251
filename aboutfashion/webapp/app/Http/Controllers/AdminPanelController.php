@@ -17,6 +17,10 @@ class AdminPanelController extends Controller{
         $this->middleware('auth:admin');
     }
 
+    public function homePageAdmin(){
+        return view('pages.admin.home');
+    }
+
     //Users
 
     public function usersPageAdmin(){
@@ -38,6 +42,7 @@ class AdminPanelController extends Controller{
         $products = Product::paginate(15);
         return view('pages.admin.products', ['products'=>$products]);
     }
+    //add and edit product is in ProductController
 
     // Promotions
 
