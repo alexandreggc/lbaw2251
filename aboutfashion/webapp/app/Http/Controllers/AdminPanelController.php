@@ -23,7 +23,7 @@ class AdminPanelController extends Controller{
             return abort('404');
         }
         //$this->authorize('view', $admin); VER POLICY
-        return view('pages.admin.home');
+        return view('pages.admin.home', array('admin'=>$admin));
     }
 
     //Users

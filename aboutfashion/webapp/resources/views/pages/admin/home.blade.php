@@ -60,7 +60,7 @@
                     <div class="card-header">
                         <h5 class="card-title">Profile Picture</h5>
                     </div>
-                    <img src={{ $admin->photo['file'] }} id="profilePic" width="300px" height="300px" />
+                    <img src={{ $admin->image->file }} id="profilePic" width="300px" height="300px" />
                 </div>
             </div>
         </div>

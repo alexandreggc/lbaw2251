@@ -8,7 +8,7 @@
                     <div class="card shadow-2-strong" style="border-radius: 1rem;">
                         <div class="card-body p-5 text-center">
 
-                            <h3 class="mb-5 ">RESER PASSWORD</h3>
+                            <h3 class="mb-5 ">RESET PASSWORD</h3>
 
                             <form method="POST" action="{{ route('reset.password.action') }}">
                                 @csrf
