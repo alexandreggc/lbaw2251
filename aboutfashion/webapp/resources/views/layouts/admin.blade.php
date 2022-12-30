@@ -31,55 +31,26 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
-
-                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">ABOUT FASHION - ADMIN PANEL</a>
+                    <a class="navbar-brand mx-4 fw-bold" href="{{ route('home') }}">
+                        ABOUT FASHION - ADMIN PANEL
+                    </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <div class=" collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav ms-auto ">
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('showAdmin', ['id' => Auth::guard('admin')->user()->id]) }}">
-                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-user" style="font-size:24px;"></i>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="{{ route('adminLogout') }}">
-                                    <i class="fa-regular fa-right-from-bracket" style="font-size:24px;"></i>
+                                    <i class="fa-solid fa-right-from-bracket" style="font-size:24px;"></i>
                                 </a>
                             </li>
-                            <!--
-                            <li class="nav-item dropdown">
-                                <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-regular fa-user" style="font-size:24px;"></i>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"
-                                    style=" z-index: 18;">
-                                    @if (Auth::check())
-                                        <li>
-                                            <span class="dropdown-item">
-                                                Hello {{ Auth::guard('admin')->user()->first_name }} !
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <a class="button dropdown-item"
-                                                href="{ route('homeAdminPanel', ['id' => Auth::guard('admin')->user()->id]) }">
-                                                See Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="button dropdown-item" href="{{ route('adminLogout') }}">
-                                                Logout
-                                            </a>
-                                        </li>
-                                    @endif
-                                </ul>
-                            </li>
-                            -->
                         </ul>
                     </div>
                 </div>
