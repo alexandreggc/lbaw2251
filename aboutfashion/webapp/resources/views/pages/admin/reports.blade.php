@@ -6,28 +6,6 @@
             <h2 class="p-3">Hi Admin!</h2>
         </div>
         <div class="row mb-5">
-            <!--
-            <ul class="nav nav-pills m-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/users">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/products">Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/orders">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/admin-panel/reports">Reports</a>
-                </li>
-            </ul
-            >-->
             <div class="col-6"></div>
             <div class="col-6 mb-3">
                 <form class="d-flex">
@@ -42,11 +20,7 @@
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
                                     data-bs-target="#collapse{{$report->id}}" aria-expanded="true" 
                                     aria-controls="collapse{{$report->id}}">
-                                <!-- imagem -->
-                                <!--<div class="col-1 pe-3">
-                                    <img src="{{ $report->review->product->images[0]->file }}" alt="product image" 
-                                        class="img-fluid">
-                                </div>-->
+                                
                                 <div class="col">
                                     @if ($report->resolved == false)
                                         <strong>Report ID: {{ $report->id }}</strong>
@@ -81,13 +55,13 @@
                                         <div class="col-1">
                                         @if ($report->resolved == false)
                                             <button type="submit" class="btn btn-info btn-sm">
-                                                <i class="fa-regular fa-envelope"></i>
+                                                <i class="fa-solid fa-envelope"></i>
                                                 &nbsp;
                                                 Close
                                             </button>
                                         @elseif ( $report->resolved == true)
                                             <button type="submit" class="btn btn-warning btn-sm">
-                                                <i class="fa-regular fa-envelope-open"></i>
+                                                <i class="fa-solid fa-envelope-open"></i>
                                                 &nbsp;
                                                 Open
                                             </button>

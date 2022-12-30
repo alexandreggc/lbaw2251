@@ -25,7 +25,7 @@ class AdminController extends Controller
         
         $admin = Admin::find($id);
         $this->authorize('view', $admin);
-        return view('pages.admin.home', array('admin'=>$admin));
+        return view('pages.admin.profile', array('admin'=>$admin));
     }
 
 

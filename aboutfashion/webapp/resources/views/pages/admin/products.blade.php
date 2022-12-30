@@ -6,30 +6,10 @@
         <h2 class="p-3">Products</h2>
     </div>
     <div class="row mb-5">
-        <!--<ul class="nav nav-pills m-3">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin-panel/users">Users</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="/admin-panel/products">Products</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin-panel/orders">Orders</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin-panel/reports">Reports</a>
-            </li>
-        </ul>-->
         <div class="col-2">
                 <a type="button" class="btn btn-outline-primary mb-4"
                     href="{{ route('createProduct') }}">
-                    <i class="fa-regular fa-plus"></i>
+                    <i class="fa-solid fa-plus"></i>
                     Add Product
                 </a>
             </div>

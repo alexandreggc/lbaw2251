@@ -7,28 +7,6 @@
         <div class="row">
             <h2 class="p-3">Users</h2>
         </div>
-        <!--<div class="row mb-3">
-                    <ul class="nav nav-pills m-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/admin-panel/users">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/products">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/promotions">Promotions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/orders">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/reviews">Reviews</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin-panel/reports">Reports</a>
-                        </li>
-                    </ul>
-                </div>-->
         <div class="row">
             <div class="col-6"></div>
             <div class="col-6 pb-3">
@@ -102,10 +80,8 @@
                                             @endif
                                             <div class="row">
                                                 <button
-                                                    class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1 delete-user"
-                                                    id={{ $user->id }}></button>
+                                                    class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1 delete-user" id={{ $user->id }}></button>
                                             </div>
-                                        @else
                                         @endif
                                     </div>
                                 </div>
