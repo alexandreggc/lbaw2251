@@ -40,10 +40,10 @@
             <div class="accordion" id="accordion">
                 @foreach ($users as $user)
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ $user->id }}">
+                        <h2 class="accordion-header" id="heading-{{ $user->id }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{ $user->id }}" aria-expanded="true"
-                                aria-controls="collapse{{ $user->id }}">
+                                data-bs-target="#collapse-{{ $user->id }}" aria-expanded="true"
+                                aria-controls="collapse-{{ $user->id }}">
                                 <div class="col-1 pe-3">
                                     <img src="{{ $user->photo['file'] }}" alt="user photo" class="img-fluid">
                                 </div>
@@ -59,8 +59,8 @@
                                 @endif
                             </button>
                         </h2>
-                        <div id="collapse{{ $user->id }}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{ $user->id }}" data-bs-parent="#accordion">
+                        <div id="collapse-{{ $user->id }}" class="accordion-collapse collapse"
+                            aria-labelledby="heading-{{ $user->id }}" data-bs-parent="#accordion">
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col">
