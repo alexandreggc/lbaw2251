@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 
 
 class ForgotPasswordController extends Controller
@@ -74,7 +74,7 @@ class ForgotPasswordController extends Controller
     }
 
     public function showForgetPasswordAdminForm(){
-        return view('auth.forgot-password');
+        return view('auth.forgot-password-admin');
     }
 
     public function submitForgetPasswordAdminForm(Request $request){
@@ -88,7 +88,7 @@ class ForgotPasswordController extends Controller
     }
 
     public function showResetPasswordAdminForm($token){
-        return view('auth.reset-password', ['token' => $token]);
+        return view('auth.reset-password-admin', ['token' => $token]);
 
     }
 

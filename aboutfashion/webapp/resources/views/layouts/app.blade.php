@@ -359,7 +359,7 @@
                                 {{ csrf_field() }}
                                 <div class="form-group mb-4">
                                     @if ($errors->has('email'))
-                                        <span class="error">
+                                        <span class="error"> 
                                             {{ $errors->first('email') }}
                                         </span>
                                     @else

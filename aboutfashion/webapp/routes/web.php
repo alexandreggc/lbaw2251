@@ -58,7 +58,7 @@ Route::get('/admin-panel/reset-password/{token}', 'Auth\ForgotPasswordController
 Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordAdminForm')->name('reset.password.admin.action');
 
 //Orders
-Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
+Route::get('/order/{id}', 'OrderController@show')->name('orderDetails'); 
 
 //Cards
 Route::get('/cards/{id}/edit', 'CardController@edit')->name('cardEditForm');
