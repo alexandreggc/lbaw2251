@@ -1,12 +1,36 @@
 showAll()
 attachEvents()
 
+function getCurrentURL () {
+    return window.location.href
+  }
+
 function attachEvents() {
+    order = document.getElementById("order")
+    order.addEventListener("change", selectOrder)
     button = document.getElementById('filterButton')
     button.addEventListener('click', selectFilters)
     search = document.getElementById('searchButton')
     search.addEventListener('click', selectSearch)
 }
+async function selectOrder() {
+    showSpinner();
+    url = '/api/products?'
+    order = document.getElementById("order").value
+    if (!(order == 'Order')) {
+        url += 'order='
+        url += order
+    }   
+    const response = await fetch(url)
+    const products = await response.json()
+    if (response) {
+        hideSpinner();
+    }
+    let oldBody = document.getElementById("data-output")
+    let newBody = drawProducts(products)
+    oldBody.innerHTML = newBody
+}
+
 
 async function showAll() {
     showSpinner();

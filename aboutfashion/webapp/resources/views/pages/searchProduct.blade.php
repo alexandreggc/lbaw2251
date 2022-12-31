@@ -103,11 +103,14 @@
                             style="font-size:25px;width:6%;color:#000; "></i></button>
 
                     <form method="GET" class="ms-auto" style="display:inline;width:20%;">
-                        <select class="form-select " name="order"
+                        <select class="form-select" name="order" id="order"
                             style="background-color:#ecf0f1;  display:inline; border: none; color:#212529; font-size: 18px;">
-                            <option selected>Order</option>
-                            <option>Jackets</option>
-                            <option>T-shirts</option>
+                            <option value="Order" selected>Order</option>
+                            <option value="price_asc"> Menor preço</option>
+                            <option value="price_desc"> Maior preço</option>
+                            <option value="avg_desc"> Desconto</option>
+                            <option value="name_asc"> Nome produto(a-z)</option>
+                            <option value="name_desc"> Nome produto(z-a)</option>
                         </select>
                     </form>
                 </div>

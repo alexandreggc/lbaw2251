@@ -13,7 +13,7 @@ function attachEvents() {
     if (likeIcon != null || likeIcon != undefined) {
         likeIcon.addEventListener('click', changeLike)
     }
-}
+} 
 
 async function addSize(element) {
     let color = document.getElementById('color').value
