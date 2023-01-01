@@ -47,7 +47,7 @@
                                         <strong>Description:</strong> {{ $product->description }}
                                         <br>
                                         <strong>Classification:</strong>
-                                        {{ is_null($product->avg_classification) ? 'No reviews yet' : $product->avg_classification }}
+                                        {{ is_null($product->avg_classification) ? 'No reviews yet' : number_format($product->avg_classification, 2, '.', '') }}
                                     </div>
                                     @if (Auth::guard('admin')->user()->role == 'Collaborator')
                                         <div class="col-1">

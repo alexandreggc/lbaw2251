@@ -21,10 +21,17 @@ class ProductController extends Controller{
         return view('pages.admin.addProduct', array('categories' => $categories));
     }
 
-    public function update(Request $request){
+    public function store(Request $request){
     }
 
-    public function store(Request $request){
+    public function edit(Request $request){
+        $this->authorize('updateProduct', Auth::guard('admin')->user());
+        $product = Product::find($request->id);
+        $categories = Category::all();
+        return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories]);
+    }
+
+    public function update(Request $request){
     }
 
     public function delete($id){
