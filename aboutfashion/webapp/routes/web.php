@@ -109,3 +109,4 @@ Route::delete('api/admin-panel/users', 'AdminController@deleteUser');
 Route::patch('api/admin-panel/users', 'AdminController@blockUser');
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->middleware('auth:admin');
+Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
