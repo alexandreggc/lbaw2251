@@ -85,9 +85,15 @@ Route::get('/admin-panel/logout', 'Auth\LoginController@adminLogout')->name('adm
 Route::get('/products', 'ProductController@showSearchPage')->name('searchProductView');
 Route::get('/products/{id}', 'ProductController@show')->name('productView');
 Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('editProduct')->middleware('auth:admin');
-Route::patch('/admin-panel/products/{id}','ProductController@update')->name('productUpdate')->middleware('auth:admin');
+Route::patch('/admin-panel/products/{id}','ProductController@update')->name('updateProduct')->middleware('auth:admin');
 Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct')->middleware('auth:admin');
 Route::put('/admin-panel/products/create','ProductController@store')->name('storeProduct')->middleware('auth:admin');
+
+//Promotions
+Route::get('/admin-panel/promotions/{id}/edit','PromotionController@edit')->name('editPromotion')->middleware('auth:admin');
+Route::patch('/admin-panel/promotions/{id}','PromotionController@update')->name('updatePromotion')->middleware('auth:admin');
+Route::get('/admin-panel/promotions/create','PromotionController@create')->name('createPromotion')->middleware('auth:admin');
+Route::put('/admin-panel/promotions/create','PromotionController@store')->name('storePromotion')->middleware('auth:admin');
 
 //WishList
 Route::post('/api/wishlist', 'UserController@toggleProductWishlist');

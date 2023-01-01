@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col">
-                <form method="POST" action="{{ route('productUpdate', ['id' => $product->id]) }}">
+                <form method="POST" action="{{ route('updateProduct', ['id' => $product->id]) }}">
                     @csrf
                     @method('patch')
                     <div class="form-group">
