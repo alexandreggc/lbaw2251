@@ -22,7 +22,7 @@
                     @csrf
                     @method('patch')
                     <div class="form-group">
-                        <label for="productSelect" class="form-label mt-4"></label>
+                        <label for="categorySelect" class="form-label mt-4"></label>
                         <select class="form-select" id="categorySelect" name="id_category" onchange="showCategory()"> <!-- ATENÇÃO AO ONCHANGE -->
                             <option>Select a category </option>
                             @foreach ($categories as $category)
