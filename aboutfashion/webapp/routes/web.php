@@ -48,7 +48,7 @@ Route::put('/review/create', 'ReviewController@store')->name('reviewCreate');
 //Forgot Password
 Route::get('/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordForm')->name('forgot.password.view');
 Route::post('/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordForm')->name('forgot.password.action');
-Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('reset.password.view');
+Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('password.reset');
 Route::post('/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password.action');
 
 
@@ -113,3 +113,9 @@ Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartV
 Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');
+
+// Images
+Route::get('/pic', 'ImageController@test');
+Route::post('/image/upload', 'ImageController@store')->name('uploadImage');
+Route::post('/image/edit', 'ImageController@edit')->name('editImage');
+Route::post('/image/delete', 'ImageController@delete')->name('deleteImage');

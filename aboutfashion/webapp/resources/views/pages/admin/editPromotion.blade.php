@@ -44,7 +44,7 @@
                     </div>
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>
-                        <button type="submit" class="btn btn-primary reg">Save</button>
+                        <button type="submit" class="btn btn-primary reg btn-lg">Save</button>
                     </div>
                 </form>
             </div>
