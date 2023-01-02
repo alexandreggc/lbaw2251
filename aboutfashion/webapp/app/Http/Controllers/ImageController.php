@@ -13,17 +13,6 @@ class ImageController extends Controller
         return view('pages.uploadImage');
     }
 
-    public function store(Request $request)
-    {
-        $image = $request->file('image');
-
-        $fileName = time().'.'.$image->getClientOriginalExtension();
-        $imagePath = Storage::disk('database')->putFile('images', $image, $fileName);
-        $imageModel = new Image;
-        $imageModel->file = $imagePath;
-        return $imageModel->save();
-    }
-
     public function update($image, int $idImage){
         if($imageModel = Image::find($idImage)){
             return -1;
@@ -46,5 +35,9 @@ class ImageController extends Controller
         $imageModel = new Image;
         $imageModel->file = $imagePath;
         return $imageModel->id;
+    }
+
+    public function delete($idImage){
+        
     }
 }

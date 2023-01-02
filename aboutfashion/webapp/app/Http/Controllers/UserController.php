@@ -152,6 +152,5 @@ class UserController extends Controller{
         }else{
             return Redirect::route('wishlistView', array('wishlist' => $wishlist));
         }
-    }
-    
+    } 
 }
