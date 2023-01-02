@@ -31,9 +31,9 @@
                             <div class="col-1"></div>
                             <div class="col">
                                 <!-- Category -->
-                                <label for="categorySelect" class="form-label mt-4"></label>
-                                <select class="form-select" id="categorySelect" name="id_category" onchange="showCategory()"> <!-- ATENÇÃO AO ONCHANGE -->
-                                    <option>Select a category </option>
+                                <label for="categorySelect" class="form-label mt-4">Category</label>
+                                <select class="form-select" id="categorySelect" name="id_category" value="{{$product['id_category']}}" onchange="showCategory()"> <!-- ATENÇÃO AO ONCHANGE -->
+                                    <option value="{{ $product['id_category'] }}" selected>{{ $product->category->name }}</option>
                                     @foreach ($categories as $category)
                                         <option value="{{$category['id']}}">{{$category['name']}}</option>
                                     @endforeach
