@@ -74,19 +74,21 @@
                                         @if (Auth::guard('admin')->user()->role == 'Collaborator')
                                             <div class="col-1">
                                                 <div class="row">
-                                                    <button type="submit" class="btn btn-warning btn-sm mb-3">
+                                                    <a type="submit" class="btn btn-warning btn-sm mb-3"
+                                                        href="{{ route('editOrderStatus', ['id' => $order->id]) }}">
                                                         <i class="fa-solid fa-pencil"></i>
                                                         &nbsp;
                                                         edit status
-                                                    </button>
+                                                    </a>
                                                 </div>
-                                                <div class="row">
-                                                    <button type="submit" class="btn btn-primary btn-sm mb-3">
+                                                <!--<div class="row">
+                                                    <a type="submit" class="btn btn-primary btn-sm mb-3"
+                                                        href="{{ route('editOrder', ['id' => $order->id]) }}">
                                                         <i class="fa-solid fa-pencil"></i>
                                                         &nbsp;
                                                         edit
-                                                    </button>
-                                                </div>
+                                                    </a>
+                                                </div> -->
                                                 <!--<div class="row">
                                                     <button class="btn btn-danger btn-sm fa-solid fa-xmark delete-order"
                                                             id="{{ $order->id }}">
