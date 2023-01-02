@@ -28,9 +28,6 @@ class UserController extends Controller{
             return abort('404');
         }
         $this->authorize('view', $user);
-        if(is_null($user)){
-            return view('pages.user.show',['user' => $user, 'countries'=>Country::all()]);   
-        }
         return view('pages.user.show',[ 'user' => $user, 'countries'=>Country::all()]);
         
     }
