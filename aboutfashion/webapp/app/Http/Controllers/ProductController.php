@@ -51,7 +51,7 @@ class ProductController extends Controller{
         if($product->save()){
             return Redirect::route('productsAdminPanel');
         }else{
-            return redirect()->back();
+            Redirect::back()->withErrors();
         }
     }
 
@@ -63,7 +63,9 @@ class ProductController extends Controller{
     }
 
     public function update(Request $request, $id){
-        $product = Product::find($id);
+        if(!$product = Product::find($id)){
+            Redirect::back()->withErrors();
+        }
         $this->authorize('updateProduct', Auth::guard('admin')->user());
 
         $validator = Validator::make($request->all(),[

@@ -33,6 +33,10 @@ class AdminPolicy{
         return $admin->role == 'Collaborator';
     }
 
+    public function createPromotion(Admin $admin){
+        return $admin->role == 'Collaborator';
+    }
+
     public function updateOrder(Admin $admin){
         return $admin->role == 'Collaborator';
     }

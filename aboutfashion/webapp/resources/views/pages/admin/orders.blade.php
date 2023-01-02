@@ -87,11 +87,11 @@
                                                         edit
                                                     </button>
                                                 </div>
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <button class="btn btn-danger btn-sm fa-solid fa-xmark delete-order"
                                                             id="{{ $order->id }}">
                                                     </button>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         @endif
                                     </div>
