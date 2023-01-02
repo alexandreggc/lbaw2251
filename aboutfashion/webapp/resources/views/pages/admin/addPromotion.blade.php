@@ -23,7 +23,7 @@
                     @method('put')
                     <div class="form-group">
                         <label for="productSelect" class="form-label"></label>
-                        <select class="form-select" id="productSelect" name="id_product" multiple="multiple" onchange="showProduct()"> <!-- ATENÇÃO AO ONCHANGE -->
+                        <select class="form-select" id="productSelect" name="id_product" onchange="showProduct()"> <!-- ATENÇÃO AO ONCHANGE -->
                             <option>Select a product</option>
                             @foreach ($products as $product)
                                 <option value="{{$product['id']}}">{{$product['name']}}</option>

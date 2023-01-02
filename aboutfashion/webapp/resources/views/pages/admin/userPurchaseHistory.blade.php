@@ -8,7 +8,7 @@
         <div class="row pb-3">
             <div class="col-1">
                 <a href="/admin-panel/users">
-                    <i class="fa-regular fa-arrow-left fa-2x"></i>
+                    <i class="fa-solid fa-arrow-left fa-2x"></i>
                 </a>
             </div>
             <div class="col">

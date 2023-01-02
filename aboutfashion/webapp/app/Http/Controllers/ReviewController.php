@@ -64,7 +64,7 @@ class ReviewController extends Controller{
         ]);
         
         if($validator->fails()){
-            return redirect()->back(); // adicionar mensagens de erro
+            Redirect::back()->withErrors();
         }
 
         if(!$product = Product::find($request->input('id_product'))){
@@ -116,9 +116,10 @@ class ReviewController extends Controller{
             'title'=> 'required|string|max:30',
             'description' => 'required|string|max:100',
             'evaluation' => 'required|integer',
-          ]);
+        ]);
+        
         if($validator->fails()){
-            return redirect()->back(); // adicionar mensagens de erro
+            Redirect::back()->withErrors();
         }
 
         $review['evaluation'] = $request->input('evaluation');

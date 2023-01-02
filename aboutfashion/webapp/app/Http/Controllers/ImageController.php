@@ -11,33 +11,45 @@ class ImageController extends Controller
 
     public function test(){
         return view('pages.uploadImage');
+        //return view('pages.editImage');
+        //return view('pages.deleteImage');
     }
 
-    public function update($image, int $idImage){
-        if($imageModel = Image::find($idImage)){
-            return -1;
-        }
+    public function store(Request $request)
+    {
+        $image = $request->file('image');
+        $imagePath = Storage::putFile('images', $image);
+        $imageModel = new Image;
+        $imageModel->file = $imagePath;
+        return $imageModel->save();
+    }
 
-        $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $imagePath = Storage::disk('database')->putFile('images', $image, $fileName);
+    public function edit(Request $request){
+        $image = $request->file('image');
+        $imageID = $request->id;
+        $imageModel = Image::find($imageID);
+        if(is_null($imageModel)){
+          return abort('404');
+        }
+        Storage::delete($imageModel->file);
+        $imagePath = Storage::putFile('images', $image);
         $imageModel->file = $imagePath;
         if($imageModel->save()){
-            return $idImage;
+            return $imageID;
         }else{
             return -1;
         }
     }
 
-    public function create($image){
-
-        $fileName = time() . '.' . $image->getClientOriginalExtension();
-        $imagePath = Storage::disk('database')->putFile('images', $image, $fileName);
-        $imageModel = new Image;
-        $imageModel->file = $imagePath;
-        return $imageModel->id;
+    public function delete(Request $request){
+        $imageID = $request->id;
+        $imageModel = Image::find($imageID);
+        if(is_null($imageModel)){
+          return abort('404');
+        }
+        Storage::delete($imageModel->file);
+        $imageModel->delete();
+        return $imageID;
     }
-
-    public function delete($idImage){
-        
-    }
+    
 }

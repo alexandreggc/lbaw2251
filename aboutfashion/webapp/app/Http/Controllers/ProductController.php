@@ -7,7 +7,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -22,6 +22,37 @@ class ProductController extends Controller{
     }
 
     public function store(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id_category' => 'required|integer',
+            'name'=> 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
+            'price' => 'required|numeric',
+            //'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        
+        if($validator->fails()){
+            Redirect::back()->withErrors();
+        }
+
+        if(!$category = Category::find($request->input('id_category'))){
+            Redirect::back()->withErrors();
+        };
+
+        $product = new Product();
+        
+        $this->authorize('createProduct', Auth::guard('admin')->user());
+    
+        $product->id_category = $request->input('id_category');
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        //$product->images[0]->file = $request->input('image');
+        
+        if($product->save()){
+            return Redirect::route('productsAdminPanel');
+        }else{
+            Redirect::back()->withErrors();
+        }
     }
 
     public function edit(Request $request){
@@ -31,7 +62,42 @@ class ProductController extends Controller{
         return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request, $id){
+        if(!$product = Product::find($id)){
+            Redirect::back()->withErrors();
+        }
+        $this->authorize('updateProduct', Auth::guard('admin')->user());
+
+        $validator = Validator::make($request->all(),[
+            'id_category' => 'required|integer',
+            'name'=> 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
+            'price' => 'required|numeric',
+            //'images' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors();
+        }
+
+        $product['name'] = $request->input('name');
+        $product['description'] = $request->input('description');
+        $product['price'] = $request->input('price');
+        $product['id_category'] = $request->input('id_category');
+        /*
+        if(!is_null($request->input('images'))){
+            $i = 0;
+            foreach($request->input('images') as $image){
+                $product->images[i]->file = $image;
+                $i++;
+            }
+        }*/
+
+        if ($product->save()) {
+            return Redirect::route('productsAdminPanel');
+        } else {
+            return Redirect::back()->withErrors();
+        }
     }
 
     public function delete($id){
