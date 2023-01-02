@@ -71,6 +71,7 @@ class ProductController extends Controller{
             'name'=> 'required|string|max:30',
             'description' => 'nullable|string|max:100',
             'price' => 'required|numeric',
+            //'images' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if($validator->fails()){
@@ -81,6 +82,14 @@ class ProductController extends Controller{
         $product['description'] = $request->input('description');
         $product['price'] = $request->input('price');
         $product['id_category'] = $request->input('id_category');
+        /*
+        if(!is_null($request->input('images'))){
+            $i = 0;
+            foreach($request->input('images') as $image){
+                $product->images[i]->file = $image;
+                $i++;
+            }
+        }*/
 
         if ($product->save()) {
             return Redirect::route('productsAdminPanel');
