@@ -53,20 +53,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-                    <div class="form-group">
-                        <label for="name" class="form-label mt-4">Name</label>
-                        <input type="text" class="form-control" id="product_name" value="{{$product->name}}" name="name">
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="form-label mt-4">Description</label>
-                        <input type="text" class="form-control" id="product_description" value="{{$product->description}}" name="description">
-                    </div>
-                    <div class="form-group">
-                        <label for="price" class="form-label mt-4">Price</label>
-                        <input type="number" class="form-control" id="product_price" value="{{$product->price}}" name="price">
-                    </div>
-                    -->
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>
                         <button type="submit" class="btn btn-primary reg btn-lg">Save</button>

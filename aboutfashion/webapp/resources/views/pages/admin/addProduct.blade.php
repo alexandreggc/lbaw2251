@@ -29,18 +29,18 @@
                                 <option value="{{$category['id']}}">{{$category['name']}}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <div class="form-group">
+                        <!-- Name -->
                         <label for="name" class="form-label mt-4">Name</label>
-                        <input type="text" class="form-control" id="product_name" name="name"> <!-- colocar value -->
-                    </div>
-                    <div class="form-group">
+                        <input type="text" class="form-control" id="product_name" name="name">
+                        <!-- Description -->
                         <label for="description" class="form-label mt-4">Description</label>
-                        <input type="text" class="form-control" id="product_description" name="description"> <!-- colocar value -->
-                    </div>
-                    <div class="form-group">
+                        <input type="text" class="form-control" id="product_description" name="description">
+                        <!-- Price -->
                         <label for="price" class="form-label mt-4">Price</label>
-                        <input type="number" class="form-control" id="product_price" name="price"> <!-- colocar value -->
+                        <input type="number" class="form-control" id="product_price" name="price">
+                        <!-- Images -->
+                        <label for="formFile" class="form-label mt-4">Images input</label>
+                        <input class="form-control" type="file" id="formFile">
                     </div>
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>
@@ -48,7 +48,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-1"></div>
+            <div class="col-2"></div>
         </div>
     </div>
 @endsection

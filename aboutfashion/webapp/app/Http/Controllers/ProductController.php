@@ -7,7 +7,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +31,32 @@ class ProductController extends Controller{
         return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request, $id){
+
+        $product = Product::find($id);
+        $this->authorize('updateProduct', Auth::guard('admin')->user());
+
+        $validator = Validator::make($request->all(),[
+            'id_category' => 'required|integer',
+            'name'=> 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
+            'price' => 'required|numeric',
+          ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors();
+        }
+
+        $product['name'] = $request->input('name');
+        $product['description'] = $request->input('description');
+        $product['price'] = $request->input('price');
+        $product['id_category'] = $request->input('id_category');
+
+        if ($product->save()) {
+            return Redirect::route('productsAdminPanel');
+        } else {
+            return Redirect::back()->withErrors();
+        }
     }
 
     public function delete($id){

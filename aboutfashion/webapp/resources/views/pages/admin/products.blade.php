@@ -44,6 +44,8 @@
                             <div class="accordion-body">
                                 <div class="row">
                                     <div class="col">
+                                        <strong>Category:</strong> {{ $product->category->name }}
+                                        <br>
                                         <strong>Description:</strong> {{ $product->description }}
                                         <br>
                                         <strong>Classification:</strong>
