@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Size;
 use App\Models\Color;
 use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -59,7 +60,10 @@ class ProductController extends Controller{
         $this->authorize('updateProduct', Auth::guard('admin')->user());
         $product = Product::find($request->id);
         $categories = Category::all();
-        return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories]);
+        $promotions = Promotion::all();
+        return view('pages.admin.editProduct', ['product'=>$product, 
+                                                'categories' => $categories, 
+                                                'promotions' => $promotions]);
     }
 
     public function update(Request $request, $id){
@@ -102,7 +106,7 @@ class ProductController extends Controller{
 
     public function delete($id){
         if(!is_numeric($id)){
-            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
         }
 
         $this->authorize('updateProduct', Auth::guard('admin')->user());
@@ -115,6 +119,66 @@ class ProductController extends Controller{
             return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
         }else{
             return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }
+    }
+
+    public function addProductPromotion(Request $request, $id){
+        if(!$product = Product::find($id)){
+            Redirect::back()->withErrors();
+        }
+
+        if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
+            abort(403);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'id_promotion' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
+        if (!$promotion = Promotion::find($request->input('id_promotion'))){
+            return Redirect::back()->withErrors();
+        }
+       
+        $product->promotions()->attach($promotion); 
+
+        if ($product->save()) {
+            return Redirect::route('productsAdminPanel');
+        } else {
+            return Redirect::back()->withErrors();
+        }
+    }
+
+    public function removeProductPromotion(Request $request, $id){
+        if(!$product = Product::find($id)){
+            Redirect::back()->withErrors();
+        }
+
+        if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
+            abort(403);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'id_promotion' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors();
+        }
+
+        if (!$promotion = Promotion::find($request->input('id_promotion'))){
+            return Redirect::back()->withErrors();
+        }
+       
+        $product->promotions()->detach($promotion); 
+
+        if ($product->save()) {
+            return Redirect::route('productsAdminPanel');
+        } else {
+            return Redirect::back()->withErrors();
         }
     }
 

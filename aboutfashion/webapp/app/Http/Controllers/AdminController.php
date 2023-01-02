@@ -34,7 +34,7 @@ class AdminController extends Controller
         ]); 
 
         if($validator->fails()){
-            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
         }
 
         $admin = Auth::guard('admin')->user();
@@ -56,7 +56,7 @@ class AdminController extends Controller
         ]); 
 
         if($validator->fails()){
-            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
         }
         $admin = Auth::guard('admin')->user();
         $this->authorize('updateUser', $admin);
