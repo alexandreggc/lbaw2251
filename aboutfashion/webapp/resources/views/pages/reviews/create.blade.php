@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <script type="text/javascript" src={{ asset('js/create_review.js') }} defer></script>
     <div id="edit_form">
         <legend>Create Review</legend>
         <form method="POST" action="{{ route('reviewCreate') }}">
@@ -8,10 +9,11 @@
             @method('put')
             <div class="form-group">
                 <label for="productSelect" class="form-label mt-4"></label>
-                <select class="form-select" id="productSelect" name="id_product" onchange="showProduct()">
-                    <option>Select a product </option>
+                <select class="form-select" id="productSelect" name="id_product">
+                    <option data-img="">Select a product </option>
                     @foreach ($products as $product)
-                        <option value="{{$product['id']}}" data-img="{{$product->images[0]['file']}}">{{$product['name']}}</option>
+                        <option value="{{ $product['id'] }}" data-img="{{ $product->images[0]['file'] }}">
+                            {{ $product['name'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -36,9 +38,9 @@
                 <label for="description" class="form-label mt-4">Evaluation</label>
             </div>
             <div class="evaluation" id="input">
-                @for($i = 5; $i >= 1; $i--)
-                    <input type="radio" id="star{{$i}}" name="evaluation" value="{{$i}}" />
-                    <label for="star{{$i}}" title="text">{{$i}} stars</label>
+                @for ($i = 5; $i >= 1; $i--)
+                    <input type="radio" id="star{{ $i }}" name="evaluation" value="{{ $i }}" />
+                    <label for="star{{ $i }}" title="text">{{ $i }} stars</label>
                 @endfor
             </div>
             <div class="modal-footer">
