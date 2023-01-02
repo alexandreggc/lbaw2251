@@ -56,7 +56,7 @@ class OrderController extends Controller{
 
   public function delete($id){
       if(!is_numeric($id)){
-          return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+          return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
       }
 
       $this->authorize('updateOrder', Auth::guard('admin')->user());
@@ -79,7 +79,7 @@ class OrderController extends Controller{
     ]);
    
     if($validator->fails()){
-      redirect()->back()->with('status', 'Bad request!'); //TODO ver isto
+      return redirect()->back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
     }
 
     $user = Auth::user();
@@ -122,6 +122,14 @@ class OrderController extends Controller{
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
   }
+  public function showCheckout(){
+    $user = Auth::user();
+    if(is_null($wishlist = $user->wishlist)){
+        return view('pages.wishlist', array('wishlist' => null));
+    }else{
+        return view('pages.wishlist', array('wishlist' => $wishlist));
+    }
+} 
 
   
 }

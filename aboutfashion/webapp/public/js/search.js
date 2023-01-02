@@ -86,26 +86,27 @@ async function selectFilters(element) {
         url += color
         url += '&'
     }
-    valueMin = document.getElementById('value-min').value
+    valueMin = document.getElementById('value-min').innerText
     url += 'min_price='
     url += valueMin
     url += '&'
 
-    valueMax = document.getElementById('value-max').value
+    valueMax = document.getElementById('value-max').innerText
     url += 'max_price='
     url += valueMax
     url += '&'
 
-    min_classification = document.getElementById('myRange').value
+    min_classification = document.getElementById('slider-range-value').innerText
     if (!(min_classification == 0)) {
         url += 'min_classification='
         url += min_classification
     } else {
         url = url.slice(0, -1);
     }
-
+    console.log(url)
     const response = await fetch(url)
     const products = await response.json()
+    console.log(products)
     if (response) {
         hideSpinner();
     }

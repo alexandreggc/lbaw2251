@@ -10,6 +10,10 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ProductPolicy {
     use HandlesAuthorization;
 
+    public function updatePromotions(Admin $admin){
+        return $admin->role == 'Collaborator';
+    }
+
     public function createReview(User $user, Product $product)
     {
     return true;

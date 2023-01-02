@@ -7,6 +7,7 @@ Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 Route::get('/help', 'PageController@helpPage')->name('help');
 
 
+
 //Admin Pages
 Route::get('/admin-panel/admins/{id}','AdminController@show')->name('showAdmin');
 Route::get('/admin-panel/', 'AdminPanelController@homePageAdmin')->name('homeAdminPanel');
@@ -15,9 +16,9 @@ Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('us
 Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
 
 Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
-
-
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
+Route::patch('/admin-panel/products/{id}/promotions/remove', 'ProductController@removeProductPromotion')->name('removeProductPromotion');
+Route::patch('/admin-panel/products/{id}/promotions/add','ProductController@addProductPromotion')->name('addProductPromotion');
 
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
 
@@ -29,6 +30,7 @@ Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name
 
 //User 
 Route::post('/login', 'Auth\LoginController@userLogin')->name('userLogin');
+Route::get('/wishlist', 'UserController@showWishlist')->name('wishlist');
 Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
@@ -60,7 +62,7 @@ Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submit
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 Route::get('/admin-panel/orders/{id}/editStatus','OrderController@editStatus')->name('editOrderStatus')->middleware('auth:admin');
-Route::patch('/admin-panel/orders/{id}/editStatus','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
+Route::patch('/admin-panel/orders/{id}','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
 Route::get('/admin-panel/orders/{id}/edit','OrderController@edit')->name('editOrder')->middleware('auth:admin');
 Route::patch('/admin-panel/orders/{id}','OrderController@update')->name('updateOrder')->middleware('auth:admin');
 

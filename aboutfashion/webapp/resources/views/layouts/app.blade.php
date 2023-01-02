@@ -63,7 +63,7 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
+                                    <a class="nav-link mx-2" href=#><i class="fa-regular fa-bell"
                                             style="font-size:24px;"></i></a>
                                 </li>
                             @endif
@@ -96,7 +96,7 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
+                                    <a class="nav-link mx-2" href="{{ url('/wishlist') }}"><i class="fa-regular fa-heart"
                                             style="font-size:24px;"></i></a>
                                 </li>
                             @endif
