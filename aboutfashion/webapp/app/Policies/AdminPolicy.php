@@ -21,6 +21,14 @@ class AdminPolicy{
         return $admin->role == 'Collaborator';
     }
 
+    public function createProduct(Admin $admin){
+        return $admin->role == 'Collaborator';
+    }
+
+    public function updateCategory(Admin $admin){
+        return $admin->role == 'Collaborator';
+    }
+
     public function updatePromotion(Admin $admin){
         return $admin->role == 'Collaborator';
     }

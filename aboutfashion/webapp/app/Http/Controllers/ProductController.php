@@ -22,6 +22,37 @@ class ProductController extends Controller{
     }
 
     public function store(Request $request){
+        $validator = Validator::make($request->all(),[
+            'id_category' => 'required|integer',
+            'name'=> 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        
+        if($validator->fails()){
+            Redirect::back()->withErrors();
+        }
+
+        if(!$category = Category::find($request->input('id_category'))){
+            Redirect::back()->withErrors();
+        };
+
+        $product = new Product();
+        
+        $this->authorize('createProduct', Auth::guard('admin')->user());
+    
+        $product->id_category = $request->input('id_category');
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->images[0]->file = $request->input('image');
+        
+        if($product->save()){
+            return Redirect::route('productsAdminPanel');
+        }else{
+            return redirect()->back();
+        }
     }
 
     public function edit(Request $request){
@@ -32,7 +63,6 @@ class ProductController extends Controller{
     }
 
     public function update(Request $request, $id){
-
         $product = Product::find($id);
         $this->authorize('updateProduct', Auth::guard('admin')->user());
 
@@ -41,7 +71,7 @@ class ProductController extends Controller{
             'name'=> 'required|string|max:30',
             'description' => 'nullable|string|max:100',
             'price' => 'required|numeric',
-          ]);
+        ]);
 
         if($validator->fails()){
             return Redirect::back()->withErrors();

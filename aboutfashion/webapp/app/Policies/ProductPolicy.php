@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProductPolicy
-{
+class ProductPolicy {
     use HandlesAuthorization;
 
     public function createReview(User $user, Product $product)
@@ -34,5 +33,4 @@ class ProductPolicy
     
           return false;    
     }
-
 }
