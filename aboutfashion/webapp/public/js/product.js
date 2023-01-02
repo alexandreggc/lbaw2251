@@ -81,7 +81,6 @@ async function addToCart(element) {
     request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
-    request.unload
     let tbody = document.getElementById('shop-pop');
     let out = `<tr id="row-${product}" class="row-product">
     <td class=" align-middle justify-content-center"style="width:8rem;"
