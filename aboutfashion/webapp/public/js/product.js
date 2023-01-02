@@ -13,7 +13,7 @@ function attachEvents() {
     if (likeIcon != null || likeIcon != undefined) {
         likeIcon.addEventListener('click', changeLike)
     }
-} 
+}
 async function addSize(element) {
     let color = document.getElementById('color').value
     if (color == 'Select color') {
@@ -42,18 +42,18 @@ async function addSize(element) {
         sizes = sizes.sort()
         n = sizes.length
         for (const number of sizes) {
-            if(n==sizes.length){
+            if (n == sizes.length) {
                 out += `
                         <label class="radio"> <input type="radio" name="size" id="${number[1]}" value="${number[0]}" checked > <span id="" ><input type="hidden" id="size_name" value="${number[1]}"> ${number[1]}</span> </label> 
                     `
             }
-            else{
+            else {
                 out += `
                         <label class="radio"> <input type="radio" name="size" id="${number[1]}" value="${number[0]}" checked> <span id="" ><input type="hidden" id="size_name" value="${number[1]}"> ${number[1]}</span> </label> 
                     `
             }
-            n=n-1
-            
+            n = n - 1
+
         }
         out += `</div>
                     <div class="cart mt-4 align-items-center"> 
@@ -67,116 +67,101 @@ async function addSize(element) {
 async function addToCart(element) {
     let token = document.getElementsByName('_token')[0].value
     let color = document.getElementById('color').value
-
-    console.log(size_name)
     let size = $('input[name=size]:checked').attr('value')
     let product = document.getElementById('id-product').innerText
-    let product_name = document.getElementById('product_name').innerText
-    let product_price = document.getElementById('product_price').value
-    let img = document.getElementById("main-image").src;
     const request = new XMLHttpRequest()
     request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
-    if(request.status)
+    request.onload = function () {
+        if (request.status == 200) {
+            let responseProduct = JSON.parse(request.responseText)['product']
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    let tbody = document.getElementById('shop-pop');
-    let out = `<tr id="row-${product}" class="row-product">
-    <td class=" align-middle justify-content-center"style="width:8rem;"
-        data-th="Produtoooooooooooooooooo">
-        <div class="row">
-            <div class="col-md-6 text-left">
-                <img src="${img}"
-                    alt=""
-                    class="img-fluid d-none d-md-block rounded mt-3 shadow ">
-            </div>
-            <div
-                class="col-md-6  align-middle text-left mt-sm-2 mx-auto">
-                <h6 style="font-size:0.8em;">
-                    ${product_name}</h6>
-                <p class="font-weight-light"
-                    style="font-size:0.5rem;">Size:
-                    ${size_name} <br>
-                    Color: ${color_name}</p>
-            </div>
-        </div>
-    </td>
-    <td class=" align-middle justify-content-center"
-        style="width:2rem;" data-th="preço">
-        <div class=" mt-sm-2">
-            <p class="font-weight-light" style="font-size:0.7rem;">
-                ${final_price}€`
-                if(Number(final_price)==Number(product_price)) {
-                    out +=`</p>`
-                }
-                else{
-                    out +=`<small class="dis-price"
-                    style="color: #888;text-decoration: line-through;">${product_price}€</small>
-                </p>`
-                }
-            
-            out +=`
-                <span id="original-price-${product}"
-                style="display: none">${product_price}</span>
-                <span id="final-price-${product}"
-                style="display: none">${final_price}</span>
-
+            console.log(JSON.parse(request.responseText))
+            let tbody = document.getElementById('shop-pop')
+            let out = `<tr id="row-${request.responseText['id_detail']}}}" class="row-product">
+            <td class=" align-middle justify-content-center"style="width:8rem;"
+                data-th="Produtoooooooooooooooooo">
+                <div class="row">
+                    <div class="col-md-6 text-left">
+                        <img src=" ${responseProduct['image']} "
+                            alt=""
+                            class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                    </div>
+                    <div
+                        class="col-md-6  align-middle text-left mt-sm-2 mx-auto">
+                        <h6 style="font-size:0.8em;">
+                             ${responseProduct['name']} </h6>
+                        <p class="font-weight-light"
+                            style="font-size:0.5rem;">Size:
+                            ${responseProduct['size']} <br>
+                            Color: ${responseProduct['color']} </p>
+                    </div>
                 </div>
-                </td>
-                <td class=" align-middle justify-content-center" style="width:3rem;"
-                data-th="quanti">
-                <input type="number" style="margin:0;"
+            </td>
+            <td class=" align-middle justify-content-center"
+                style="width:2rem;" data-th="preço">
+                <div class=" mt-sm-2">
+                <p class="font-weight-light" style="font-size:0.7rem;">
+                 ${responseProduct['price_with_promotion']} €`
+
+            if (responseProduct['price_with_promotion'] == responseProduct['price_without_promotion']) {
+                out += `</p>`
+            } else {
+                out += `<small class="dis-price"
+                style="color: #888;text-decoration: line-through;"> ${responseProduct['price_with_promotion']}€</small>
+            </p>`
+            }
+
+            out += `<span id="original-price-${responseProduct['price_with_promotion']}"
+            style="display: none">${responseProduct['price_without_promotion']}</span>
+        <span id="final-price-${responseProduct['id_detail']}"
+            style="display: none">${responseProduct['quantity'] * responseProduct['price_with_promotion']}</span>
+
+            </div>
+            </td>
+            <td class=" align-middle justify-content-center" style="width:3rem;"
+            data-th="quanti">
+            <input readonly type="number" style="margin:0;"
                 class="form-control form-control-sm text-center update-quantity"
-                value="1" min="1"
-                style="padding:0;width:2.5rem;" id=${product}>
-                <span id="quantity-${product}"
-                style="display: none">1</span>
-                </td>
-                <td class="actions align-middle " style="width:2rem" data-th="">
-                <div class="text-right justify-content-center">
+                value="${responseProduct['quantity']}" min="1"
+                style="padding:0;width:2.5rem;" id=${responseProduct['id_detail']}>
+            <span id="quantity-${responseProduct['id_detail']}"
+                style="display: none">${responseProduct['quantity']}</span>
+            </td>
+            <td class="actions align-middle " style="width:2rem" data-th="">
+            <div class="text-right justify-content-center">
                 <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
-                id=${product}>
-                <i class="fas fa-trash" id=${product}></i>
+                    id=${responseProduct['id_detail']}>
+                    <i class="fas fa-trash" id=${responseProduct['id_detail']}></i>
                 </button>
-                </div>
-                </td>
-                </tr>`
-                tbody.innerHTML = out;
-    let dropdownA = document.getElementById('navbarDropdownMenuLink2');
-    let ariaExpandedAttr = dropdownA.getAttribute('aria-expanded');
-    if (ariaExpandedAttr == 'false') {
-        dropdownA.setAttribute('aria-expanded', 'true');
-    };
-    if (dropdownA.classList.contains('show')) {
-        dropdownA.classList.add("show");
-    };
-    let dropdown = document.getElementById('dropdownSC');
-    let dataBsPopperAttr = dropdown.hasAttribute('data-bs-popper');
-    if (!(dataBsPopperAttr)) {
-        dropdown.setAttribute('data-bs-popper', 'none');
-    };
-    if (!(dropdown.classList.contains('show'))) {
-        dropdown.classList.add("show");
-    };
+            </div>
+            </td>
+            </tr>`
 
-    return;
+            tbody.innerHTML = out
+
+            let dropdownA = document.getElementById('navbarDropdownMenuLink2');
+            let ariaExpandedAttr = dropdownA.getAttribute('aria-expanded');
+            if (ariaExpandedAttr == 'false') {
+                dropdownA.setAttribute('aria-expanded', 'true');
+            };
+            if (dropdownA.classList.contains('show')) {
+                dropdownA.classList.add("show");
+            };
+            let dropdown = document.getElementById('dropdownSC');
+            let dataBsPopperAttr = dropdown.hasAttribute('data-bs-popper');
+            if (!(dataBsPopperAttr)) {
+                dropdown.setAttribute('data-bs-popper', 'none');
+            };
+            if (!(dropdown.classList.contains('show'))) {
+                dropdown.classList.add("show");
+            };
+        } else {
+            console.log('Error!')
+        }
+    }
+
 }
 
 function dismiss_Dsc(element) {
@@ -204,10 +189,10 @@ function changeLike(element) {
     request.onload = function () {
         if (request.status == 200) {
             if (heartIcon.classList.contains('fa-regular')) {
-                let out = `<i class="fa-solid fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+                let out = `< i class="fa-solid fa-heart " id = "heartIcon" style = "font-size:1.7rem;" ></ > `
                 likeIcon.innerHTML = out
             } else {
-                let out = `<i class="fa-regular fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
+                let out = `< i class="fa-regular fa-heart " id = "heartIcon" style = "font-size:1.7rem;" ></ > `
                 likeIcon.innerHTML = out
             }
         } else {
