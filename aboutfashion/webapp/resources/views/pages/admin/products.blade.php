@@ -28,6 +28,18 @@
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapse{{ $product->id }}" aria-expanded="true"
                                 aria-controls="collapse{{ $product->id }}">
+                                <!--
+                                @if (is_null($product->images[0]->file))
+                                    <div class="col-1 pe-3">
+                                        <img src="https://media.istockphoto.com/id/695717960/pt/vetorial/loading-icon.jpg?s=170667a&w=0&k=20&c=rdi6NZ2ktqsm-RP4Au6TtWQVu9XXs6IQBrrYvTB34JY=" 
+                                        alt="product image" class="img-fluid">
+                                    </div>
+                                @else
+                                    <div class="col-1 pe-3">
+                                        <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                    </div>
+                                @endif
+                                -->
                                 <div class="col-1 pe-3">
                                     <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
                                 </div>
