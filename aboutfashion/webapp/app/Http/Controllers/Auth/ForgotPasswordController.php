@@ -39,12 +39,7 @@ class ForgotPasswordController extends Controller
     }
 
     public function showResetPasswordForm($token){
-        $user = Auth::user(); 
-        if(is_null($user)){
-            return view('auth.reset-password',['order'=>null]);   
-        }
-        return view('auth.reset-password',['token' => $token, 'order' => $user->orders->where('status', 'Shopping Cart')->first()]);
-
+        return view('auth.reset-password',['token' => $token]);
     }
 
     public function submitResetPasswordForm(Request $request)

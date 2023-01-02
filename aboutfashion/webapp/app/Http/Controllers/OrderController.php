@@ -8,6 +8,7 @@ use App\Models\Stock;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Psy\Readline\Hoa\Exception;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
@@ -37,10 +38,20 @@ class OrderController extends Controller{
       $products = Product::all();
       // REVER O QUE ENVIAR PARA A VIEW DE EDIÇÃO DAS ORDERS
       // ADDRESS, CARD, STOCK ??
-      return view('pages.admin.editPromotion', ['order'=>$order, 'products' => $products]);
+      return view('pages.admin.editOrder', ['order'=>$order, 'products' => $products]);
   }
 
-  public function update(Request $request){
+  public function update(Request $request, $id){
+  }
+
+  public function editStatus(Request $request){
+    $order = Order::find($request->id);
+    $this->authorize('updateOrderStatus', Auth::guard('admin')->user());
+    return view('pages.admin.editOrderStatus', ['order'=>$order]);
+  }
+
+  public function updateStatus(Request $request, $id){
+  
   }
 
   public function delete($id){
@@ -111,4 +122,6 @@ class OrderController extends Controller{
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
   }
+
+  
 }

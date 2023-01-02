@@ -30,8 +30,7 @@
 
 <body class="d-flex flex-column min-vh-100">
     @php
-        if (!Auth::user()) {
-            $order = null; // TODO modificar
+        if (!Auth::user() && !($order = Session::get('cart'))) {
         } elseif (
             !($order = Auth::user()
                 ->orders()
@@ -60,10 +59,10 @@
                                         style="font-size:24px;"></i></a>
                             </li>
                             @if (Auth::check())
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
-                                        style="font-size:24px;"></i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
+                                            style="font-size:24px;"></i></a>
+                                </li>
                             @endif
                             <li class="nav-item dropdown">
                                 <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
@@ -93,10 +92,10 @@
                                 </ul>
                             </li>
                             @if (Auth::check())
-                            <li class="nav-item">
-                                <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
-                                        style="font-size:24px;"></i></a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
+                                            style="font-size:24px;"></i></a>
+                                </li>
                             @endif
                             <li class="nav-item dropdown " id="shoppingCartTog">
                                 <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink2" role="button"
@@ -256,8 +255,9 @@
                                     </label>
                                 </div>
                                 <div class="modal-footer">
-                                    <a class="button button-outline me-auto"
-                                        href="{{ url('/forgot-password') }}"  data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop3">Forgot password?</a>
+                                    <a class="button button-outline me-auto" href="{{ url('/forgot-password') }}"
+                                        data-bs-dismiss="modal" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop3">Forgot password?</a>
                                     <!-- meter 'home' -->
                                     <button type="submit" class="btn btn-secondary">Login</button>
                                     <button type="button" class="btn btn-primary"><a
@@ -359,21 +359,23 @@
                         <div class="modal-body">
                             <div class="row text-center mb-3">
                                 <p>If you've forgotten your password, please enter your registered email address. <br>
-                                     We'll send you a link to reset your password.</p>
+                                    We'll send you a link to reset your password.</p>
                             </div>
                             <form method="POST" action="{{ route('forgot.password.action') }}">
                                 {{ csrf_field() }}
                                 <div class="form-group mb-4">
                                     @if ($errors->has('email'))
-                                        <span class="error"> 
+                                        <span class="error">
                                             {{ $errors->first('email') }}
                                         </span>
                                     @else
                                     @endif
-                                    <input id="email" type="email" name="email" value="" style="width:100%;" required>
-                                    <small class="mx-auto" style="text-align:center;">Please enter your email address.</small>
+                                    <input id="email" type="email" name="email" value=""
+                                        style="width:100%;" required>
+                                    <small class="mx-auto" style="text-align:center;">Please enter your email
+                                        address.</small>
                                 </div>
-                                
+
 
                                 <div class="modal-footer">
                                     <button type="submit" class="btn mx-auto btn-primary reg">Send</button>
