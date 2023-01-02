@@ -15,9 +15,9 @@ Route::get('/admin-panel/users','AdminPanelController@usersPageAdmin')->name('us
 Route::get('/admin-panel/users/{id}/purchase-history','AdminPanelController@userPurchaseHistoryPageAdmin')->name('userPurchaseHistoryAdminPanel');
 
 Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->name('productsAdminPanel');
-
-
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
+Route::patch('/admin-panel/products/{id}/promotions/remove', 'ProductController@removeProductPromotion')->name('removeProductPromotion');
+Route::patch('/admin-panel/products/{id}/promotions/add','ProductController@addProductPromotion')->name('addProductPromotion');
 
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
 
