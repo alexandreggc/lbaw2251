@@ -48,7 +48,7 @@ Route::put('/review/create', 'ReviewController@store')->name('reviewCreate');
 //Forgot Password
 Route::get('/forgot-password', 'Auth\ForgotPasswordController@showForgetPasswordForm')->name('forgot.password.view');
 Route::post('/forgot-password', 'Auth\ForgotPasswordController@submitForgetPasswordForm')->name('forgot.password.action');
-Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('reset.password.view');
+Route::get('/reset-password/{token}', 'Auth\ForgotPasswordController@showResetPasswordForm')->name('password.reset');
 Route::post('/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordForm')->name('reset.password.action');
 
 
