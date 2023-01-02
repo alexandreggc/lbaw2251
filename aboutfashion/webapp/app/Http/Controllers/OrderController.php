@@ -122,6 +122,14 @@ class OrderController extends Controller{
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
   }
+  public function showCheckout(){
+    $user = Auth::user();
+    if(is_null($wishlist = $user->wishlist)){
+        return view('pages.wishlist', array('wishlist' => null));
+    }else{
+        return view('pages.wishlist', array('wishlist' => $wishlist));
+    }
+} 
 
   
 }

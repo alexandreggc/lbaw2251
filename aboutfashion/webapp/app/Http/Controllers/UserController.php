@@ -145,9 +145,9 @@ class UserController extends Controller{
     public function showWishlist(){
         $user = Auth::user();
         if(is_null($wishlist = $user->wishlist)){
-            return Redirect::route('wishlistView', array('wishlist' => null));
+            return view('pages.wishlist', array('wishlist' => null));
         }else{
-            return Redirect::route('wishlistView', array('wishlist' => $wishlist));
+            return view('pages.wishlist', array('wishlist' => $wishlist));
         }
     } 
 }

@@ -7,6 +7,7 @@ Route::get('/contacts', 'PageController@contactsPage')->name('contacts');
 Route::get('/help', 'PageController@helpPage')->name('help');
 
 
+
 //Admin Pages
 Route::get('/admin-panel/admins/{id}','AdminController@show')->name('showAdmin');
 Route::get('/admin-panel/', 'AdminPanelController@homePageAdmin')->name('homeAdminPanel');
@@ -29,6 +30,7 @@ Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name
 
 //User 
 Route::post('/login', 'Auth\LoginController@userLogin')->name('userLogin');
+Route::get('/wishlist', 'UserController@showWishlist')->name('wishlist');
 Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');

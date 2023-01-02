@@ -1,12 +1,11 @@
 @extends('layouts.app')
 @section('content')
     @csrf
-    <script type="text/javascript" src={{ asset('js/shopping_cart.js') }} defer></script>
 
     <head>
         <ol class="breadcrumb p-3 pb-1">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item active">Shopping Cart</li>
+            <li class="breadcrumb-item active">Checkout</li>
         </ol>
     </head>
 
