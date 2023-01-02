@@ -50,6 +50,7 @@ class AdminPanelController extends Controller{
         $promotions = Promotion::paginate(15);
         return view('pages.admin.promotions', ['promotions'=>$promotions]);
     }
+    //add and edit promotion is in PromotionController
 
     // Orders
 
