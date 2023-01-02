@@ -75,10 +75,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow" style="height:97px;">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
@@ -95,10 +92,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow " style="height:97px;">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
@@ -115,10 +109,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow" style="height:97px;">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
@@ -141,10 +132,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
@@ -160,10 +148,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
@@ -179,10 +164,7 @@
                                     <img src="${products[j].images[0]}">
                                 </a>
                                 <span class="product-discount-label">${havePromo(products[j].promotion.discount)}</span>
-                                <ul class="product-links">
-                                    <li><a href="#"><i class="fa fa-search"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                </ul>
+                                
                             </div>
                             <div class="product-content shadow">
                                 <h3 class="title"><a href="/products/${products[j].id}">${products[j].name}</a></h3>
