@@ -67,10 +67,7 @@ async function addSize(element) {
 async function addToCart(element) {
     let token = document.getElementsByName('_token')[0].value
     let color = document.getElementById('color').value
-    var select = document.getElementById('color');
-    var color_name = select.options[select.selectedIndex].text;
-    let final_price = document.getElementById('final_price').value
-    let size_name = $('input[name=size]').filter(function(){ return $(this).css('background-color') === 'rgb(44,62,80)';}).attr('id')
+
     console.log(size_name)
     let size = $('input[name=size]:checked').attr('value')
     let product = document.getElementById('id-product').innerText
@@ -81,6 +78,25 @@ async function addToCart(element) {
     request.open('post', '/api/shopping-cart', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
+    if(request.status)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     let tbody = document.getElementById('shop-pop');
     let out = `<tr id="row-${product}" class="row-product">
     <td class=" align-middle justify-content-center"style="width:8rem;"
