@@ -4040,6 +4040,7 @@ insert into image (id, file) values (DEFAULT, 'https://robohash.org/ametquamveni
 insert into image (id, file) values (DEFAULT, 'https://robohash.org/numquamvoluptatibusrecusandae.jpg?size=300x300&set=set1');
 insert into image (id, file) values (DEFAULT, 'https://robohash.org/auteveniettempore.jpg?size=300x300&set=set1');
 insert into image (id, file) values (DEFAULT, 'https://robohash.org/quimagnamdeserunt.jpg?size=300x300&set=set1');
+insert into image (id, file) values (DEFAULT, 'https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg');
 
 --
 insert into product (id, name, description, price, id_category) values (DEFAULT, 'JAQUETA ESTILO BOMBER JACKERMAN', 'None', 180, 9);
