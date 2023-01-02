@@ -8,7 +8,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Category;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -23,8 +23,6 @@ class PromotionController extends Controller{
 
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
-            //alterar para array de ids pois é suposto ser vários produtos
-            'id_product' => 'required|integer',
             'discount' => 'required|numeric',
             'start_date' => 'required|date',
             'final_date' => 'required|date',
@@ -34,26 +32,15 @@ class PromotionController extends Controller{
             Redirect::back()->withErrors();
         }
 
-        // fazer foreach para verificar se todos os produtos existem
-        // quando for recebido um array
-        if(!$product = Product::find($request->input('id_product'))){
-            Redirect::back()->withErrors();
-        };
-
         $promotion = new Promotion();
         
         $this->authorize('createPromotion', Auth::guard('admin')->user());
         
         $promotion->discount = $request->input('discount');
         $promotion->start_date = $request->input('start_date');
-        $promotion->end_date = $request->input('final_date');
+        $promotion->final_date = $request->input('final_date');
         
         if($promotion->save()){
-            //fazer foreach e em cada product é que se adiciona a promo - fazer no final do save talvez?
-            $product = Product::find($request->input('id_product'));
-            //$promotion->products()->attach($product); -- isto funciona??
-            $product->id_category = $promotion->id;
-
             return Redirect::route('promotionsAdminPanel');
         }else{
             Redirect::back()->withErrors();
@@ -74,8 +61,6 @@ class PromotionController extends Controller{
         $this->authorize('updatePromotion', Auth::guard('admin')->user());
 
         $validator = Validator::make($request->all(),[
-            //alterar para array de ids pois é suposto ser vários produtos
-            'id_product' => 'required|integer',
             'discount' => 'required|numeric',
             'start_date' => 'required|date',
             'final_date' => 'required|date',
@@ -85,24 +70,12 @@ class PromotionController extends Controller{
             return Redirect::back()->withErrors();
         }
 
-        // fazer foreach para verificar se todos os produtos existem
-        // quando for recebido um array
-        if(!$product = Product::find($request->input('id_product'))){
-            Redirect::back()->withErrors();
-        };
-
         $promotion->discount = $request->input('discount');
         $promotion->start_date = $request->input('start_date');
-        $promotion->end_date = $request->input('final_date');
+        $promotion->final_date = $request->input('final_date');
 
-        if ($product->save()) {
-            //fazer foreach e em cada product é que se adiciona a promo - fazer no final do save talvez?
-            $product = Product::find($request->input('id_product'));
-            //$promotion->products()->attach($product); -- isto funciona??
-            $product->id_category = $promotion->id;
-
-
-            return Redirect::route('productsAdminPanel');
+        if ($promotion->save()) {
+            return Redirect::route('promotionsAdminPanel');
         } else {
             return Redirect::back()->withErrors();
         }

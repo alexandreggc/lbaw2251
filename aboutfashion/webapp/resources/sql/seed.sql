@@ -174,7 +174,7 @@ CREATE TABLE category(
 CREATE TABLE product(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL CONSTRAINT product_unique UNIQUE,
-    description TEXT NOT NULL,
+    description TEXT,
     price NUMERIC NOT NULL,
     avg_classification NUMERIC,
     id_category INTEGER NOT NULL REFERENCES category(id) ON UPDATE CASCADE

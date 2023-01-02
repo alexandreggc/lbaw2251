@@ -48,12 +48,12 @@
                                     @if (Auth::guard('admin')->user()->role == 'Collaborator')
                                         <div class="col-1">
                                             <div class="row">
-                                                <button type="submit" class="btn btn-primary btn-sm mb-3"
+                                                <a type="submit" class="btn btn-primary btn-sm mb-3"
                                                         href="{{ route('editPromotion', ['id' => $promotion->id]) }}">
                                                     <i class="fa-solid fa-pencil"></i>
                                                     &nbsp;
                                                     edit
-                                                </button>
+                                                </a>
                                             </div>
                                             <div class="row">
                                                 <button class="btn btn-danger btn-sm pe-1 fa-solid fa-xmark delete-promotion" 
