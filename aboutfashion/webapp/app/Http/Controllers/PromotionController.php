@@ -17,7 +17,7 @@ class PromotionController extends Controller{
     
     public function create(Request $request){
         $this->authorize('updatePromotion', Auth::guard('admin')->user());
-        $cproducts = Product::all();
+        $products = Product::all();
         return view('pages.admin.addPromotion', array('products' => $products));
     }
 

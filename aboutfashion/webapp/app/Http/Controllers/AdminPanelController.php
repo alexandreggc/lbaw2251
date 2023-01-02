@@ -58,6 +58,7 @@ class AdminPanelController extends Controller{
         $orders = Order::paginate(15);
         return view('pages.admin.orders', ['orders'=>$orders]);
     }
+    //add and edit order is in OrderController
 
     // Reviews
 

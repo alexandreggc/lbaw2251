@@ -14,7 +14,7 @@
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Social title
-                        <span>{{ $admin['gender']==='M'? 'Mr.' : ($admin['gender']==='F'? 'Ms.' : 'Other')}}</span>
+                        <span>{{ $admin['gender']==='M'? 'Mr.' : ($admin['gender']==='F'? 'Ms.' : 'Not Defined')}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         First name

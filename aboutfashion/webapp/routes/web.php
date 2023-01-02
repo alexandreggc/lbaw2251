@@ -58,7 +58,9 @@ Route::get('/admin-panel/reset-password/{token}', 'Auth\ForgotPasswordController
 Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submitResetPasswordAdminForm')->name('reset.password.admin.action');
 
 //Orders
-Route::get('/order/{id}', 'OrderController@show')->name('orderDetails'); 
+Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
+Route::get('/admin-panel/orders/{id}/edit','OrderController@edit')->name('editOrder')->middleware('auth:admin');
+Route::patch('/admin-panel/orders/{id}','OrderController@update')->name('updateOrder')->middleware('auth:admin');
 
 //Cards
 Route::get('/cards/{id}/edit', 'CardController@edit')->name('cardEditForm');
@@ -110,3 +112,4 @@ Route::patch('api/admin-panel/users', 'AdminController@blockUser');
 Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartView');
 Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
+Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');

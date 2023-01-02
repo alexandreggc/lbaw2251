@@ -6,27 +6,26 @@ use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AdminPolicy
-{
+class AdminPolicy{
     use HandlesAuthorization;
 
-    public function view(Admin $admin, Admin $model)
-    {
+    public function view(Admin $admin, Admin $model){
         return $admin->id == $model->id;
     }
 
-    public function updateUser(Admin $admin)
-    {
+    public function updateUser(Admin $admin){
         return $admin->role == 'Technician';
     }
 
-    public function updateProduct(Admin $admin)
-    {
+    public function updateProduct(Admin $admin){
         return $admin->role == 'Collaborator';
     }
 
-    public function updatePromotion(Admin $admin)
-    {
+    public function updatePromotion(Admin $admin){
+        return $admin->role == 'Collaborator';
+    }
+
+    public function updateOrder(Admin $admin){
         return $admin->role == 'Collaborator';
     }
 }
