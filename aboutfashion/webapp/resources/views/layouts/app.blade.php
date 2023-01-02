@@ -59,10 +59,12 @@
                                 <a class="nav-link mx-2" href="/products"><i class="fa-solid fa-magnifying-glass"
                                         style="font-size:24px;"></i></a>
                             </li>
+                            @if (Auth::check())
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
                                         style="font-size:24px;"></i></a>
                             </li>
+                            @endif
                             <li class="nav-item dropdown">
                                 <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -90,10 +92,12 @@
 
                                 </ul>
                             </li>
+                            @if (Auth::check())
                             <li class="nav-item">
                                 <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
                                         style="font-size:24px;"></i></a>
                             </li>
+                            @endif
                             <li class="nav-item dropdown " id="shoppingCartTog">
                                 <a class="nav-link mx-2 " href="#" id="navbarDropdownMenuLink2" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
