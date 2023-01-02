@@ -22,23 +22,13 @@
                     @csrf
                     @method('patch')
                     <div class="form-group">
-                        <label for="productSelect" class="form-label mt-4"></label>
-                        <select class="form-select" id="categorySelect" name="id_product" onchange="showProduct()"> <!-- ATENÇÃO AO ONCHANGE -->
-                            <option>Select a product</option> <!-- VER COMO ADICIONAR MAIS QUE UM PRODUTO -->
-                            @foreach ($products as $product)
-                                <option value="{{$product['id']}}">{{$product['name']}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
+                        <!-- Discount -->
                         <label for="discount" class="form-label mt-4">Discount</label>
                         <input type="number" class="form-control" id="promotion_discount" value="{{$promotion->discount}}" name="discount">
-                    </div>
-                    <div class="form-group">
+                        <!-- Start Date -->
                         <label for="start_date" class="form-label mt-4">Start Date</label>
                         <input type="date" class="form-control" id="promotion_start_date" value="{{$promotion->start_date}}" name="start_date">
-                    </div>
-                    <div class="form-group">
+                        <!-- Final Date -->
                         <label for="final_date" class="form-label mt-4">Final Date</label>
                         <input type="date" class="form-control" id="promotion_final_date" value="{{$promotion->final_date}}" name="final_date">
                     </div>
