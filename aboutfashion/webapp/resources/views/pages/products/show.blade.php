@@ -35,7 +35,7 @@
                                 <div class="mt-4 mb-3">
                                     <div class="row">
                                         <div class="col-md-10">
-                                            <h3 class="text-uppercase ">{{ $product->name }}</h3>
+                                            <h3 class="text-uppercase " id="product_name">{{ $product->name }}</h3>
                                         </div>
                                         @if (!Auth::user())
                                         @else
@@ -60,12 +60,13 @@
                                         @php
                                             $finalPrice = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));
                                         @endphp
-                                        <span class="act-price">Price: {{ $finalPrice }}€</span>
+                                        <span class="act-price">Price: {{ $finalPrice }}€ <input type="hidden" id="final_price" value="{{ $finalPrice }}"></span>
                                         @if ($finalPrice == $product->price)
-                                            <div class="ml-2 mx-2"> <small class="dis-price"></small></div>
+                                            <div class="ml-2 mx-2"> <small class="dis-price"><input type="hidden" id="product_price" value="{{ $product->price}}"></small></div>
                                         @else
                                             <div class="ml-2 mx-2"> <small class="dis-price"
                                                     style="color: #888;text-decoration: line-through;">{{ $product->price }}€</small>
+                                                    <input type="hidden" id="product_price" value="{{ $product->price}}">
                                             </div>
                                         @endif
 
@@ -330,3 +331,4 @@ data-bs-slide="next">
 @endif
 </body>
 @endsection
+

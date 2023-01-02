@@ -37,7 +37,7 @@
                 ->orders()
                 ->where('status', 'Shopping Cart')
                 ->first())
-        ) {
+        ){
             $order = null;
         }
     @endphp
@@ -114,8 +114,11 @@
                                         </div>
                                     </div>
                                     <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
-                                        <tbody>
-                                            @if (is_null($order))
+                                        <tbody id="shop-pop">
+                                            @php
+                                                $n = count($order->details);
+                                            @endphp
+                                            @if (is_null($order) or ($n==0))
                                                 <tr>
                                                     <td>
                                                         <div
@@ -128,7 +131,6 @@
                                                 </tr>
                                             @else
                                                 @php
-                                                    $n = count($order->details);
                                                     $detail = $order->details[$n - 1];
                                                 @endphp
                                                 <tr id="row-{{ $detail->id }}" class="row-product">
