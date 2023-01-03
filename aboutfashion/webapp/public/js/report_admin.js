@@ -6,7 +6,7 @@ function attachEvents() {
 
 function changeReport(elem) {
     let token = document.getElementsByName('_token')[0].value
-    let id_report = elem.target.id.slice(6)
+    let id_report = elem.target.id
     const request = new XMLHttpRequest()
     request.open('PATCH', '/api/admin-panel/reports', true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
@@ -14,12 +14,12 @@ function changeReport(elem) {
     request.onload = function () {
         if (request.status == 200) {
             let response = JSON.parse(request.responseText)
-            if (response['change'] == 1) {
+            if (response['resolved'] == 1) {
                 document.getElementById('badge-change-' + id_report).style = ""
-                document.getElementById('change-' + id_report).classList.replace('fa-envelope-open', 'fa-envelope')
+                document.getElementById(id_report).classList.replace('fa-envelope', 'fa-envelope-open')
             } else {
                 document.getElementById('badge-change-' + id_report).style = "display: none;"
-                document.getElementById('change-' + id_report).classList.replace('fa-envelope-open', 'fa-envelope')
+                document.getElementById(id_report).classList.replace('fa-envelope-open', 'fa-envelope')
             }
         } else {
             console.log('ERROR!')

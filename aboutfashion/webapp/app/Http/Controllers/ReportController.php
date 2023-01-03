@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 
 class ReportController extends Controller{
     /**
@@ -14,6 +13,11 @@ class ReportController extends Controller{
      *
      * @return Response
      */
+
+    public function __construct(){
+        $this->middleware('auth');
+    }
+    
     public function create(Request $request){
         $report = store($request);
         return view('reports.create', ['report' => $report]);
@@ -113,17 +117,17 @@ class ReportController extends Controller{
         return $report;
     }
 
-    public function changeReport($id){
+    public function changeReport(Request $request){
         $this->authorize('updateReport', Auth::guard('admin')->user());
         
-        $report = Report::find($id);
+        $report = Report::find($request['id']);
         if(is_null($report)){
             return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
         }
         
         $report->resolved = $report->resolved ? 0 : 1;
         if($report->save()){
-            return Response::json(array('status' => 'success', 'message'=>'OK!', 'open/close'=>$report->resolved),200);
+            return Response::json(array('status' => 'success', 'message'=>'OK!', 'resolved'=>$report->resolved),200);
         }else{
             return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
         } 

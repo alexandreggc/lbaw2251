@@ -19,13 +19,13 @@
                     <label for="report-type">Type of report:</label><br>
                     <input type="radio" id="report-type-1" name="report-type" value="spam">
                     <label for="report-type-1">Spam</label><br>
-                    <input type="radio" id="report-type-2" name="report-type" value="inappropriate">
+                    <input type="radio" id="report-type-2" name="report-type" value="Hate speech or symbols">
                     <label for="report-type-2">Hate speech or symbols</label><br>
-                    <input type="radio" id="report-type-3" name="report-type" value="other">
+                    <input type="radio" id="report-type-3" name="report-type" value="Scam or fraud">
                     <label for="report-type-3">Scam or fraud</label><br>
-                    <input type="radio" id="report-type-4" name="report-type" value="other">
+                    <input type="radio" id="report-type-4" name="report-type" value="False information">
                     <label for="report-type-4">False information</label><br>
-                    <input type="radio" id="report-type-5" name="report-type" value="other">
+                    <input type="radio" id="report-type-5" name="report-type" value="Violence or dangerous orgatizations">
                     <label for="report-type-5">Violence or dangerous orgatizations</label><br>
                     <br>
                     <label for="report-description">Other:</label><br>
