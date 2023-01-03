@@ -12,7 +12,7 @@
                 </a>
             </div>
             <div class="col">
-                <h3>Edit Status of order nº{{ $order['id'] }} from user {{ $order->user->name }}</h3>
+                <h3>Edit Status of order nº{{ $order['id'] }} from user {{ $order['user']->first_name . ' ' . $order['user']->last_name}}</h3>
             </div>
         </div>
         <div class="row">

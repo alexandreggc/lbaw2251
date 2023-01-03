@@ -35,17 +35,17 @@
                                     @elseif ($order->status == "Pending")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-warning ms-3">Completed</span>
+                                            <span class="badge bg-warning ms-3">Pending</span>
                                         </div>
                                     @elseif ($order->status == "Cancelled")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-danger ms-3">Completed</span>
+                                            <span class="badge bg-danger ms-3">Cancelled</span>
                                         </div>
                                     @elseif ($order->status == "In Progress")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-info ms-3">{{$order->status }}</span>
+                                            <span class="badge bg-info ms-3">In Progress</span>
                                         </div>
                                     @else <!-- $order->status == "Shopping Cart" -->
                                         @continue

@@ -63,7 +63,7 @@ Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submit
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 Route::get('/admin-panel/orders/{id}/editStatus','OrderController@editStatus')->name('editOrderStatus')->middleware('auth:admin');
-Route::patch('/admin-panel/orders/{id}','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
+Route::patch('/admin-panel/orders/{id}/status','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
 Route::get('/admin-panel/orders/{id}/edit','OrderController@edit')->name('editOrder')->middleware('auth:admin');
 Route::patch('/admin-panel/orders/{id}','OrderController@update')->name('updateOrder')->middleware('auth:admin');
 

@@ -58,7 +58,7 @@ class OrderController extends Controller
       abort('404');
     }
 
-    $this->authorize('updateOrderStatus', Auth::guard('admin')->user(), $order);
+    $this->authorize('updateOrderStatus',  $order);
 
     $status_enum = ['Shopping Cart', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
 
@@ -70,7 +70,7 @@ class OrderController extends Controller
     if (!$order = Order::find($id)) {
       Redirect::back()->withErrors();
     }
-    $this->authorize('updateOrderStatus', Auth::guard('admin')->user(), $order);
+    $this->authorize('updateOrderStatus',  $order);
 
     $status_enum = ['Shopping Cart', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
 
