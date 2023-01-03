@@ -182,10 +182,10 @@ function changeLike(element) {
     request.onload = function () {
         if (request.status == 200) {
             if (heartIcon.classList.contains('fa-regular')) {
-                let out = `< i class="fa-solid fa-heart " id = "heartIcon" style = "font-size:1.7rem;" ></ > `
+                let out = `<i class="fa-solid fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
                 likeIcon.innerHTML = out
             } else {
-                let out = `< i class="fa-regular fa-heart " id = "heartIcon" style = "font-size:1.7rem;" ></ > `
+                let out = `<i class="fa-regular fa-heart " id="heartIcon" style="font-size:1.7rem;"></i>`
                 likeIcon.innerHTML = out
             }
         } else {
