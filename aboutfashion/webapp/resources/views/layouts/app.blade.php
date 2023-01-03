@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" style="height: 100%;">
 
 <head>
     <meta charset="utf-8">
@@ -28,7 +28,7 @@
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
-<body class="d-flex flex-column min-vh-100 ">
+<body class="d-flex flex-column min-vh-100 " style="height: 100%;display: flex;flex-direction: column;">
     @php
         if (!Auth::user()) {
             if (!($order = Session::get('cart'))) {
@@ -44,7 +44,7 @@
         }
 
     @endphp
-    <main>
+    <main style="flex: 1;">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light p-3" style=" z-index: 20;">
                 <div class="container-fluid">
@@ -446,13 +446,15 @@
 
 
         </header>
-        <section id="content">
+        <section id="content" style="height:100%">
             @yield('content')
         </section>
 
         <footer
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto"
-            style="z-index: 200;position:absolute;left: 0;bottom: 0;width: 100%;text-align: center;">
+            style="z-index: 200;  position:relative;
+  left: 0;
+  bottom: 0;width: 100%;text-align: center;">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"

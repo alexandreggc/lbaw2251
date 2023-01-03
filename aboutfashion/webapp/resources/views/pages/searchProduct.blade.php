@@ -15,7 +15,7 @@
                     </ul>
 
                     <div class="card h-100 shadow costum-card text-center mx-auto">
-                        <input type="hidden" id="url_api" value="">
+                        <input type="hidden" id="url_api" value="/api/products?">
                         <form class="mt-4 mb-4 " method="GET">
                             <fieldset>
                                 <div class="card-group ">

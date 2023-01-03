@@ -16,20 +16,35 @@ function attachEvents() {
 async function selectOrder() {
     showSpinner();
     url = document.getElementById("url_api").value
-    order = document.getElementById("order").value
-    if (!(order == 'Order')) {
-        url += 'order='
-        url += order
-    }   
-    const response = await fetch(url)
-    const products = await response.json()
-    if (response) {
-        hideSpinner();
+    params = parseQueryString(url)
+    order_ = document.getElementById("order").value
+    if (!(order_ == 'Order')) {
+        params['order']=order_
+        url = makeUrl(params)
+        const response = await fetch(url)
+        const products = await response.json()
+        if (response) {
+            hideSpinner();
+        }
+        let oldBody = document.getElementById("data-output")
+        let newBody = drawProducts(products)
+        oldBody.innerHTML = newBody
+        document.getElementById("url_api").setAttribute("value",url) 
+    }else{
+        delete params.order;
+        url = makeUrl(params)
+        const response = await fetch(url)
+        const products = await response.json()
+        if (response) {
+            hideSpinner();
+        }
+        let oldBody = document.getElementById("data-output")
+        let newBody = drawProducts(products)
+        oldBody.innerHTML = newBody
+        document.getElementById("url_api").setAttribute("value",url) 
+
     }
-    let oldBody = document.getElementById("data-output")
-    let newBody = drawProducts(products)
-    oldBody.innerHTML = newBody
-    document.getElementById("url_api").setAttribute("value",url) = url
+   
 }
 
 
@@ -45,75 +60,116 @@ async function showAll() {
 
     oldBody.innerHTML = newBody
 }
-function urlParse(){
-    var partsArray = document.getElementById("url_api").value.split('&');
-    
+function parseQueryString(queryString) {
+    // Separa a string em elementos separados por '&'
+    let elements = queryString.split('&');
+
+    // Cria um objeto vazio para armazenar os elementos
+    const params = {};
+    if(elements[0].split('?')[1] != ''){
+        params[elements[0].split('?')[1].split('=')[0]]=elements[0].split('?')[1].split('=')[1]
+    }
+    elements.shift();
+    // Percorre cada elemento
+    for (const element of elements) {
+        // Separa o elemento em chave e valor
+        const [key, value] = element.split('=');
+
+        // Adiciona o elemento ao objeto
+        params[key] = value;
+    }
+
+    // Retorna o objeto
+    return params;
 }
+
+function makeUrl(params){
+    let url = '/api/products?'
+    const keys = Object.keys(params);
+    const values = Object.values(params);
+    for(let i=0;i<keys.length;i++){
+        url += String(keys[i])
+        url += '='
+        url += values[i]
+        if(i!=(keys.length-1)){
+            url += '&'
+        }
+    }
+    return url;
+}
+
+
 async function selectSearch(element) {
     showSpinner();
     url = document.getElementById("url_api").value
+    params = parseQueryString(url)
     let name = document.getElementById('fname').value
-    if((url == '' ) && (!(name == '' ))){
-        url += '/api/products?'
-        url += 'product_name='
-        url += name
-    }else if(!(name == '' )){
-        url += '&'
-        url += 'product_name='
-        url += name
-    }
-    const response = await fetch(url)
-    const products = await response.json()
-    if (response) {
-        hideSpinner();
-    }
-    let oldBody = document.getElementById("data-output")
-    let newBody = drawProducts(products)
+    if((!(name == '' ))){
+        params['product_name']=name
+        url = makeUrl(params)
+        const response = await fetch(url)
+        const products = await response.json()
+        if (response) {
+            hideSpinner();
+        }
+        let oldBody = document.getElementById("data-output")
+        let newBody = drawProducts(products)
 
-    oldBody.innerHTML = newBody
-    document.getElementById("url_api").setAttribute("value",url) = url
+        oldBody.innerHTML = newBody
+        document.getElementById("url_api").setAttribute("value",url) 
+    }else{
+        delete params.product_name;
+        url = makeUrl(params)
+        const response = await fetch(url)
+        const products = await response.json()
+        if (response) {
+            hideSpinner();
+        }
+        let oldBody = document.getElementById("data-output")
+        let newBody = drawProducts(products)
+
+        oldBody.innerHTML = newBody
+        document.getElementById("url_api").setAttribute("value",url) 
+    }
 }
 
 
 async function selectFilters(element) {
     showSpinner();
-    url = '/api/products?'
+    url = document.getElementById("url_api").value
+    params = parseQueryString(url)
     category = document.getElementById('category').value
     if (!(category == 'Select category')) {
-        url += 'id_category='
-        url += category
-        url += '&'
+        params['id_category']=category
+    }else{
+        delete params.id_category;
     }
     size = document.getElementById('size').value
     if (!(size == 'Select size')) {
-        url += 'id_size='
-        url += size
-        url += '&'
+        params['id_size']=size
+    }else{
+        delete params.id_size;
     }
 
     color = document.getElementById('color').value
     if (!(color == 'Select color')) {
-        url += 'id_color='
-        url += color
-        url += '&'
+        params['id_color']=color
+    }else{
+        delete params.id_color;
     }
     valueMin = document.getElementById('value-min').innerText
-    url += 'min_price='
-    url += valueMin
-    url += '&'
+    params['min_price']=valueMin
 
     valueMax = document.getElementById('value-max').innerText
-    url += 'max_price='
-    url += valueMax
-    url += '&'
+    params['max_price']=valueMax
 
-    min_classification = document.getElementById('slider-range-value').innerText
-    if (!(min_classification == 0)) {
-        url += 'min_classification='
-        url += min_classification
+    min_classification_ = document.getElementById('slider-range-value').innerText
+    if (!(min_classification_ == 0)) {
+        params['min_classification']=min_classification_
     } else {
-        url = url.slice(0, -1);
+        delete params.min_classification;
     }
+    url = makeUrl(params)
     const response = await fetch(url)
     const products = await response.json()
     if (response) {
@@ -121,9 +177,8 @@ async function selectFilters(element) {
     }
     let oldBody = document.getElementById("data-output")
     let newBody = drawProducts(products)
-
     oldBody.innerHTML = newBody
-    document.getElementById("url_api").setAttribute("value",url) = url
+    document.getElementById("url_api").setAttribute("value",url) 
 }
 
 function drawProducts(products) {
