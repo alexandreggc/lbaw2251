@@ -123,6 +123,7 @@ Route::post('/api/wishlist', 'UserController@toggleProductWishlist');
 //Reports
 Route::get('/reports/create/{id_review}', 'ReportController@create')->name('createReport')->middleware('auth:admin');
 Route::put('/reports/create', 'ReportController@store')->name('storeReport')->middleware('auth:admin');
+Route::get('/reports/success','ReportController@success')->name('successReport')->middleware('auth:admin');
 
 //API
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');

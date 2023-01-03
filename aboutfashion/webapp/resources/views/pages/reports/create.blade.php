@@ -11,7 +11,7 @@
 
                   <h3 class="mb-5 ">REPORT REVIEW</h3>
 
-                  <form method="POST" action="{{ route('report.action') }}">
+                  <form method="POST" action="{{ route('storeReport') }}">
                     @csrf
                     
                     

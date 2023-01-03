@@ -6,6 +6,11 @@ use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
+use App\Models\Review;
+use App\Models\User;
+
 
 class ReportController extends Controller{
     /**
@@ -26,20 +31,35 @@ class ReportController extends Controller{
     }
 
     public function store(Request $request){
+        $validator = Validator::make($request->all(),[
+            'report-type' => 'required',
+            'description' => 'nullable|string|max:100',
+        ]);
+        
+        if($validator->fails()){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
         $report = new Report();
         $user = User::find($request->input('id_user'));
         $review = Review::find($request->input('id_review'));
-        $this->authorize('store', $user, $review);
-
-        //guardar os dados do novo report
         $report->id = $request->input('id');
         $report->id_user = $request->input('id_user');
         $report->id_review = $request->input('id_review');
         $report->report_date = $request->input('report_date');
         $report->resolved = $request->input('resolved');
         $report->description = $request->input('description');
-        $report->save();
-        return $report;
+        
+        
+        if($report->save()){
+            return Redirect::route('successReport');
+        }else{
+            return redirect()->back();
+        }
+    }
+
+    public function success(){
+        return view('pages.reports.success');
     }
 
     /**
@@ -54,63 +74,7 @@ class ReportController extends Controller{
         if(is_null($user)){
             return view('pages.report',['report' => $report]);   
         }
-        return view('pages.report',[ 'report' => $report]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function edit(Request $request){
-        $report = update($request);
-        return view('reports.edit', ['report' => $report]);    
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function update(Request $request){
-        $user = User::find($request->input('id_user'));
-        $report = Report::find($request->input('id'));
-        $this->authorize('update', $user, $report);
-
-        //atualizar os dados do report editado
-        $report->resolved = $request->input('resolved');
-        $report->description = $request->input('description');
-        $report->save();
-        return $report;
-    }
-
-    /**
-     * Show the form for deleting the specified resource.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function delete(Request $request){
-        $review = destroy($request->input('id'));
-        return view('reports.delete', ['report' => $report]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function destroy($id){
-        $report = Report::find($id);
-        $user = User::find($report->id_user);
-        $this->authorize('delete', $user, $report);
-
-        //eliminar o report
-        $report->delete();
-        return $report;
+        return view('pages.report',['report' => $report]);
     }
 
     public function changeReport(Request $request){
