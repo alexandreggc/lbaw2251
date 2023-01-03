@@ -17,7 +17,7 @@
                 <div class="row w-100">
                     <div class="col-lg-12 col-md-12 col-12">
                     @if (is_null($notifications))
-                        <p>You don't have notifications.</p>
+                        <p class="mx-4">You don't have notifications.</p>
                     @else
                         <table id="notifications_table" class="table table-condensed mb-4 table-responsive">
                             <thead>
