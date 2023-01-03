@@ -26,7 +26,9 @@
                     <select class="form-select" id="statusSelect" name="status" value="{{$order['status']}}">
                         <option value="{{ $order['status'] }}" selected>{{ $order->status }}</option>
                         @foreach ($status_enum as $status)
-                            <option value="{{$status}}">{{$status}}</option>
+                            @if ($status != 'Shopping Cart' && $status != $order['status'])
+                                <option value="{{$status}}">{{$status}}</option>
+                            @endif
                         @endforeach
                     </select>
                     <div class="modal-footer p-5 pe-0">

@@ -15,12 +15,13 @@ class ImageController extends Controller
         //return view('pages.deleteImage');
     }
 
-    public function store(Request $request)
+    public function store($file)
     {
-        $image = $request->file('image');
-        $imagePath = Storage::putFile('images', $image);
+        $imageDir = 'public/img/';
+        $imgName = date('mdYHis') . uniqid() . '.' . $file->extension();
+        $file->storeAs($imageDir, $imgName);
         $imageModel = new Image;
-        $imageModel->file = $imagePath;
+        $imageModel->file = 'img/'. $imgName;
         $imageModel->save();
         return $imageModel->id;
     }

@@ -8,6 +8,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Promotion;
+=use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +16,59 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ChangePriceWishlist;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller{
     
+    public function addProductImage(Request $request, $id_product){
+        $product = Product::find($id_product);
+            if(is_null($product)){
+                return abort('404');
+        }
+        $file = $request->file('image');
+        $imageId = (new ImageController)->store($file);
+        $product->images()->attach($imageId);
+        $product->save();
+
+        return Redirect::route('editProduct', ['id' => $product->id]);
+    }
+
+    public function deleteProductImage($id_image, $id_product){
+        $product = Product::find($id_product);
+        $imageModel = Image::find($id_image);
+
+        if(is_null($product) || is_null($imageModel)){
+            return abort('404');
+        }
+
+        $product->images()->detach($imageModel->id);
+        $product->save();
+        Storage::delete('public/'.$imageModel->file);
+        $imageModel->delete();
+
+        return Redirect::route('editProduct', ['id' => $product->id]);
+    }
+
+    public function editProductImage(Request $request, $id_image, $id_product){
+        $product = Product::find($id_product);
+        $imageModel = Image::find($id_image);
+        $oldImagePath = $imageModel->file;
+        if(is_null($product) || is_null($imageModel)){
+            return abort('404');
+        }
+
+        $imageDir = 'public/img/';
+        $newImage = $request->file('image');
+        $newImgName = date('mdYHis') . uniqid() . '.' . $newImage->extension();
+        $newImage->storeAs($imageDir, $newImgName);
+
+        $imageModel->file = 'img/'. $newImgName;
+        $imageModel->save();
+
+        Storage::delete('public/'.$oldImagePath);
+
+        return Redirect::route('editProduct', ['id' => $product->id]);
+    }
 
     public function create(Request $request){
         $this->authorize('updateProduct', Auth::guard('admin')->user());
@@ -26,18 +77,20 @@ class ProductController extends Controller{
     }
 
     public function store(Request $request){
+
         $validator = Validator::make($request->all(),[
             'id_category' => 'required|integer',
             'name'=> 'required|string|max:30',
             'description' => 'nullable|string|max:100',
             'price' => 'required|numeric',
-            //'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images' => 'array|required',
+            'images.*' => 'required|mimetypes:image/jpg,image/jpeg,image/bmp,image/png',
         ]);
-        
+
         if($validator->fails()){
             Redirect::back()->withErrors();
         }
-
+        
         if(!$category = Category::find($request->input('id_category'))){
             Redirect::back()->withErrors();
         };
@@ -50,7 +103,14 @@ class ProductController extends Controller{
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
-        //$product->images[0]->file = $request->input('image');
+        $product->save();
+
+        if($files=$request->file('images')){
+            foreach($files as $file){
+                $imageId = (new ImageController)->store($file);
+                $product->images()->attach($imageId);
+            }
+        }
         
         if($product->save()){
             return Redirect::route('productsAdminPanel');

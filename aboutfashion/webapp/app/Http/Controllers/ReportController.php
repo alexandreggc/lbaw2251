@@ -113,43 +113,26 @@ class ReportController extends Controller{
         return $report;
     }
 
-    public function open($id){
-        if(!is_numeric($id)){
-            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
-        }
+    public function changeReport($id){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|int',
+        ]); 
 
+        if($validator->fails()){
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
+        }
         $this->authorize('updateReport', Auth::guard('admin')->user());
-        $report = Report::find($id);
+        
+        $report = Report::find($request['id']);
         if(is_null($report)){
             return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
         }
-
-        $report->resolved = 0;
-
-        if ($report->save()) {
-            return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
+        
+        $report->resolved = $report->resolved ? 0 : 1;
+        if($report->save()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!', 'open/close'=>$report->resolved),200);
         }else{
-            return Redirect::back()->withErrors();
-        }
-    }
-
-    public function close($id){
-        if(!is_numeric($id)){
-            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
-        }
-
-        $this->authorize('updateReport', Auth::guard('admin')->user());
-        $report = Report::find($id);
-        if(is_null($report)){
-            return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
-        }
-
-        $report->resolved = 1;
-
-        if ($report->save()) {
-            return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
-        }else{
-            return Redirect::back()->withErrors();
-        }
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        } 
     }
 }

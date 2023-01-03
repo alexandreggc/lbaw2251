@@ -42,18 +42,18 @@
                                     </div>
                                 @else
                                     <div class="col-1 pe-3">
-                                        <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                        <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                     </div>
                                 @endif
                                 -->
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                    <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                 </div>
                                 <div class="col">
                                     <strong>Name: </strong>{{ $product->name }}
                                     <br>
                                     <br>
-                                    <strong>Price: </strong>{{ $product->price }}
+                                    <strong>Price: </strong>{{ $product->price }} €
                                 </div>
                             </button>
                         </h2>
