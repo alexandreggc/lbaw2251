@@ -29,7 +29,7 @@ class PromotionController extends Controller{
         ]);
         
         if($validator->fails()){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         $promotion = new Promotion();
@@ -43,7 +43,7 @@ class PromotionController extends Controller{
         if($promotion->save()){
             return Redirect::route('promotionsAdminPanel');
         }else{
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
     }
 
@@ -56,7 +56,7 @@ class PromotionController extends Controller{
 
     public function update(Request $request, $id){
         if(!$promotion = Promotion::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
         $this->authorize('updatePromotion', Auth::guard('admin')->user());
 
@@ -67,7 +67,7 @@ class PromotionController extends Controller{
         ]);
 
         if($validator->fails()){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         $promotion->discount = $request->input('discount');
@@ -77,7 +77,7 @@ class PromotionController extends Controller{
         if ($promotion->save()) {
             return Redirect::route('promotionsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
     }
 

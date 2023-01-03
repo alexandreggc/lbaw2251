@@ -45,10 +45,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Card', 'id_user');
     }
 
-    public function notifications(){
-        return $this->belongsToMany('App\Models\Notification', 'user_notification', 'id_user', 'id_notification');
-    }
-
     public function reports(){
         return $this->hasMany('App\Models\Report', 'id_user');
     }

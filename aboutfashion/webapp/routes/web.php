@@ -20,6 +20,9 @@ Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')
 Route::patch('/admin-panel/products/{id}/promotions/remove', 'ProductController@removeProductPromotion')->name('removeProductPromotion');
 Route::patch('/admin-panel/products/{id}/promotions/add','ProductController@addProductPromotion')->name('addProductPromotion');
 Route::get('/admin-panel/categories','AdminPanelController@categoriesPageAdmin')->name('categoriesAdminPanel');
+Route::patch('/admin-panel/products/{id}/stocks/add','ProductController@addNewProductStock')->name('addNewProductStock');
+Route::patch('/admin-panel/products/{id}/stocks/modify','ProductController@modifyProductStock')->name('modifyProductStock');
+
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
 
 Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel');
