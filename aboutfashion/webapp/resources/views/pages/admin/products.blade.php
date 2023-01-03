@@ -53,7 +53,7 @@
                                     <strong>Name: </strong>{{ $product->name }}
                                     <br>
                                     <br>
-                                    <strong>Price: </strong>{{ $product->price }}
+                                    <strong>Price: </strong>{{ $product->price }} €
                                 </div>
                             </button>
                         </h2>

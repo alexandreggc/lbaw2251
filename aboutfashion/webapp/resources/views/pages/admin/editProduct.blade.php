@@ -45,7 +45,7 @@
                                 <label for="description" class="form-label mt-4">Description</label>
                                 <input type="text" class="form-control" id="product_description" value="{{$product->description}}" name="description">
                                 <!-- Price -->
-                                <label for="price" class="form-label mt-4">Price</label>
+                                <label for="price" class="form-label mt-4">Price (€)</label>
                                 <input type="number" class="form-control" id="product_price" value="{{$product->price}}" name="price">
                                 <!-- Images -->
                                 <label for="formFile" class="form-label mt-4">New images input</label>
