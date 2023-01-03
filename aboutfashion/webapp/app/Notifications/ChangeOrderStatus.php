@@ -12,15 +12,16 @@ class ChangeOrderStatus extends Notification
 {
     use Queueable;
 
-    protected $fillable = ['id']; 
-
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+
+     private $order;
+    public function __construct($order)
     {
+        $this->order = $order;
     }
 
     /**
@@ -42,14 +43,13 @@ class ChangeOrderStatus extends Notification
      */
     public function toMail($notifiable)
     {
-        $order = Order::find($notifiable['id']);
-        $address = (is_null($order->address)) ? 'Not Defined' : ($order->address->street . ', nº' . $order->address->number);
-        $card = (is_null($order->card)) ? 'Not Defined' : ($order->card->number);
+        $address = (is_null($this->order->address)) ? 'Not Defined' : ($this->order->address->street . ', nº' . $this->order->address->number);
+        $card = (is_null($this->order->card)) ? 'Not Defined' : ($this->order->card->number);
 
         return (new MailMessage)
-                    ->subject('Order nº'. $notifiable['id'] . ' - ' . $order->status)
-                    ->line('Hello ' . $order->user->first_name . '! Your Order nº'. $notifiable['id'] . ' has changed its status to ' . $order->status.'.')
-                    ->action('View your order', url('/order/'.$notifiable['id']))
+                    ->subject('Order nº'. $this->order->id . ' - ' . $this->order->status)
+                    ->line('Hello ' . $notifiable->first_name . '! Your Order nº'. $this->order->id . ' has changed its status to ' . $this->order->status.'.')
+                    ->action('View your order', url('/order/'.$this->order->id))
                     ->line('Address: ' . $address)
                     ->line('Card: '.  $card)
                     ->line('Thank you for shopping on our website!');
@@ -63,10 +63,9 @@ class ChangeOrderStatus extends Notification
      */
     public function toArray($notifiable)
     {
-        $order = Order::find($notifiable['id']);
         return [
             'title' => 'Change Order Status',
-            'text' => 'Your Order '. $notifiable['id'] . ' has changed its status to ' . $order->status.'.',
+            'text' => 'Your Order '. $this->order->id . ' has changed its status to ' . $this->order->status.'.',
         ];
     }
 }

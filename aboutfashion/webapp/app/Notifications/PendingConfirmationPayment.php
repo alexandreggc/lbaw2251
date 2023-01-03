@@ -12,16 +12,10 @@ class PendingConfirmationPayment extends Notification
 {
     use Queueable;
 
-    protected $fillable = ['id']; 
-
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    private $order;
+    public function __construct($order)
     {
-        //
+        $this->order = $order;
     }
 
     /**
@@ -43,14 +37,13 @@ class PendingConfirmationPayment extends Notification
      */
     public function toMail($notifiable)
     {
-        $order = Order::find($notifiable['id']);
-        $address = (is_null($order->address)) ? 'Not Defined' : ($order->address->street . ', nº' . $order->address->number);
-        $card = (is_null($order->card)) ? 'Not Defined' : ($order->card->number);
+        $address = (is_null($this->order->address)) ? 'Not Defined' : ($this->order->address->street . ', nº' . $this->order->address->number);
+        $card = (is_null($this->order->card)) ? 'Not Defined' : ($this->order->card->number);
 
         return (new MailMessage)
-                    ->subject('Order nº'. $notifiable['id'])
-                    ->line('Hello ' . $order->user->first_name . '! Your Order nº'. $notifiable['id'] . ' is waiting for payment approval!')
-                    ->action('View your order', url('/order/'.$notifiable['id']))
+                    ->subject('Order nº'. $this->order->id)
+                    ->line('Hello ' . $this->order->user->first_name . '! Your Order nº'. $this->order->id . ' is waiting for payment approval!')
+                    ->action('View your order', url('/order/'.$this->order->id))
                     ->line('Address: ' . $address)
                     ->line('Card: '.  $card)
                     ->line('Thank you for shopping on our website!');
@@ -64,10 +57,9 @@ class PendingConfirmationPayment extends Notification
      */
     public function toArray($notifiable)
     {
-        $order = Order::find($notifiable['id']);
         return [
             'title' => 'Pending payment approval!',
-            'text' => 'Your Order '. $notifiable['id'] . ' is waiting for payment approval!',
+            'text' => 'Your Order '. $this->order->id . ' is waiting for payment approval!',
         ];
     }
 }
