@@ -8,6 +8,7 @@ class Stock extends Model{
     public $timestamps = false;
 
     protected $table = 'stock';
+    //protected $primaryKey = ['id_product', 'id_size', 'id_color'];
 
  
     public function product(){

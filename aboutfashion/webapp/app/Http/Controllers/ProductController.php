@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\ChangePriceShoppingCart;
 use Exception;
 use App\Models\Size;
 use App\Models\User;
 use App\Models\Color;
 use App\Models\Image;
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ChangePriceWishlist;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\ChangePriceShoppingCart;
 
 class ProductController extends Controller{
     
@@ -127,7 +129,7 @@ class ProductController extends Controller{
         $categories = Category::all();
         $promotions = Promotion::all();
         $colors = Color::all();
-        $sizes = Size::all();
+        $sizes = Size::all(); 
         return view('pages.admin.editProduct', ['product'=>$product, 
                                                 'categories' => $categories, 
                                                 'promotions' => $promotions,
@@ -231,7 +233,7 @@ class ProductController extends Controller{
             $stock->id_size = $request->input('id_size');
             $stock->stock = $request->input('new_stock');
 
-            if ($stock->save()) {
+            if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$id_color,$id_size ))) {
                 return Redirect::route('productsAdminPanel');
             } else {
                 return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
@@ -270,7 +272,7 @@ class ProductController extends Controller{
 
         $stock->stock = $request->input('new_stock');
 
-        if ($stock->save()) {
+        if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$stock->id_color,$stock->id_size ))) {
             return Redirect::route('productsAdminPanel');
         } else {
             return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
