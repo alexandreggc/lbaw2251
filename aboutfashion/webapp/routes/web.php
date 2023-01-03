@@ -19,7 +19,7 @@ Route::get('/admin-panel/products','AdminPanelController@productsPageAdmin')->na
 Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')->name('promotionsAdminPanel');
 Route::patch('/admin-panel/products/{id}/promotions/remove', 'ProductController@removeProductPromotion')->name('removeProductPromotion');
 Route::patch('/admin-panel/products/{id}/promotions/add','ProductController@addProductPromotion')->name('addProductPromotion');
-
+Route::get('/admin-panel/categories','AdminPanelController@categoriesPageAdmin')->name('categoriesAdminPanel');
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
 
 Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel');
@@ -95,6 +95,10 @@ Route::patch('/admin-panel/products/{id}','ProductController@update')->name('upd
 Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct')->middleware('auth:admin');
 Route::put('/admin-panel/products/create','ProductController@store')->name('storeProduct')->middleware('auth:admin');
 
+//Categories
+Route::get('/admin-panel/categories/create','CategoryController@create')->name('createCategory')->middleware('auth:admin');
+Route::put('/admin-panel/categories/create','CategoryController@store')->name('storeCategory')->middleware('auth:admin');
+
 //Promotions
 Route::get('/admin-panel/promotions/{id}/edit','PromotionController@edit')->name('editPromotion')->middleware('auth:admin');
 Route::patch('/admin-panel/promotions/{id}','PromotionController@update')->name('updatePromotion')->middleware('auth:admin');
@@ -117,6 +121,7 @@ Route::get('/shopping-cart', 'ShoppingCartController@show')->name('shoppingCartV
 Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');
+Route::delete('/api/admin-panel/categories/{id}', 'CategoryController@delete')->middleware('auth:admin');
 
 // Images
 Route::get('/pic', 'ImageController@test');

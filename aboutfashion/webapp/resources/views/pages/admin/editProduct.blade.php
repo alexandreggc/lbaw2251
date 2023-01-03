@@ -65,7 +65,6 @@
             <h3>Edit promotions</h3>
         </div>
         <div class="row">
-            <div class="col-1"></div>
             <div class="col">
                 <table class="table">
                     <thead>
@@ -74,7 +73,7 @@
                         <th scope="col">Discount</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">Final Date</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Remove</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,7 +88,7 @@
                                         @csrf
                                         @method('patch')
                                         <input type="hidden" name="id_promotion" value="{{$promotion->id}}">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button type="submit" class="btn btn-danger">Remove</button>
                                     </form>
                                 </td>
                             </tr>

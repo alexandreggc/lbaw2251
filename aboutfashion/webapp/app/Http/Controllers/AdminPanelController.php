@@ -8,6 +8,7 @@ use App\Models\Promotion;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\Report;
+use App\Models\Category;
 
 use Illuminate\Http\Request;
 
@@ -43,6 +44,12 @@ class AdminPanelController extends Controller{
         return view('pages.admin.products', ['products'=>$products]);
     }
     //add and edit product is in ProductController
+
+    // Categories - present in Products Page
+     public function categoriesPageAdmin(){
+        $categories = Category::paginate(15);
+        return view('pages.admin.categories', ['categories'=>$categories]);
+    }
 
     // Promotions
 

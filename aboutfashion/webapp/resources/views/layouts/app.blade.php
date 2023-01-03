@@ -28,7 +28,7 @@
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 ">
     @php
         if (!Auth::user()) {
             if (!($order = Session::get('cart'))) {
@@ -455,7 +455,7 @@
 
         <footer
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto"
-            style="z-index: 200;">
+            style="z-index: 200;position:absolute;left: 0;bottom: 0;width: 100%;text-align: center;">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"

@@ -4,51 +4,99 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller{
 
 
     public function create(Request $request){
-        $category = store($request);
-        return view('categories.create', ['category' => $category]);
+        $this->authorize('updateCategory', Auth::guard('admin')->user());
+        $categories = Category::all();
+        return view('pages.admin.addCategory', array('categories' => $categories));
     }
 
     public function store(Request $request){
-        $category = new Category();
-        $this->authorize('store', $category);
-        //implementar esta policy store no CategoryPolicy
+        $validator = Validator::make($request->all(),[
+            'name'=> 'required|string|max:30',
+            'id_super_category' => 'nullable|integer',
+        ]);
+        
+        if($validator->fails()){
+            Redirect::back()->withErrors();
+        }
 
-        $category->id = $request->input('id');
+        $category = new Category();
+        
+        $this->authorize('createCategory', Auth::guard('admin')->user());
+    
         $category->name = $request->input('name');
-        $category->save();
-        return $category;
+        if(!is_null($request->input('id_super_category'))){
+            if(!$super_category = Category::find($request->input('id_super_category'))) {
+                Redirect::back()->withErrors();
+            }
+            $category->id_super_category = $request->input('id_super_category');
+        }
+        
+        if($category->save()){
+            return Redirect::route('categoriesAdminPanel');
+        } else {
+            Redirect::back()->withErrors();
+        }
     }
 
 
     public function edit($request){
-        //implementar esta policy update no CategoryPolicy
-        $category = update($request);
-        return view('categories.edit', ['category' => $category]);
+        $this->authorize('updateCategory', Auth::guard('admin')->user());
+        $category = Category::find($request->id);
+        $categories = Category::all();
+        return view('pages.admin.editProduct', ['category' => $category, 'categories' => $categories]);
     }
 
 
-    public function update(Request $request){
-        $category = Category::find($request->input('id'));
-        $this->authorize('update', $category);
-        //implementar esta policy update no CategoryPolicy
+    public function update(Request $request , $id){
+        if(!$category = Category::find($id)){
+            Redirect::back()->withErrors();
+        }
+        $this->authorize('updateCategory', Auth::guard('admin')->user());
 
-        $category->name = $request->input('name');
-        $category->save();
-        return $category;
+        $validator = Validator::make($request->all(),[
+            'name'=> 'required|string|max:30',
+            'id_super_category' => 'nullable|integer',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors();
+        }
+
+        $category['name'] = $request->input('name');
+        $category['id_super_category'] = $request->input('id_super_category');
+
+        if ($Category->save()) {
+            return Redirect::route('categoriesAdminPanel');
+        } else {
+            return Redirect::back()->withErrors();
+        }
     }
 
-    public function destroy(Request $request){
-        $category = Category::find($request->input('id'));
-        $this->authorize('delete', $category);
-        //implementar esta policy delete no CategoryPolicy
+    public function delete($id){
+        if(!is_numeric($id)){
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
+        }
 
-        $category->delete();
-        return $category;
+        $this->authorize('updateCategory', Auth::guard('admin')->user());
+        $category = Category::find($id);
+        if(is_null($category)){
+            return Response::json(array('status' => 'error', 'message' => 'Product not found!'), 404);
+        }
+
+        if($category->delete()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }
     }
 
     
