@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Size;
 use App\Models\User;
 use App\Models\Color;
+use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Promotion;
-=use App\Models\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ChangePriceWishlist;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 
 class ProductController extends Controller{
     
@@ -140,26 +141,19 @@ class ProductController extends Controller{
             'id_category' => 'required|integer',
             'name'=> 'required|string|max:30',
             'description' => 'nullable|string|max:100',
-            'price' => 'required|numeric',
+            //'price' => 'required|numeric',
             //'images' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if($validator->fails()){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         $product['name'] = $request->input('name');
         $product['description'] = $request->input('description');
-        $product['price'] = $request->input('price');
+        $product['price'] = $request->input('number');
         $product['id_category'] = $request->input('id_category');
-        /*
-        if(!is_null($request->input('images'))){
-            $i = 0;
-            foreach($request->input('images') as $image){
-                $product->images[i]->file = $image;
-                $i++;
-            }
-        }*/
+
 
         if ($product->save()) {
             if($product->price != $oldPrice){
@@ -170,13 +164,21 @@ class ProductController extends Controller{
                     if($user->wishlist->contains($product)){
                         array_push($usersWishlist, $user);
                     }
-
-                    
+                    try{
+                        if(count($user->orders->where('status', 'Shopping Cart')->first()->details->where('id_product', $product->id)) != 0){
+                            array_push($usersShopping, $user);
+                        }
+                    }catch(Exception $e){
+                        
+                    }
                 }
                 Notification::send($usersWishlist, new ChangePriceWishlist($product));
+                Notification::send($usersShopping, new ChangePriceWishlist($product));
             }
             return Redirect::route('productsAdminPanel');
         } else {
+            dump($product->save());
+            return;
             return Redirect::back()->withErrors();
         }
     }
