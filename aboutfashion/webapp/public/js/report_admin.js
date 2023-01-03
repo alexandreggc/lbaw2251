@@ -9,7 +9,7 @@ function attachEvents() {
 function openReport(elem) {
     let token = document.getElementsByName('_token')[0].value
     const request = new XMLHttpRequest()
-    request.open('patch', '/api/admin-panel/reports/open/' + elem.target.id, true)
+    request.open('PATCH', '/api/admin-panel/reports/open/' + elem.target.id, true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('_token=' + token)
 
@@ -20,12 +20,13 @@ function openReport(elem) {
             console.log('ERROR!')
         }
     }
+    attachEvents()
 }
 
 function closeReport(elem) {
     let token = document.getElementsByName('_token')[0].value
     const request = new XMLHttpRequest()
-    request.open('patch', '/api/admin-panel/reports/close/' + elem.target.id, true)
+    request.open('PATCH', '/api/admin-panel/reports/close/' + elem.target.id, true)
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('_token=' + token)
 
@@ -36,4 +37,5 @@ function closeReport(elem) {
             console.log('ERROR!')
         }
     }
+    attachEvents()
 }

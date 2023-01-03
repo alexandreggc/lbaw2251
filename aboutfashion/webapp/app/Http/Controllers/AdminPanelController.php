@@ -40,21 +40,21 @@ class AdminPanelController extends Controller{
     //Products
 
     public function productsPageAdmin(){
-        $products = Product::paginate(15);
+        $products = Product::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.products', ['products'=>$products]);
     }
     //add and edit product is in ProductController
 
     // Categories - present in Products Page
      public function categoriesPageAdmin(){
-        $categories = Category::paginate(15);
+        $categories = Category::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.categories', ['categories'=>$categories]);
     }
 
     // Promotions
 
     public function promotionsPageAdmin(){
-        $promotions = Promotion::paginate(15);
+        $promotions = Promotion::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.promotions', ['promotions'=>$promotions]);
     }
     //add and edit promotion is in PromotionController
@@ -62,7 +62,7 @@ class AdminPanelController extends Controller{
     // Orders
 
     public function ordersPageAdmin(){
-        $orders = Order::paginate(15);
+        $orders = Order::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.orders', ['orders'=>$orders]);
     }
     //add and edit order is in OrderController
@@ -70,14 +70,14 @@ class AdminPanelController extends Controller{
     // Reviews
 
     public function reviewsPageAdmin(){
-        $reviews = Review::paginate(15);
+        $reviews = Review::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.reviews', ['reviews'=>$reviews]);
     }
 
     // Reports
 
     public function reportsPageAdmin(){
-        $reports = Report::paginate(15);
+        $reports = Report::orderBy('id', 'ASC')->paginate(15);
         return view('pages.admin.reports', ['reports'=>$reports]);
     }
 }

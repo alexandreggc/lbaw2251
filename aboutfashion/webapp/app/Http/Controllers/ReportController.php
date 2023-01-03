@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ReportController extends Controller{
     /**
@@ -123,7 +126,7 @@ class ReportController extends Controller{
 
         $report->resolved = 0;
 
-        if ($review->save()) {
+        if ($report->save()) {
             return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
         }else{
             return Redirect::back()->withErrors();
@@ -143,7 +146,7 @@ class ReportController extends Controller{
 
         $report->resolved = 1;
 
-        if ($review->save()) {
+        if ($report->save()) {
             return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
         }else{
             return Redirect::back()->withErrors();
