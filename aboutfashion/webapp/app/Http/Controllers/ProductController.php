@@ -9,6 +9,9 @@ use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Stock;
+use App\Models\Image;
+use App\Models\ProductImage;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +23,7 @@ use App\Notifications\ChangePriceWishlist;
 use Illuminate\Support\Facades\Notification;
 
 class ProductController extends Controller{
-    
+
     public function addProductImage(Request $request, $id_product){
         $product = Product::find($id_product);
             if(is_null($product)){
@@ -69,7 +72,7 @@ class ProductController extends Controller{
         Storage::delete('public/'.$oldImagePath);
 
         return Redirect::route('editProduct', ['id' => $product->id]);
-    }
+    }    
 
     public function create(Request $request){
         $this->authorize('updateProduct', Auth::guard('admin')->user());
@@ -125,9 +128,13 @@ class ProductController extends Controller{
         $product = Product::find($request->id);
         $categories = Category::all();
         $promotions = Promotion::all();
+        $colors = Color::all();
+        $sizes = Size::all();
         return view('pages.admin.editProduct', ['product'=>$product, 
                                                 'categories' => $categories, 
-                                                'promotions' => $promotions]);
+                                                'promotions' => $promotions,
+                                                'colors' => $colors,
+                                                'sizes' => $sizes]);
     }
 
     public function update(Request $request, $id){
@@ -201,9 +208,84 @@ class ProductController extends Controller{
         }
     }
 
+    public function addNewProductStock(Request $request, $id){
+        if(!$product = Product::find($id)){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
+        if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
+            abort(403);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'id_color' => 'required|integer',
+            'id_size' => 'required|integer',
+            'quantity' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
+        $id_color = $request->input('id_color');
+        $id_size = $request->input('id_size');
+
+        if(is_null(Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first)){
+            $stock = new Stock();
+            $stock->id_product = $id;
+            $stock->id_color = $request->input('id_color');
+            $stock->id_size = $request->input('id_size');
+            $stock->stock = $request->input('new_stock');
+
+            if ($stock->save()) {
+                return Redirect::route('productsAdminPanel');
+            } else {
+                return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+            }
+
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function modifyProductStock(Request $request, $id){
+        if(!$product = Product::find($id)){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
+        if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
+            abort(403);
+        }
+
+        $validator = Validator::make($request->all(),[
+            'id_color' => 'required|integer',
+            'id_size' => 'required|integer',
+            'new_stock' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+
+        $id_color = $request->input('id_color');
+        $id_size = $request->input('id_size');
+
+        if(!$stock = Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first()){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Stock not found!'));
+        }
+
+        $stock->stock = $request->input('new_stock');
+
+        if ($stock->save()) {
+            return Redirect::route('productsAdminPanel');
+        } else {
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+        }
+    }
+
     public function addProductPromotion(Request $request, $id){
         if(!$product = Product::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
@@ -219,7 +301,7 @@ class ProductController extends Controller{
         }
 
         if (!$promotion = Promotion::find($request->input('id_promotion'))){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
        
         $product->promotions()->attach($promotion); 
@@ -227,13 +309,13 @@ class ProductController extends Controller{
         if ($product->save()) {
             return Redirect::route('productsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
     }
 
     public function removeProductPromotion(Request $request, $id){
         if(!$product = Product::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
@@ -245,19 +327,19 @@ class ProductController extends Controller{
         ]);
 
         if($validator->fails()){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
-        if (!$promotion = Promotion::find($request->input('id_promotion'))){
-            return Redirect::back()->withErrors();
+        if(!$promotion = Promotion::find($request->input('id_promotion'))){
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
        
         $product->promotions()->detach($promotion); 
 
-        if ($product->save()) {
+        if($product->save()) {
             return Redirect::route('productsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
     }
 

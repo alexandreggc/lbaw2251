@@ -149,11 +149,11 @@
                 <table class="table">
                     <thead>
                         <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Discount</th>
-                        <th scope="col">Start Date</th>
-                        <th scope="col">Final Date</th>
-                        <th scope="col">Remove</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">Final Date</th>
+                            <th scope="col">Remove</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -198,6 +198,75 @@
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>
                         <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <div class="row pb-3">
+            <h3>Manage Stock</h3>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Color</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($product->stocks as $stock)
+                            <tr>
+                                <th scope="row">{{$stock->color->name}}</th>
+                                <td>{{$stock->size->name}}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('modifyProductStock', ['id' => $product->id]) }}">
+                                        @csrf
+                                        @method('patch')
+                                        <input type="hidden" name="id_color" value="{{$stock->color->id}}">
+                                        <input type="hidden" name="id_size" value="{{$stock->size->id}}">
+                                        <input type="number" class="form-control" id="product_stock_{{$stock->id_color}}_{{$stock->id_size}}"
+                                            value="{{$stock->stock}}" name="new_stock">
+                                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-1"></div>
+            <div class="col">
+                <h4 class="pb-3">Add new stock</h4>
+                <form method="POST" action="{{ route('addNewProductStock', ['id' => $product->id]) }}">
+                    @csrf
+                    @method('patch')
+                    <div class="form-group">
+                        <!-- Color -->
+                        <label for="colorSelect" class="form-label">Color</label>
+                        <select class="form-select" id="colorSelect" name="id_color">
+                            <option>Select a color</option>
+                            @foreach ($colors as $color)
+                                <option value="{{$color['id']}}">{{$color['name']}}</option>
+                            @endforeach
+                        </select>
+                        <!-- Size -->
+                        <label for="sizeSelect" class="form-label">Size</label>
+                        <select class="form-select" id="sizeSelect" name="id_size">
+                            <option>Select a size</option>
+                            @foreach ($sizes as $size)
+                                <option value="{{$size['id']}}">{{$size['name']}}</option>
+                            @endforeach
+                        </select>
+                        <!-- Stock -->
+                        <label for="quantitySelect" class="form-label mt-4">Quantity</label>
+                        <input type="number" class="form-control" id="quantitySelect" name="new_stock">
+                    </div>
+                    <div class="modal-footer p-5 pe-0">
+                        <span class="error-text me-auto" style="color:red"> </span>
+                        <button type="submit" class="btn btn-primary btn-lg">Save</button>
                     </div>
                 </form>
             </div>

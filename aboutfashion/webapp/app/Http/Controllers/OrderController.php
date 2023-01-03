@@ -184,6 +184,8 @@ class OrderController extends Controller
       return redirect()->back()->withErrors('status', 'Empty cart!');
     }
 
-    return view('pages.checkout', array('order' => $order,'user'=>$user, 'details' => $details, 'addresses' => $user->addresses, 'cards' => $user->cards));
+    return view('pages.user.checkout', array('order' => $order,'user'=>$user, 'details' => $details, 'addresses' => $user->addresses, 'cards' => $user->cards));
   }
 }
+
+  

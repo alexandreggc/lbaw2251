@@ -20,6 +20,9 @@ Route::get('/admin-panel/promotions','AdminPanelController@promotionsPageAdmin')
 Route::patch('/admin-panel/products/{id}/promotions/remove', 'ProductController@removeProductPromotion')->name('removeProductPromotion');
 Route::patch('/admin-panel/products/{id}/promotions/add','ProductController@addProductPromotion')->name('addProductPromotion');
 Route::get('/admin-panel/categories','AdminPanelController@categoriesPageAdmin')->name('categoriesAdminPanel');
+Route::patch('/admin-panel/products/{id}/stocks/add','ProductController@addNewProductStock')->name('addNewProductStock');
+Route::patch('/admin-panel/products/{id}/stocks/modify','ProductController@modifyProductStock')->name('modifyProductStock');
+
 Route::get('/admin-panel/orders','AdminPanelController@ordersPageAdmin')->name('ordersAdminPanel');
 
 Route::get('/admin-panel/reviews','AdminPanelController@reviewsPageAdmin')->name('reviewsAdminPanel');
@@ -31,6 +34,8 @@ Route::get('/admin-panel/reports','AdminPanelController@reportsPageAdmin')->name
 //User 
 Route::post('/login', 'Auth\LoginController@userLogin')->name('userLogin');
 Route::get('/wishlist', 'UserController@showWishlist')->name('wishlist');
+Route::get('/notifications', 'UserController@showNotifications')->name('wishlist');
+Route::get('/checkout', 'OrderController@showCheckout')->name('checkout');
 Route::get('/users/{id}', 'UserController@show')->name('userView');
 Route::patch('/users/{id}', 'UserController@update')->name('userUpdate');
 Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');

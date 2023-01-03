@@ -65,7 +65,7 @@ class ReviewController extends Controller{
         ]);
         
         if($validator->fails()){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         if(!$product = Product::find($request->input('id_product'))){

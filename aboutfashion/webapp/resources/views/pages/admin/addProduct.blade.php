@@ -22,8 +22,8 @@
                     @csrf
                     @method('put')
                     <div class="form-group">
-                        <label for="productSelect" class="form-label"></label>
-                        <select class="form-select" id="categorySelect" name="id_category" onchange="showCategory()"> <!-- ATENÇÃO AO ONCHANGE -->
+                        <label for="categorySelect" class="form-label"></label>
+                        <select class="form-select" id="categorySelect" name="id_category">
                             <option>Select a category </option>
                             @foreach ($categories as $category)
                                 <option value="{{$category['id']}}">{{$category['name']}}</option>
