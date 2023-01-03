@@ -12,10 +12,10 @@ class PendingConfirmationPayment extends Notification
 {
     use Queueable;
 
-    private $this->order;
-    public function __construct($this->order)
+    private $order;
+    public function __construct($order)
     {
-        $this->order = $this->order;
+        $this->order = $order;
     }
 
     /**
