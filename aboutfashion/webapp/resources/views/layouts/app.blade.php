@@ -63,9 +63,10 @@
                                         style="font-size:24px;"></i></a>
                             </li>
                             @if (Auth::check())
-                                <li class="nav-item">
-                                    <a class="nav-link mx-2" href=#><i class="fa-regular fa-bell"
-                                            style="font-size:24px;"></i></a>
+                                <li class="nav-item dropdown " id="notificationsTog">
+                                    <a class="nav-link mx-2" href="{{ url('/notifications') }}" >
+                                        <i class="fa-regular fa-bell" style="font-size:24px;"></i>
+                                    </a>
                                 </li>
                             @endif
                             <li class="nav-item dropdown">

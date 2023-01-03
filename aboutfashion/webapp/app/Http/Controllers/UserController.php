@@ -180,6 +180,10 @@ class UserController extends Controller{
     } 
     public function showNotifications(){
         $user = Auth::user();
-        return view('pages.user.notifications', array('notifications'=>$user->notification));
+        $notifications = array();
+        foreach($user->notifications as $notification){
+            array_push($notifications, array('id' => $notification->id, 'title' => $notification->data['title'], 'description' => $notification->data['text'], 'date' => $notification->created_at));
+        }
+        return view('pages.user.notifications', array('notifications'=>$notifications));
     } 
 }

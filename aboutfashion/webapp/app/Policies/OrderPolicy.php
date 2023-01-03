@@ -22,4 +22,8 @@ class OrderPolicy{
     public function updateOrderStatus(Admin $admin, Order $order){
         return $admin->role == 'Collaborator';
     }
+
+    public function cancelOrder(User $user, Order $order){
+        return $user->id == $order->id_user;
+    }
 }

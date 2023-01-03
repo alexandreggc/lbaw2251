@@ -149,6 +149,11 @@ class OrderController extends Controller
     $this->authorize('checkout', $card);
     $this->authorize('checkout', $address);
 
+    $order1 = Order::find($order->id);
+    $order1->id_card = $card->id;
+    $order1->id_address = $address->id;
+    $order1->save();
+
     $errors = array();
     foreach ($details as $detail) {
       $filters = array(['id_product', $detail['id_product']], ['id_color', $detail['id_color']], ['id_size', $detail['id_size']]);
@@ -167,9 +172,36 @@ class OrderController extends Controller
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
 
-    $user->notify(new PendingConfirmationPayment($order));
+    $user->notify(new PendingConfirmationPayment($order1->id));
     return redirect()->route('orderDetails', ['id' => $order->id]);
   }
+
+  public function cancel(int $id){
+    $this->middleware('auth:web');
+
+    if(!is_numeric($id)){
+      return redirect()->back();
+    }
+    
+    $order = Order::find($id);
+    if(is_null($order)){
+      return redirect()->back();
+    }
+
+    if($order->status == 'Completed' || $order->status == 'Shopping Cart'){
+      return redirect()->back();
+    }
+
+    $this->authorize('cancelOrder', $order);
+    
+    try {
+      DB::select('SELECT cancel_order(?)', array($order->id));
+    } catch (Exception $e) {
+      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
+    }
+    return redirect()->route('orderDetails', ['id' => $order->id]);
+  }
+  
   public function showCheckout()
   {
     $this->middleware('auth:web');
