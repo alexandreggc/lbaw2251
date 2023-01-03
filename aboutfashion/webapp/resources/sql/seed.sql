@@ -272,8 +272,6 @@ CREATE OR REPLACE FUNCTION checkout(input_order Integer)
 RETURNS void AS $$
 DECLARE t_row record;
 BEGIN
-    BEGIN
-    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     
     FOR t_row IN SELECT * FROM details WHERE id_order = input_order LOOP
         IF ((SELECT stock FROM stock WHERE t_row.id_product = id_product AND t_row.id_color = id_color AND t_row.id_size = id_size) < t_row.quantity)
@@ -285,23 +283,21 @@ BEGIN
 	
     UPDATE user_order SET status = 'Pending' WHERE id = input_order;
     
-    END;
 END; $$
 LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION cancel_order(input_order Integer) 
 RETURNS void AS $$
 DECLARE t_row record;
 BEGIN
-    BEGIN
-    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
 
     FOR t_row IN SELECT * FROM details WHERE id_order = input_order LOOP
         UPDATE stock SET stock = stock + t_row.quantity WHERE t_row.id_product = id_product AND t_row.id_color = id_color AND t_row.id_size = id_size ;
     END LOOP;
 	
     UPDATE user_order SET status = 'Cancelled' WHERE id = input_order;
-    END;
 END; $$
 LANGUAGE plpgsql;
 
