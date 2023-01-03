@@ -50,6 +50,8 @@
                                     <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                 </div>
                                 <div class="col">
+                                    <strong>ID: </strong>{{ $product->id }}
+                                    <br>
                                     <strong>Name: </strong>{{ $product->name }}
                                     <br>
                                     <br>
