@@ -19,13 +19,14 @@
                     Manage Categories
                 </a>
             </div>
-            <div class="col-2"></div>
+            <div class="col-8"></div>
+            <!--<div class="col-2"></div>
             <div class="col-6">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-            </div>
+            </div>-->
             <div class="accordion" id="accordion">
                 @foreach ($products as $product)
                     <div class="accordion-item" id="accordion-item-{{ $product->id }}">
@@ -41,18 +42,18 @@
                                     </div>
                                 @else
                                     <div class="col-1 pe-3">
-                                        <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                        <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                     </div>
                                 @endif
                                 -->
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                    <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                 </div>
                                 <div class="col">
                                     <strong>Name: </strong>{{ $product->name }}
                                     <br>
                                     <br>
-                                    <strong>Price: </strong>{{ $product->price }}
+                                    <strong>Price: </strong>{{ $product->price }} €
                                 </div>
                             </button>
                         </h2>

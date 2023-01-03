@@ -72,15 +72,7 @@
                             </div>
                         </h5>
                     </div>
-                    <?php 
-                    if (strpos($user->photo['file'],"http") !== false){
-                        $profileImg = $user->photo['file'];
-                    } else {
-                        $profileImg = 'storage/'.$user->photo['file'];
-                    }
-                    ?>
-                    <img src="{{ asset($profileImg) }}" id="profilePic" width="300px" height="300px" />
-                    
+                    <img src="{{ asset($user->photo->imageURL()) }}" id="profilePic" width="300px" height="300px" />
                 </div>
             </div>
             <div class="bottom_buttons">

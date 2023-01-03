@@ -5,9 +5,9 @@
     <script type="text/javascript" src={{ asset('js/users_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
-            <h2 class="p-3">Users</h2>
+            <h2 class="p-3 pb-5">Users</h2>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <div class="col-6"></div>
             <div class="col-6 pb-3">
                 <form class="d-flex">
@@ -15,7 +15,7 @@
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
-        </div>
+        </div>-->
         <div class="row">
             <div class="accordion" id="accordion">
                 @foreach ($users as $user)
@@ -25,7 +25,7 @@
                                 data-bs-target="#collapse-{{ $user->id }}" aria-expanded="true"
                                 aria-controls="collapse-{{ $user->id }}">
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $user->photo['file'] }}" alt="user photo" class="img-fluid">
+                                    <img src="{{ asset($user->photo->imageURL()) }}" alt="user photo" class="img-fluid">
                                 </div>
                                 @if ($user->blocked == 1)
                                     <div class="col">
@@ -36,9 +36,9 @@
                                 @else
                                     <div class="col">
                                         {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                    </div>
-                                    <span class="badge bg-danger ms-3" id="badge-block-{{ $user->id }}"
+                                        <span class="badge bg-danger ms-3" id="badge-block-{{ $user->id }}"
                                         style="display: none">Blocked</span>
+                                    </div>
                                 @endif
                             </button>
                         </h2>
@@ -74,19 +74,22 @@
                                             @if ($user['blocked'] == 0)
                                                 <div class="row">
                                                     <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock block-user"
-                                                        id="block-{{ $user->id }}"></button>
+                                                        id="block-{{ $user->id }}">
+                                                    </button>
                                                 </div>
                                             @else
                                                 <div class="row">
                                                     <button
                                                         class="btn btn-warning btn-sm mb-3 fa-solid fa-unlock block-user"
-                                                        id="block-{{ $user->id }}"></button>
+                                                        id="block-{{ $user->id }}">
+                                                    </button>
                                                 </div>
                                             @endif
                                             <div class="row">
                                                 <button
                                                     class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1 delete-user"
-                                                    id={{ $user->id }}></button>
+                                                    id={{ $user->id }}>
+                                                </button>
                                             </div>
                                         @endif
                                     </div>

@@ -25,7 +25,7 @@
                         @foreach ($order->details as $item)
                             <div class="col-4 pt-4">
                                 <div class="card">
-                                    <img src="{{ $item->product->images[0]->file }}" alt="product image" class="img-fluid">
+                                    <img src="{{ asset($item->product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                     <div class="card-body">
                                         <strong>{{ $item->product->name }}</strong>
                                         <strong>{{ $item->color->name }}</strong>

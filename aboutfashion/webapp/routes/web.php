@@ -64,7 +64,7 @@ Route::post('/admin-panel/reset-password', 'Auth\ForgotPasswordController@submit
 //Orders
 Route::get('/order/{id}', 'OrderController@show')->name('orderDetails');
 Route::get('/admin-panel/orders/{id}/editStatus','OrderController@editStatus')->name('editOrderStatus')->middleware('auth:admin');
-Route::patch('/admin-panel/orders/{id}','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
+Route::patch('/admin-panel/orders/{id}/status','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
 Route::get('/admin-panel/orders/{id}/edit','OrderController@edit')->name('editOrder')->middleware('auth:admin');
 Route::patch('/admin-panel/orders/{id}','OrderController@update')->name('updateOrder')->middleware('auth:admin');
 
@@ -96,6 +96,9 @@ Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('ed
 Route::patch('/admin-panel/products/{id}','ProductController@update')->name('updateProduct')->middleware('auth:admin');
 Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct')->middleware('auth:admin');
 Route::put('/admin-panel/products/create','ProductController@store')->name('storeProduct')->middleware('auth:admin');
+Route::post('/product-image/edit/{id_image}/{id_product}', 'ProductController@editProductImage')->name('editProductImage');
+Route::delete('/product-image/delete/{id_image}/{id_product}', 'ProductController@deleteProductImage')->name('deleteProductImage');
+Route::post('/product-image/delete/{id_product}', 'ProductController@addProductImage')->name('addProductImage');
 
 //Categories
 Route::get('/admin-panel/categories/create','CategoryController@create')->name('createCategory')->middleware('auth:admin');
@@ -124,6 +127,8 @@ Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->mid
 Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/categories/{id}', 'CategoryController@delete')->middleware('auth:admin');
+Route::delete('/api/admin-panel/reviews/{id}', 'ReviewController@delete')->middleware('auth:admin');
+Route::patch('/api/admin-panel/reports', 'ReportController@changeReport')->middleware('auth:admin');
 
 // Images
 Route::get('/pic', 'ImageController@test');

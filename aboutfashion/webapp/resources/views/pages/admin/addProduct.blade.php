@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-1"></div>
             <div class="col">
-                <form method="POST" action="{{ route('storeProduct') }}">
+                <form method="POST" action="{{ route('storeProduct') }}" enctype="multipart/form-data">
                     @csrf
                     @method('put')
                     <div class="form-group">
@@ -40,7 +40,7 @@
                         <input type="number" class="form-control" id="product_price" name="price">
                         <!-- Images -->
                         <label for="formFile" class="form-label mt-4">Images input</label>
-                        <input class="form-control" type="file" id="formFile"> <!-- multiple name="images[]" -->
+                        <input required type="file" class="form-control" name="images[]" placeholder="images" multiple>
                     </div>
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class ReportController extends Controller{
     /**
@@ -108,5 +111,28 @@ class ReportController extends Controller{
         //eliminar o report
         $report->delete();
         return $report;
+    }
+
+    public function changeReport($id){
+        $validator = Validator::make($request->all(),[
+            'id' => 'required|int',
+        ]); 
+
+        if($validator->fails()){
+            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
+        }
+        $this->authorize('updateReport', Auth::guard('admin')->user());
+        
+        $report = Report::find($request['id']);
+        if(is_null($report)){
+            return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
+        }
+        
+        $report->resolved = $report->resolved ? 0 : 1;
+        if($report->save()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!', 'open/close'=>$report->resolved),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        } 
     }
 }

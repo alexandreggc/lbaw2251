@@ -30,13 +30,22 @@
                             aria-labelledby="heading{{ $category->id }}" data-bs-parent="#accordion">
                             <div class="accordion-body">
                                 <div class="row">
-                                    <div class="col-3">
-                                        @if (Auth::guard('admin')->user()->role == 'Collaborator')
-                                            <button class="btn btn-danger btn-sm pe-1 fa-solid fa-xmark delete-category" 
-                                                id="{{ $category->id }}">
-                                            </button>
+                                    <div class="col">
+                                        @if (!is_null($category->id_super_category))
+                                            <strong>Super Category: </strong>{{ $category->superCategory->name }}    
+                                        @else
+                                            <strong>Super Category: </strong>None
                                         @endif
                                     </div>
+                                    @if (Auth::guard('admin')->user()->role == 'Collaborator')
+                                        <div class="col-1">
+                                            <div class="row">
+                                                <button class="btn btn-danger btn-sm pe-1 fa-solid fa-xmark delete-category" 
+                                                    id="{{ $category->id }}">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -17,7 +17,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{$detail->product['description']}}</h5>
                 </div>
-                <img src="{{$detail->product->images[0]['file']}}" class="d-block user-select-none" width="100%" height="100%" focusable="false"></img>
+                <img src="{{asset($detail->product->images[0]->imageURL())}}" class="d-block user-select-none" width="100%" height="100%" focusable="false"></img>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Size <span>{{$detail['size']['name']}}</span>

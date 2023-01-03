@@ -44,4 +44,12 @@ class AdminPolicy{
     public function updateOrder(Admin $admin){
         return $admin->role == 'Collaborator';
     }
+
+    public function updateReview(Admin $admin){
+        return $admin->role == 'Technician';
+    }
+
+    public function updateReport(Admin $admin){
+        return $admin->role == 'Technician';
+    }
 }

@@ -5,16 +5,16 @@
     <script type="text/javascript" src={{ asset('js/order_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
-            <h2 class="p-3">Orders</h2>
+            <h2 class="p-3 pb-5">Orders</h2>
         </div>
         <div class="row mb-5">
-            <div class="col-6"></div>
+            <!--<div class="col-6"></div>
             <div class="col-6 mb-3">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-            </div>
+            </div>-->
             <div class="row-12">
                 <div class="accordion" id="accordion">
                     @foreach($orders as $order)
@@ -35,17 +35,17 @@
                                     @elseif ($order->status == "Pending")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-warning ms-3">Completed</span>
+                                            <span class="badge bg-warning ms-3">Pending</span>
                                         </div>
                                     @elseif ($order->status == "Cancelled")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-danger ms-3">Completed</span>
+                                            <span class="badge bg-danger ms-3">Cancelled</span>
                                         </div>
                                     @elseif ($order->status == "In Progress")
                                         <div class="col-3">
                                             {{ $order->user['first_name'] . ' ' . $order->user['last_name'] }}
-                                            <span class="badge bg-info ms-3">{{$order->status }}</span>
+                                            <span class="badge bg-info ms-3">In Progress</span>
                                         </div>
                                     @else <!-- $order->status == "Shopping Cart" -->
                                         @continue
@@ -58,7 +58,7 @@
                                     <div class="row">
                                         <div class="col-2">
                                             @foreach ($order->details as $details)
-                                                <img src="{{ $details->product->images[0]->file }}" 
+                                                <img src="{{ asset($details->product->images[0]->imageURL()) }}" 
                                                     class="img-fluid" alt="Responsive image">
                                                 <div class="pt-3 text-center">
                                                     <strong>{{$details->product['name']}}</strong>

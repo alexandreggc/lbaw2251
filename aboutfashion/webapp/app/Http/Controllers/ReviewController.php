@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -144,5 +145,23 @@ class ReviewController extends Controller{
         }else{
             return Redirect::back()->withErrors();
         } 
+    }
+
+    public function delete($id){
+        if(!is_numeric($id)){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+
+        $this->authorize('updateReview', Auth::guard('admin')->user());
+        $review = Review::find($id);
+        if(is_null($review)){
+            return Response::json(array('status' => 'error', 'message' => 'Review not found!'), 404);
+        }
+
+        if($review->delete()){
+            return Response::json(array('status' => 'success', 'message'=>'OK!'),200);
+        }else{
+            return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
+        }
     }
 }

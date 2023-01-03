@@ -9,15 +9,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
-class AdminController extends Controller
-{
+class AdminController extends Controller{
     
     public function __construct(){
         $this->middleware('auth:admin');
     }
 
-    public function show($id)
-    {
+    public function show($id){
         if(!is_numeric($id)){
             abort(404);
         }
@@ -26,7 +24,6 @@ class AdminController extends Controller
         $this->authorize('view', $admin);
         return view('pages.admin.profile', array('admin'=>$admin));
     }
-
 
     public function deleteUser(Request $request){
         $validator = Validator::make($request->all(),[
@@ -72,39 +69,5 @@ class AdminController extends Controller
         }else{
             return Response::json(array('status' => 'error', 'message'=>'Something happens!'),500);
         }      
-    }
-    
-    public function index()
-    {
-        //
-    }
-
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-
-    
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
-
-
-    public function destroy(Admin $admin)
-    {
-        //
     }
 }
