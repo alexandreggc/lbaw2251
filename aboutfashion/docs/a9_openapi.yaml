@@ -22,7 +22,6 @@ tags:
   - name: 'M06: Reviews and Reports'
   - name: 'M07: Pages'
 
-
 paths:
   /login:
     post:
@@ -111,15 +110,15 @@ paths:
                   value: '/admin-panel/login'
 
   /logout:
-    post:
+    get:
       operationId: R104
       summary: 'R104: Logout Action'
-      description: 'Logout the current authenticated user and admins. Access: USR, TEC, COL'
+      description: 'Processes the logout request. Access: PUB'
       tags:
         - 'M01: Authentication'
       responses:
         '302':
-          description: 'Redirect after processing logout.'
+          description: 'Redirect after processing the logout request.'
           headers:
             Location:
               schema:
@@ -127,21 +126,14 @@ paths:
               examples:
                 302Success:
                   description: 'Successful logout. Redirect to home page.'
-                  value: '../'
-
+                  value: '/'
+                302Error:
+                  description: 'Failed logout. Redirect to home page.'
+                  value: '/'
+    
   /register:
-    get:
-      operationId: R105
-      summary: 'R105: Register Form'
-      description: 'Provide register form. Access: PUB'
-      tags:
-        - 'M01: Authentication'
-      responses:
-        '200':
-          description: 'Ok. Show UI'
-
     post:
-      operationId: R106
+      operationId: R105
       summary: 'R106: Register Action'
       description: 'Processes the new user registration form submission. Access: PUB'
       tags:
@@ -325,7 +317,7 @@ paths:
         '403':
           description: 'You do not have permission to create a card'
 
-    post:
+    put:
       operationId: R206
       summary: 'R206: Create card action'
       description: 'Processes the create card form submission. Access: USR'
@@ -368,7 +360,7 @@ paths:
                   description: 'Failed create. Redirect to create card form.'
                   value: '/cards/create'
         '403':
-          description: 'You do not have permission to create a card.'
+          description: 'You do not have permission to create a card'
   
   /cards/{id}:
     patch:
@@ -673,70 +665,6 @@ paths:
                   description: 'Failed request. Redirect to home page.'
                   value: '<html>...</html>'
 
-  /admin-panel/users/{id}:
-    delete:
-      operationId: R302
-      summary: 'R302: Delete user'
-      description: 'Delete a user. Access: COL,TEC'
-      tags:
-        - 'M03: Administration'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '302':
-          description: 'Redirect after processing the new user information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful delete. Redirect to admin panel.'
-                  value: '/admin-panel'
-                302Failure:
-                  description: 'Failed delete. Redirect to admin panel.'
-                  value: '/admin-panel'
-        '403':
-          description: 'You do not have permission to delete this profile.'
-  
-  /admin-panel/users/{id}/block:
-    patch:
-      operationId: R303
-      summary: 'R303: Blocks or Unblocks an user'
-      description: 'Block or Unblock an user. Access: COL,TEC'
-      tags:
-        - 'M03: Administration'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '302':
-          description: 'Redirect after processing the new user information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                302Success:
-                  description: 'Successful block. Redirect to admin panel.'
-                  value: '/admin-panel'
-                302Failure:
-                  description: 'Failed block. Redirect to admin panel.'
-                  value: '/admin-panel'
-        '403':
-          description: 'You do not have permission to block this profile.'
-
   /api/products:
     get:
       operationId: R401
@@ -970,205 +898,6 @@ paths:
           description: 'Ok. Show order UI'
         '404':
           description: "Error. There's not an order with the specified primary key"
-    
-  /orders/create:
-    get:
-      operationId: R502
-      summary: 'R502: Create Order'
-      description: 'Show the form to create an order. Access: PUB'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      responses:
-        '200':
-          description: 'Ok. Show create order UI'
-    post:
-      operationId: R503
-      summary: 'R503: Create Order'
-      description: 'Create an order. Access: PUB'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id_user:
-                  type: integer
-                id_address:
-                  type: integer
-                id_card:
-                  type: integer
-                total:
-                  type: integer
-                products:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id_product:
-                        type: integer
-                      id_size:
-                        type: integer
-                      id_color:
-                        type: integer
-                      quantity:
-                        type: integer 
-              example:
-                example1:
-                  value:
-                    id_user: 1
-                    id_address: 1
-                    id_card: 1
-                    total: 100
-                    products: [{id_product: 1, id_size: 1, id_color: 1, quantity: 1}, {id_product: 2, id_size: 2, id_color: 2, quantity: 2}]
-                example2:
-                  value:
-                    id_user: 1
-                    id_address: 1
-                    id_card: 1
-                    total: 100
-                    products: [{id_product: 1, id_size: 1, id_color: 1, quantity: 1}, {id_product: 2, id_size: 2, id_color: 2, quantity: 2}]
-      responses:
-        '200':
-          description: 'Ok. Order created'
-        '400':
-          description: 'Bad request'
-        '404':
-          description: 'Error. User, address, payment or promotion not found'
-        '409':
-          description: 'Error. Product not found or not enough stock'
-
-  /api/shopping-cart/add:
-    post:
-      operationId: R504
-      summary: 'R504: Add product to shopping cart'
-      description: 'Add a product to the shopping cart. Access: PUB'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id_product:
-                  type: integer
-                id_size:
-                  type: integer
-                id_color:
-                  type: integer
-                quantity:
-                  type: integer
-              example:
-                id_product: 1
-                id_size: 1
-                id_color: 1
-                quantity: 1
-      responses:
-        '200':
-          description: 'Ok. Product added to shopping cart'
-        '400':
-          description: 'Bad request'
-        '404':
-          description: 'Error. Product not found or not enough stock'
-        '409':
-          description: 'Error. Product not found or not enough stock'
-
-  /api/shopping-cart/remove:
-    post:
-      operationId: R505
-      summary: 'R505: Remove product from shopping cart'
-      description: 'Remove a product from the shopping cart. Access: PUB'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id_product:
-                  type: integer
-                id_size:
-                  type: integer
-                id_color:
-                  type: integer
-              example:
-                id_product: 1
-                id_size: 1
-                id_color: 1
-      responses:
-        '200':
-          description: 'Ok. Product removed from shopping cart'
-        '400':
-          description: 'Bad request'
-        '404':
-          description: 'Error. Product not found or not enough stock'
-        '409':
-          description: 'Error. Product not found or not enough stock'
-
-  /users/{id}/shopping-cart:
-    get:
-      operationId: R506
-      summary: 'R506: Show shopping cart'
-      description: 'Show the shopping cart of the user with the index {id}. Access: OWN'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-
-      responses:
-        '200':
-          description: 'Ok. Show shopping cart UI'
-        '404':
-          description: "Error. There's not a user with the specified primary key"
-
-  /api/shopping-cart/checkout:
-    post:
-      operationId: R507
-      summary: 'R507: Checkout shopping cart'
-      description: 'Checkout the shopping cart. Access: PUB'
-      tags:
-        - 'M05: Orders and Wishlist'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id_user:
-                  type: integer
-                id_address:
-                  type: integer
-                id_card:
-                  type: integer
-                total:
-                  type: integer
-              example:
-                id_user: 1
-                id_address: 1
-                id_card: 1
-                total: 100
-      responses:
-        '200':
-          description: 'Ok. Shopping cart checked out'
-        '400':
-          description: 'Bad request'
-        '404':
-          description: 'Error. User, address, payment or promotion not found'
-        '409':
-          description: 'Error. Product not found or not enough stock'
 
   /:
     get:
