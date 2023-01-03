@@ -37,7 +37,8 @@ Route::delete('/users/{id}', 'UserController@delete')->name('userDelete');
 Route::get('/users/{id}/edit', 'UserController@edit')->name('userUpdateForm');
 Route::post('register', 'Auth\RegisterController@register')->name('userRegister');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::post('picture', 'UserController@editPicture')->name('editPicture');
+Route::post('/picture/{id}', 'UserController@editPicture')->name('editPicture');
+Route::delete('/picture/delete/{id}', 'UserController@deletePicture')->name('deletePicture');
 
 //Reviews
 Route::get('/review/{id}/edit', 'ReviewController@edit')->name('reviewEditForm');

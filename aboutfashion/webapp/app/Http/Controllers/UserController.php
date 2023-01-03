@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\Product;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller{
 
@@ -108,14 +110,40 @@ class UserController extends Controller{
         if(is_null($user)){
             return abort('404');
         }
-        $validator = Validator::make($request->all(),[
-            'file' => 'required|string|max:255',
-        ]);
+        $imageDir = 'public/img/';
+        $image = $request->file('image');
+        $imgName = date('mdYHis') . uniqid() . '.' . $image->extension();
+        $image->storeAs($imageDir, $imgName);
+        $imageModel = new Image;
+        $imageModel->file = 'img/'. $imgName;
+        $imageModel->save();
 
-        if($validator->fails()){
-            return redirect()->back(); // Adicionar as mensagens de erro
+        //$imageId = (new ImageController)->store($request);
+        //$request['id'] = $user->photo['id'];
+        //(new ImageController)->delete($request);
+
+        $oldImg = $user->photo;
+        if ($oldImg['id'] !== 3329){
+            Storage::delete('public/'.$oldImg['file']);
+            $oldImg->delete();
         }
- 
+        $user->id_image = $imageModel->id;
+        $user->save();
+        return Redirect::route('userView', array('id' => $user->id));
+    }
+
+    public function deletePicture($id){
+        $user = User::find($id);
+        if(is_null($user)){
+            return abort('404');
+        }
+        $oldImg = $user->photo;
+        if ($oldImg['id'] !== 3329){
+            Storage::delete('public/'.$oldImg['file']);
+            $oldImg->delete();
+        }
+        $user->id_image = 3329;
+        $user->save();
         return Redirect::route('userView', array('id' => $user->id));
     }
 

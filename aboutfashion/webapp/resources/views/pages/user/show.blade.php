@@ -15,9 +15,6 @@
                 Details</a>
         </li>
         <li class="nav-item" role="presentation">
-            <a class="nav-link" data-bs-toggle="tab" href="#wishlist" aria-selected="true" role="tab">Wishlist</a>
-        </li>
-        <li class="nav-item" role="presentation">
             <a class="nav-link" data-bs-toggle="tab" href="#reviews" aria-selected="true" role="tab">Reviews</a>
         </li>
         <li class="nav-item" role="presentation">
@@ -65,10 +62,25 @@
                 <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="card-title d-flex justify-content-between">Profile Picture
-                            <a class="fas fa-edit" href="{{ url('/editPicture') }}" data-bs-toggle="modal" data-bs-target="#editPicture"></a>
+                            <div class="justify-content-between" style="display: flex; flex-direction: row; align-items: center;">
+                                <a class="fas fa-edit" href="{{ url('/editPicture') }}" data-bs-toggle="modal" data-bs-target="#editPicture"></a>
+                                <form action="{{ route('deletePicture', ['id' => $user->id]) }}" method="post">
+                                    <input class="btn btn-danger btn-sm" type="submit" value="Delete" style="margin-left: 1em;"> </input>
+                                    @method('delete')
+                                    @csrf
+                                </form>
+                            </div>
                         </h5>
                     </div>
-                    <img src={{ $user->photo['file'] }} id="profilePic" width="300px" height="300px" />
+                    <?php 
+                    if (strpos($user->photo['file'],"http") !== false){
+                        $profileImg = $user->photo['file'];
+                    } else {
+                        $profileImg = 'storage/'.$user->photo['file'];
+                    }
+                    ?>
+                    <img src="{{ asset($profileImg) }}" id="profilePic" width="300px" height="300px" />
+                    
                 </div>
             </div>
             <div class="bottom_buttons">
@@ -89,12 +101,12 @@
                             <span aria-hidden="true"></span>
                             </button>
                         </div>
-                        <form method="POST" action="{{ route('editPicture', ['id' => $user['id']]) }}">
+                        <form method="POST" action="{{ route('editPicture', ['id' => $user['id']]) }}" enctype="multipart/form-data">
                             <div class="modal-body">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group">
                                     <label for="formFile" class="form-label mt-4">Picture input file</label>
-                                    <input class="form-control" type="file" id="formFile">
+                                    <input class="form-control" type="file" id="formFile" name="image">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -201,9 +213,6 @@
                     </div>
                 @endforeach
             </div>
-        </div>
-        <div class="tab-pane fade" id="wishlist" role="tabpanel">
-            <p>This is the wishlist page.</p>
         </div>
         <div class="tab-pane fade" id="reviews" role="tabpanel">
             <h2>My Reviews</h2>

@@ -21,7 +21,8 @@ class ImageController extends Controller
         $imagePath = Storage::putFile('images', $image);
         $imageModel = new Image;
         $imageModel->file = $imagePath;
-        return $imageModel->save();
+        $imageModel->save();
+        return $imageModel->id;
     }
 
     public function edit(Request $request){

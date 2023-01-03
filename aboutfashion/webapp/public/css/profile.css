@@ -82,6 +82,18 @@ div#myTabContent.tab-content {
     flex-direction: row;
 }
 
+#edit_form .modal-footer{
+    padding-top: 1em;
+}
+
+#edit_form{
+    margin: 0 auto;
+}
+
+#information{
+    margin-left: 8em;
+}
+
 .profile-flex #profile-tab{
     margin-top: 1.5em;
 }
