@@ -120,6 +120,9 @@ Route::put('/admin-panel/promotions/create','PromotionController@store')->name('
 //WishList
 Route::post('/api/wishlist', 'UserController@toggleProductWishlist');
 
+//Reports
+Route::get('/reports/create/{id_review}', 'ReportController@create')->name('createReport')->middleware('auth:admin');
+Route::put('/reports/create', 'ReportController@store')->name('storeReport')->middleware('auth:admin');
 
 //API
 Route::get('/api/products/', 'ProductController@searchAPI')->name('productSearchAPI');

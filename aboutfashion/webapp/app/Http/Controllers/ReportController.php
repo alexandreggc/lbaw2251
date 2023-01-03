@@ -18,17 +18,13 @@ class ReportController extends Controller{
         $this->middleware('auth');
     }
     
-    public function create(Request $request){
-        $report = store($request);
-        return view('reports.create', ['report' => $report]);
+    public function create(Request $request, $id_review){
+        $user = Auth::user();
+        $review = Review::find($id_review);
+        $this->authorize('create', $user, $review);
+        return view('pages.reports.create', ['review' => $review]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
     public function store(Request $request){
         $report = new Report();
         $user = User::find($request->input('id_user'));
