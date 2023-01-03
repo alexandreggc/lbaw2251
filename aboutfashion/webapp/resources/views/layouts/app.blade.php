@@ -284,7 +284,7 @@
                             <form method="POST" action="{{ route('userLogin') }}">
                                 {{ csrf_field() }}
                                 <div class="form-group">
-                                    <label for="email" class="form-label mt-4">Email address</label>
+                                    <label for="email" class="form-label mt-4">Email address*</label>
                                     <input id="email" type="email" name="email" value="{{ old('email') }}"
                                         required autofocus class="form-control" placeholder="Enter email">
                                     <small>Please enter your email address.</small>
@@ -295,7 +295,7 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label for="password" class="form-label mt-4">Password</label>
+                                    <label for="password" class="form-label mt-4">Password*</label>
                                     <input type="password" class="form-control" id="password"
                                         placeholder="Password" name="password" required>
                                     <small>Please enter your password.</small>
@@ -344,19 +344,19 @@
                             <form method="POST" action="{{ route('userRegister') }}">
                                 {{ csrf_field() }}
                                 <div class="form-group">
-                                    <label for="first_name" class="form-label mt-4">First Name</label>
+                                    <label for="first_name" class="form-label mt-4">First Name*</label>
                                     <input type="text" class="form-control" id="first_name"
                                         placeholder="First Name" name="first_name" required>
                                     <small>Please enter your first name.</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="last_name" class="form-label mt-4">Last Name</label>
+                                    <label for="last_name" class="form-label mt-4">Last Name*</label>
                                     <input type="text" class="form-control" id="last_name"
                                         placeholder="Last Name" name="last_name" required>
                                     <small>Please enter your last name.</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="email1" class="form-label mt-4">Email address</label>
+                                    <label for="email1" class="form-label mt-4">Email address*</label>
                                     <input id="email1" type="text" name="email" required autofocus
                                         class="form-control" placeholder="Enter email">
                                     <small>Please enter your email address.</small>
@@ -367,13 +367,13 @@
                                     @endif
                                 </div>
                                 <div class="form-group">
-                                    <label for="password" class="form-label mt-4">Password</label>
+                                    <label for="password" class="form-label mt-4">Password*</label>
                                     <input type="password" class="form-control" id="password1"
                                         placeholder="Password" name="password" required>
                                     <small>Please enter your password.</small>
                                 </div>
                                 <div class="form-group">
-                                    <label for="password" class="form-label mt-4">Confirm Password</label>
+                                    <label for="password" class="form-label mt-4">Confirm Password*</label>
                                     <input type="password" class="form-control" id="password2"
                                         placeholder="Password" name="password" required>
                                     <small>Please enter your password again.</small>
