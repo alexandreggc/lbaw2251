@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
+
 class ShoppingCartController extends Controller{
 
     public function show(Request $request){
@@ -42,12 +43,13 @@ class ShoppingCartController extends Controller{
     }
 
     private function searchArray(int $id_product, int $id_color, int $id_size, array $cart){
-        foreach($cart as $detail){
-            if($detail['id_product'] == $id_product && $detail['id_color'] == $id_color && $detail['id_size'] == $id_size){
-                return $detail['id'];
-            }
-            return -1;
+        $keys = array_keys($cart);
+        foreach($keys as $key){
+            if($cart[$key]['id_product'] == $id_product && $cart[$key]['id_color'] == $id_color && $cart[$key]['id_size'] == $id_size){
+                return $key;
+            }  
         }
+        return -1;
     }
 
 
@@ -94,7 +96,7 @@ class ShoppingCartController extends Controller{
     private function getDetailJSON(int $id_detail){
         if(Auth::user()){
             $detail = Detail::find($id_detail);
-            $product = $detail->product();
+            $product = $detail->product;
             $color = $detail->color->name;
             $size = $detail->size->name;
             $quantity = $detail->quantity;
@@ -127,8 +129,9 @@ class ShoppingCartController extends Controller{
         }
 
         if(Auth::user()){
-            if($detail = $this->addProductAuth($request['id_product'],$request['id_color'],$request['id_size'], 1)){
-                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!', 'product'=>$this->getDetailJSON($detail->id), 'id_detail'=>$detail->id),200);
+            $detail = $this->addProductAuth($request['id_product'], $request['id_color'], $request['id_size'], 1);
+            if(!is_null($detail)){
+                return Response::json(array('status'=>'success','message' => 'The product has been added from your cart!', 'product'=>$this->getDetailJSON($detail->id), 'id_detail'=>$detail),200);
             }else{
                 return Response::json(array('status'=>'error','message' => 'An error occurred and we were unable to add the product to your cart!'),500);
             }
@@ -139,7 +142,7 @@ class ShoppingCartController extends Controller{
             }
             if($cart = $request->session()->get('cart')){
                 $i = $this->searchArray($request['id_product'], $request['id_color'], $request['id_size'], $cart);
-                if($i === -1){
+                if($i == -1){
                     $i = end($cart)['id'] + 1;
                     array_push($cart, array('id' => $i, 'id_product' => $request['id_product'], 'id_color' => $request['id_color'], 'id_size' => $request['id_size'], 'quantity' => 1));
                 }else{

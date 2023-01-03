@@ -17,9 +17,11 @@ function deleteProduct(elem) {
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     request.send('id_detail=' + detail + '&_token=' + token)
 
+
     request.onload = function () {
         if (request.status == 200) {
-            (document.getElementById('row-' + detail)).remove()
+            console.log('teste')
+            document.getElementById('row-' + detail).remove()
             updatePrice()
         } else {
             console.log('ERROR!')

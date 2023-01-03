@@ -123,3 +123,5 @@ Route::get('/pic', 'ImageController@test');
 Route::post('/image/upload', 'ImageController@store')->name('uploadImage');
 Route::post('/image/edit', 'ImageController@edit')->name('editImage');
 Route::post('/image/delete', 'ImageController@delete')->name('deleteImage');
+
+Route::get('/api/shopping-cart', 'ShoppingCartController@add');

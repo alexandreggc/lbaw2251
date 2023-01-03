@@ -75,9 +75,10 @@ async function addToCart(element) {
     request.send('id_color=' + color + '&id_size=' + size + '&id_product=' + product + '&_token=' + token)
     request.onload = function () {
         if (request.status == 200) {
+            console.log(JSON.parse(request.responseText))
+            
             let responseProduct = JSON.parse(request.responseText)['product']
 
-            console.log(JSON.parse(request.responseText))
             let tbody = document.getElementById('shop-pop')
             let out = `<tr id="row-${request.responseText['id_detail']}}}" class="row-product">
             <td class=" align-middle justify-content-center"style="width:8rem;"
@@ -128,14 +129,6 @@ async function addToCart(element) {
                 style="padding:0;width:2.5rem;" id=${responseProduct['id_detail']}>
             <span id="quantity-${responseProduct['id_detail']}"
                 style="display: none">${responseProduct['quantity']}</span>
-            </td>
-            <td class="actions align-middle " style="width:2rem" data-th="">
-            <div class="text-right justify-content-center">
-                <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
-                    id=${responseProduct['id_detail']}>
-                    <i class="fas fa-trash" id=${responseProduct['id_detail']}></i>
-                </button>
-            </div>
             </td>
             </tr>`
 

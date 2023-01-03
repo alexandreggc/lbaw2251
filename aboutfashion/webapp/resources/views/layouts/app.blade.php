@@ -34,6 +34,9 @@
             if (!($order = Session::get('cart'))) {
                 $order = null;
             }
+            else{
+                dump($order); 
+            }
         } elseif (
             !($order = Auth::user()
                 ->orders()
@@ -42,6 +45,7 @@
         ) {
             $order = null;
         }
+
     @endphp
     <main>
         <header>
@@ -96,8 +100,8 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href="{{ url('/wishlist') }}"><i class="fa-regular fa-heart"
-                                            style="font-size:24px;"></i></a>
+                                    <a class="nav-link mx-2" href="{{ url('/wishlist') }}"><i
+                                            class="fa-regular fa-heart" style="font-size:24px;"></i></a>
                                 </li>
                             @endif
                             <li class="nav-item dropdown " id="shoppingCartTog">
@@ -131,7 +135,7 @@
                                                 </tr>
                                             @elseif(Auth::user())
                                                 @php
-                                                    $detail = end($order->details);
+                                                    $detail = $order->details[count($order->details) - 1];
                                                 @endphp
                                                 <tr id="row-{{ $detail->id }}" class="row-product">
                                                     <td class=" align-middle justify-content-center"style="width:8rem;"
@@ -194,7 +198,7 @@
                                 </td>
                                 </tr>
                             @elseif(!Auth::user())
-                                @php 
+                                @php
                                     $id = end($order)['id'];
                                     $product = \App\Models\Product::find(end($order)['id_product']);
                                     $size = \App\Models\Size::find(end($order)['id_size']);
@@ -248,14 +252,6 @@
                                             style="padding:0;width:2.5rem;" id={{ $id }}>
                                         <span id="quantity-{{ $id }}"
                                             style="display: none">{{ $quantity }}</span>
-                                    </td>
-                                    <td class="actions align-middle " style="width:2rem" data-th="">
-                                        <div class="text-right justify-content-center">
-                                            <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
-                                                id={{ $id }}>
-                                                <i class="fas fa-trash" id={{ $id }}></i>
-                                            </button>
-                                        </div>
                                     </td>
                                 </tr>
                                 @endif
