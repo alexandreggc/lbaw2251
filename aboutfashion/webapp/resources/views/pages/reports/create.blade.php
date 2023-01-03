@@ -13,8 +13,6 @@
 
                   <form method="POST" action="{{ route('storeReport') }}">
                     @csrf
-                    
-                    
                     <div class="form-group text-start">
                     <label for="report-type">Type of report:</label><br>
                     <input type="radio" id="report-type-1" name="report-type" value="spam">
@@ -30,18 +28,17 @@
                     <br>
                     <label for="report-description">Other:</label><br>
                     <textarea id="report-description" name="report-description"></textarea><br>
+                    
+                    <input type="hidden" id="id_review" name="id_review" value="{{$review->id}}">
+                    <input type="hidden" id="id_user" name="id_user" value="Auth::User->user()->id">
+                    <input type="hidden" id="id_review" name="id_review" value="{{$}}">
                     </div>
                     
                     <hr class="my-4">
                     <button type="submit" class="btn btn-primary" >
                     Send
                     </button>
-                    
-                    
                 </form>
-
-                  
-
                 </div>
               </div>
             </div>
