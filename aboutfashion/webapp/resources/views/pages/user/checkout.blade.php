@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @csrf
-
+    <script type="text/javascript" src={{ asset('js/checkout.js') }} defer></script>
     <script type="text/javascript" src={{ asset('js/shopping_cart.js') }} defer></script>
     <head>
         <ol class="breadcrumb p-3 pb-1">
@@ -27,8 +27,8 @@
                             @else
                             <form class="text-center">
                             @foreach ($addresses as $address)
-                            <div class="choice mx-3  mb-4 text-start" id="{{ $address['id'] }}">
-                            <input class="mx-4" type="radio" id="radio-address-{{ $address['id'] }}" name="radio-group" value="option-1" checked>
+                            <div class="choice mx-3  mb-4 text-start addressClass" id="{{ $address['id'] }}">
+                            <input class="mx-4" type="radio" id="radio-address-{{ $address['id'] }}" name="radio-group" value="{{ $address['id'] }}" checked>
                             <label class=" mx-2"for="radio-1">
                                 <div>{{ $address['name'] }} , {{ $address['street'] }} {{ $address['number'] }}
                                 </div>
@@ -49,8 +49,8 @@
                             @else
                             <form class="text-center">
                             @foreach ($cards as $card)
-                            <div class="choice mx-3 mb-4 text-start"id="{{ $card['id'] }}" >
-                            <input class="mx-4" type="radio" id="radio-card-{{ $card['id'] }}" name="radio-group" value="option-1" checked>
+                            <div class="choice mx-3 mb-4 text-start cardClass"id="{{ $card['id'] }}" >
+                            <input class="mx-4" type="radio" id="radio-card-{{ $card['id'] }}" name="radio-group" value="{{ $card['id'] }}" checked>
                             <label class=" mx-2"for="radio-1">
                                 <div>{{ $card['name'] }} <small>({{ $card['nickname'] }})</small>
                                 </div>
@@ -156,7 +156,7 @@
                                 <div class="d-flex justify-content-between my-3 information">
                                     <span>Total</span><span id="total" style="padding: 0;"></span>
                                 </div>
-                                <button class="btn btn-primary btn-block d-flex mx-auto mt-5"
+                                <button class="btn btn-primary btn-block d-flex mx-auto mt-5" id="button_buyNow"
                                     style="background-color:rgba(0,0,0,.9);" type="button"><span>Buy Now</span></button>
                             </div>
                         </div>
@@ -165,4 +165,5 @@
             </div>
         </section>
     </body>
+
 @endsection
