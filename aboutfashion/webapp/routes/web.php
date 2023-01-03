@@ -72,6 +72,8 @@ Route::get('/admin-panel/orders/{id}/editStatus','OrderController@editStatus')->
 Route::patch('/admin-panel/orders/{id}/status','OrderController@updateStatus')->name('updateOrderStatus')->middleware('auth:admin');
 Route::get('/admin-panel/orders/{id}/edit','OrderController@edit')->name('editOrder')->middleware('auth:admin');
 Route::patch('/admin-panel/orders/{id}','OrderController@update')->name('updateOrder')->middleware('auth:admin');
+Route::get('/orders/{id}/cancel','OrderController@cancel');
+
 
 //Cards
 Route::get('/cards/{id}/edit', 'CardController@edit')->name('cardEditForm');
