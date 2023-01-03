@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
@@ -232,7 +233,7 @@ class ProductController extends Controller{
             $stock->id_size = $request->input('id_size');
             $stock->stock = $request->input('new_stock');
 
-            if ($stock->save()) {
+            if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$stock->id_color,$stock->id_size ))) {
                 return Redirect::route('productsAdminPanel');
             } else {
                 return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
@@ -271,7 +272,7 @@ class ProductController extends Controller{
 
         $stock->stock = $request->input('new_stock');
 
-        if ($stock->save()) {
+        if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$stock->id_color,$stock->id_size ))) {
             return Redirect::route('productsAdminPanel');
         } else {
             return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
