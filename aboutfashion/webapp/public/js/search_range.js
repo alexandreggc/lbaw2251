@@ -3,11 +3,11 @@
 var pmdSliderValueRange = document.getElementById('pmd-slider-value-range');
 
 noUiSlider.create(pmdSliderValueRange, {
-  start: [ 0, 1000 ], // Handle start position
+  start: [ 0, 5000 ], // Handle start position
   connect: true, // Display a colored bar between the handles
   range: { // Slider can select '0' to '100'
     'min': 0,
-    'max': 1000
+    'max': 5000
   },
   format: wNumb({
     decimals: 0}),

@@ -15,7 +15,7 @@ function attachEvents() {
 }
 async function selectOrder() {
     showSpinner();
-    url = '/api/products?'
+    url = document.getElementById("url_api").value
     order = document.getElementById("order").value
     if (!(order == 'Order')) {
         url += 'order='
@@ -29,6 +29,7 @@ async function selectOrder() {
     let oldBody = document.getElementById("data-output")
     let newBody = drawProducts(products)
     oldBody.innerHTML = newBody
+    document.getElementById("url_api").setAttribute("value",url) = url
 }
 
 
@@ -44,14 +45,23 @@ async function showAll() {
 
     oldBody.innerHTML = newBody
 }
-
+function urlParse(){
+    var partsArray = document.getElementById("url_api").value.split('&');
+    
+}
 async function selectSearch(element) {
     showSpinner();
-    url = '/api/products?'
+    url = document.getElementById("url_api").value
     let name = document.getElementById('fname').value
-    url += 'product_name='
-    url += name
-
+    if((url == '' ) && (!(name == '' ))){
+        url += '/api/products?'
+        url += 'product_name='
+        url += name
+    }else if(!(name == '' )){
+        url += '&'
+        url += 'product_name='
+        url += name
+    }
     const response = await fetch(url)
     const products = await response.json()
     if (response) {
@@ -61,6 +71,7 @@ async function selectSearch(element) {
     let newBody = drawProducts(products)
 
     oldBody.innerHTML = newBody
+    document.getElementById("url_api").setAttribute("value",url) = url
 }
 
 
@@ -86,24 +97,23 @@ async function selectFilters(element) {
         url += color
         url += '&'
     }
-    valueMin = document.getElementById('value-min').value
+    valueMin = document.getElementById('value-min').innerText
     url += 'min_price='
     url += valueMin
     url += '&'
 
-    valueMax = document.getElementById('value-max').value
+    valueMax = document.getElementById('value-max').innerText
     url += 'max_price='
     url += valueMax
     url += '&'
 
-    min_classification = document.getElementById('myRange').value
+    min_classification = document.getElementById('slider-range-value').innerText
     if (!(min_classification == 0)) {
         url += 'min_classification='
         url += min_classification
     } else {
         url = url.slice(0, -1);
     }
-
     const response = await fetch(url)
     const products = await response.json()
     if (response) {
@@ -113,6 +123,7 @@ async function selectFilters(element) {
     let newBody = drawProducts(products)
 
     oldBody.innerHTML = newBody
+    document.getElementById("url_api").setAttribute("value",url) = url
 }
 
 function drawProducts(products) {

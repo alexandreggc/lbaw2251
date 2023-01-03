@@ -15,6 +15,7 @@
                     </ul>
 
                     <div class="card h-100 shadow costum-card text-center mx-auto">
+                        <input type="hidden" id="url_api" value="">
                         <form class="mt-4 mb-4 " method="GET">
                             <fieldset>
                                 <div class="card-group ">
@@ -106,11 +107,11 @@
                         <select class="form-select" name="order" id="order"
                             style="background-color:#ecf0f1;  display:inline; border: none; color:#212529; font-size: 18px;">
                             <option value="Order" selected>Order</option>
-                            <option value="price_asc"> Menor preço</option>
-                            <option value="price_desc"> Maior preço</option>
-                            <option value="avg_desc"> Desconto</option>
-                            <option value="name_asc"> Nome produto(a-z)</option>
-                            <option value="name_desc"> Nome produto(z-a)</option>
+                            <option value="price_asc">Smaller price </option>
+                            <option value="price_desc"> Bigger price </option>
+                            <option value="avg_desc"> Discount </option>
+                            <option value="name_asc"> Product name (a-z) </option>
+                            <option value="name_desc"> Product name (z-a) </option>
                         </select>
                     </form>
                 </div>

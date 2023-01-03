@@ -28,15 +28,18 @@
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 ">
     @php
-        if (!Auth::user() && !($order = Session::get('cart'))) {
+        if (!Auth::user()) {
+            if (!($order = Session::get('cart'))) {
+                $order = null;
+            }
         } elseif (
             !($order = Auth::user()
                 ->orders()
                 ->where('status', 'Shopping Cart')
                 ->first())
-        ){
+        ) {
             $order = null;
         }
     @endphp
@@ -60,7 +63,7 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-bell"
+                                    <a class="nav-link mx-2" href=#><i class="fa-regular fa-bell"
                                             style="font-size:24px;"></i></a>
                                 </li>
                             @endif
@@ -93,7 +96,7 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href="#"><i class="fa-regular fa-heart"
+                                    <a class="nav-link mx-2" href="{{ url('/wishlist') }}"><i class="fa-regular fa-heart"
                                             style="font-size:24px;"></i></a>
                                 </li>
                             @endif
@@ -114,10 +117,8 @@
                                     </div>
                                     <table id="shoppingCart" class="table table-condensed mb-4 table-responsive">
                                         <tbody id="shop-pop">
-                                            @php
-                                                $n = count($order->details);
-                                            @endphp
-                                            @if (is_null($order) or ($n==0))
+
+                                            @if (is_null($order))
                                                 <tr>
                                                     <td>
                                                         <div
@@ -128,9 +129,9 @@
                                                     </td>
 
                                                 </tr>
-                                            @else
+                                            @elseif(Auth::user())
                                                 @php
-                                                    $detail = $order->details[$n - 1];
+                                                    $detail = end($order->details);
                                                 @endphp
                                                 <tr id="row-{{ $detail->id }}" class="row-product">
                                                     <td class=" align-middle justify-content-center"style="width:8rem;"
@@ -176,7 +177,7 @@
                                 </td>
                                 <td class=" align-middle justify-content-center" style="width:3rem;"
                                     data-th="quanti">
-                                    <input type="number" style="margin:0;"
+                                    <input readonly type="number" style="margin:0;"
                                         class="form-control form-control-sm text-center update-quantity"
                                         value="{{ $detail->quantity }}" min="1"
                                         style="padding:0;width:2.5rem;" id={{ $detail->id }}>
@@ -192,7 +193,71 @@
                                     </div>
                                 </td>
                                 </tr>
+                            @elseif(!Auth::user())
+                                @php 
+                                    $id = end($order)['id'];
+                                    $product = \App\Models\Product::find(end($order)['id_product']);
+                                    $size = \App\Models\Size::find(end($order)['id_size']);
+                                    $color = \App\Models\Color::find(end($order)['id_color']);
+                                    $quantity = end($order)['quantity'];
+                                @endphp
+                                <tr id="row-{{ $id }}" class="row-product">
+                                    <td class=" align-middle justify-content-center"style="width:8rem;"
+                                        data-th="Produtoooooooooooooooooo">
+                                        <div class="row">
+                                            <div class="col-md-6 text-left">
+                                                <img src="{{ $product->images[0]['file'] }}" alt=""
+                                                    class="img-fluid d-none d-md-block rounded mt-3 shadow ">
+                                            </div>
+                                            <div class="col-md-6  align-middle text-left mt-sm-2 mx-auto">
+                                                <h6 style="font-size:0.8em;">
+                                                    {{ $product->name }}</h6>
+                                                <p class="font-weight-light" style="font-size:0.5rem;">Size:
+                                                    {{ $size->name }} <br>
+                                                    Color: {{ $color->name }} </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class=" align-middle justify-content-center" style="width:2rem;"
+                                        data-th="preço">
+                                        <div class=" mt-sm-2">
+                                            @php
+                                                $finalPrice = $product->getPriceWithPromotion(date('Y-m-d H:i:s'));
+                                            @endphp
+                                            <p class="font-weight-light" style="font-size:0.7rem;">
+                                                {{ $finalPrice }}€
+                                                @if ($finalPrice == $product['price'])
+                                            </p>
+                                        @else
+                                            <small class="dis-price"
+                                                style="color: #888;text-decoration: line-through;">{{ $product['price'] }}€</small>
+                                            </p>
+                                            @endif
+                                            <span id="original-price-{{ $id }}"
+                                                style="display: none">{{ $product['price'] }}</span>
+                                            <span id="final-price-{{ $id }}"
+                                                style="display: none">{{ $finalPrice }}</span>
 
+                                        </div>
+                                    </td>
+                                    <td class=" align-middle justify-content-center" style="width:3rem;"
+                                        data-th="quanti">
+                                        <input readonly type="number" style="margin:0;"
+                                            class="form-control form-control-sm text-center update-quantity"
+                                            value="{{ $quantity }}" min="1"
+                                            style="padding:0;width:2.5rem;" id={{ $id }}>
+                                        <span id="quantity-{{ $id }}"
+                                            style="display: none">{{ $quantity }}</span>
+                                    </td>
+                                    <td class="actions align-middle " style="width:2rem" data-th="">
+                                        <div class="text-right justify-content-center">
+                                            <button class="btn btn-white d-flex mx-auto bg-white btn-md delete-detail "
+                                                id={{ $id }}>
+                                                <i class="fas fa-trash" id={{ $id }}></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endif
                                 </tbody>
                                 </table>
@@ -394,7 +459,7 @@
 
         <footer
             class=" bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top mb-auto"
-            style="z-index: 200;">
+            style="z-index: 200;position:absolute;left: 0;bottom: 0;width: 100%;text-align: center;">
             <p class="col-md-4 mb-0  mx-3"> &#169 About Fashion</p>
             <ul class="nav col-md-4 justify-content-end">
                 <li class="nav-item"> <a href="/about"
