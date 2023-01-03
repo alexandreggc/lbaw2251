@@ -23,7 +23,7 @@
                                     data-bs-target="#collapse{{$review->id}}" aria-expanded="true" 
                                     aria-controls="collapse{{$review->id}}">
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $review->product->images[0]->file }}" alt="product image" 
+                                    <img src="{{ asset($review->product->images[0]->imageURL()) }}" alt="product image" 
                                         class="img-fluid">
                                 </div>
                                 <div class="col">

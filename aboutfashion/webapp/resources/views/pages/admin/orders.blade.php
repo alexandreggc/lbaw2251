@@ -58,7 +58,7 @@
                                     <div class="row">
                                         <div class="col-2">
                                             @foreach ($order->details as $details)
-                                                <img src="{{ $details->product->images[0]->file }}" 
+                                                <img src="{{ asset($details->product->images[0]->imageURL()) }}" 
                                                     class="img-fluid" alt="Responsive image">
                                                 <div class="pt-3 text-center">
                                                     <strong>{{$details->product['name']}}</strong>

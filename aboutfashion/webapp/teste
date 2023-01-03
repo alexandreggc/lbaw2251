@@ -1,4 +1,10 @@
-create schema if not exists lbaw2251;
+
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[42P07]: Duplicate table: 7 ERROR:  relation "notifications" already exists (SQL: create schema if not exists lbaw2251;
 --DROP's
 SET search_path TO lbaw2251;
 --DROP's
@@ -31,8 +37,6 @@ DROP TABLE IF EXISTS user_order CASCADE;
 DROP TABLE IF EXISTS order_details CASCADE;
 DROP TABLE IF EXISTS user_like CASCADE;
 DROP TABLE IF EXISTS password_resets CASCADE;
-DROP TABLE IF EXISTS notifications CASCADE;
-
 
 
 DROP INDEX IF EXISTS user_order_idx  CASCADE;
@@ -14892,3 +14896,23 @@ insert into report (id, description, resolved, report_date, id_review, id_user) 
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh', true, '2022-11-03 18:40:43', 18, 123);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti', false, '2022-11-06 07:03:20', null, 117);
 insert into report (id, description, resolved, report_date, id_review, id_user) values (DEFAULT, 'eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero nam dui proin leo odio porttitor id consequat in consequat ut nulla sed accumsan', true, '2022-11-08 22:53:20', 14, 154);
+)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:759
+    755▕         // If an exception occurs when attempting to run a query, we'll format the error
+    756▕         // message to include the bindings with SQL, which will make this exception a
+    757▕         // lot more helpful to the developer instead of just the database's errors.
+    758▕         catch (Exception $e) {
+  ➜ 759▕             throw new QueryException(
+    760▕                 $query, $this->prepareBindings($bindings), $e
+    761▕             );
+    762▕         }
+    763▕     }
+
+      [2m+7 vendor frames [22m
+  8   database/seeders/DatabaseSeeder.php:18
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+      [2m+23 vendor frames [22m
+  32  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()

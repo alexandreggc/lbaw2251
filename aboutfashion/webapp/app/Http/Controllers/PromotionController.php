@@ -67,7 +67,7 @@ class PromotionController extends Controller{
         ]);
 
         if($validator->fails()){
-            return return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
+            return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
         }
 
         $promotion->discount = $request->input('discount');
