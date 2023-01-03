@@ -31,7 +31,8 @@
                                         @else
                                             <span class="badge bg-secondary ms-3">Other Report</span>
                                         @endif
-                                        <span class="badge bg-warning ms-3">Open</span>
+                                        <span class="badge bg-warning ms-3" id="badge-change-{{ $report->id }}"
+                                            style="display: none">Open</span>
                                     @elseif ($report->resolved == true)
                                         <strong>Report ID: {{ $report->id }}</strong>
                                         @if (isset($report->id_review))
@@ -39,7 +40,7 @@
                                         @else
                                             <span class="badge bg-secondary ms-3">Other Report</span>
                                         @endif
-                                        <span class="badge bg-success ms-3">Closed</span>
+                                        <span class="badge bg-success ms-3" id="badge-change-{{ $report->id }}">Closed</span>
                                     @endif
                                     <br>
                                     <br>
@@ -69,14 +70,14 @@
                                         <div class="col-1">
                                             @if ($report->resolved == false)
                                                 <div class="row">
-                                                    <button class="btn btn-info btn-sm fa-solid fa-envelope close-report"
+                                                    <button class="btn btn-info btn-sm fa-solid fa-envelope change-report"
                                                         id="{{ $report->id }}">
                                                     </button>
                                                 </div>
                                             @elseif ($report->resolved == true)
                                                 <div class="row">
                                                     <button
-                                                        class="btn btn-warning btn-sm fa-solid fa-envelope-open open-report"
+                                                        class="btn btn-warning btn-sm fa-solid fa-envelope-open change-report"
                                                         id="{{ $report->id }}">
                                                     </button>
                                                 </div>
@@ -88,9 +89,10 @@
                         </div>
                     </div>
                 @endforeach
-                <div style="padding-top:1em;">
-                    {{ $reports->links() }}
-                </div>
+            </div>
+            <div style="padding-top:1em;">
+                {{ $reports->links() }}
+            </div>
         </div>
     </div>
 @endsection

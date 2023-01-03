@@ -36,9 +36,9 @@
                                 @else
                                     <div class="col">
                                         {{ $user['first_name'] . ' ' . $user['last_name'] }}
-                                    </div>
-                                    <span class="badge bg-danger ms-3" id="badge-block-{{ $user->id }}"
+                                        <span class="badge bg-danger ms-3" id="badge-block-{{ $user->id }}"
                                         style="display: none">Blocked</span>
+                                    </div>
                                 @endif
                             </button>
                         </h2>
@@ -74,19 +74,22 @@
                                             @if ($user['blocked'] == 0)
                                                 <div class="row">
                                                     <button class="btn btn-warning btn-sm mb-3 fa-solid fa-lock block-user"
-                                                        id="block-{{ $user->id }}"></button>
+                                                        id="block-{{ $user->id }}">
+                                                    </button>
                                                 </div>
                                             @else
                                                 <div class="row">
                                                     <button
                                                         class="btn btn-warning btn-sm mb-3 fa-solid fa-unlock block-user"
-                                                        id="block-{{ $user->id }}"></button>
+                                                        id="block-{{ $user->id }}">
+                                                    </button>
                                                 </div>
                                             @endif
                                             <div class="row">
                                                 <button
                                                     class="fa-solid fa-user-xmark btn btn-danger btn-sm pe-1 delete-user"
-                                                    id={{ $user->id }}></button>
+                                                    id={{ $user->id }}>
+                                                </button>
                                             </div>
                                         @endif
                                     </div>
