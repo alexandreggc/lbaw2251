@@ -134,7 +134,7 @@
                                                 @php
                                                     $detail = $order->details[count($order->details) - 1];
                                                 @endphp
-                                                <tr id="row-{{ $detail->id }}" class="row-product">
+                                                <tr>
                                                     <td class=" align-middle justify-content-center"style="width:8rem;"
                                                         data-th="Produtoooooooooooooooooo">
                                                         <div class="row">
@@ -202,7 +202,7 @@
                                     $color = \App\Models\Color::find(end($order)['id_color']);
                                     $quantity = end($order)['quantity'];
                                 @endphp
-                                <tr id="row-{{ $id }}" class="row-product">
+                                <tr>
                                     <td class=" align-middle justify-content-center"style="width:8rem;"
                                         data-th="Produtoooooooooooooooooo">
                                         <div class="row">

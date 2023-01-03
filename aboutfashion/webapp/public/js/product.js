@@ -80,7 +80,7 @@ async function addToCart(element) {
             let responseProduct = JSON.parse(request.responseText)['product']
 
             let tbody = document.getElementById('shop-pop')
-            let out = `<tr id="row-${request.responseText['id_detail']}}}" class="row-product">
+            let out = `<tr>
             <td class=" align-middle justify-content-center"style="width:8rem;"
                 data-th="Produtoooooooooooooooooo">
                 <div class="row">
@@ -114,9 +114,9 @@ async function addToCart(element) {
             </p>`
             }
 
-            out += `<span id="original-price-${responseProduct['price_with_promotion']}"
+            out += `<span 
             style="display: none">${responseProduct['price_without_promotion']}</span>
-        <span id="final-price-${responseProduct['id_detail']}"
+        <span 
             style="display: none">${responseProduct['quantity'] * responseProduct['price_with_promotion']}</span>
 
             </div>
@@ -126,8 +126,8 @@ async function addToCart(element) {
             <input readonly type="number" style="margin:0;"
                 class="form-control form-control-sm text-center update-quantity"
                 value="${responseProduct['quantity']}" min="1"
-                style="padding:0;width:2.5rem;" id=${responseProduct['id_detail']}>
-            <span id="quantity-${responseProduct['id_detail']}"
+                style="padding:0;width:2.5rem;" >
+            <span "
                 style="display: none">${responseProduct['quantity']}</span>
             </td>
             </tr>`
