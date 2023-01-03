@@ -120,7 +120,7 @@ class ReviewController extends Controller{
         ]);
         
         if($validator->fails()){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         $review['evaluation'] = $request->input('evaluation');
@@ -129,7 +129,7 @@ class ReviewController extends Controller{
         if ($review->save()) {
             return Redirect::route('userView', array('id'=>Auth::user()));
         }else{
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
@@ -143,7 +143,7 @@ class ReviewController extends Controller{
         if($review->delete()){
             return Redirect::route('userView', array('id'=>Auth::user()));
         }else{
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         } 
     }
 

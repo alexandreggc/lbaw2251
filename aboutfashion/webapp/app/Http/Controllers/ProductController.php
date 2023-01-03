@@ -89,11 +89,11 @@ class ProductController extends Controller{
         ]);
 
         if($validator->fails()){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
         
         if(!$category = Category::find($request->input('id_category'))){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         };
 
         $product = new Product();
@@ -116,7 +116,7 @@ class ProductController extends Controller{
         if($product->save()){
             return Redirect::route('productsAdminPanel');
         }else{
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
@@ -137,7 +137,7 @@ class ProductController extends Controller{
     public function update(Request $request){
         $id = $request['id'];
         if(!$product = Product::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
         $oldPrice = $product->price;
         $this->authorize('updateProduct', Auth::guard('admin')->user());
@@ -179,7 +179,7 @@ class ProductController extends Controller{
             }
             return Redirect::route('productsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
@@ -203,7 +203,7 @@ class ProductController extends Controller{
 
     public function addProductPromotion(Request $request, $id){
         if(!$product = Product::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
@@ -219,7 +219,7 @@ class ProductController extends Controller{
         }
 
         if (!$promotion = Promotion::find($request->input('id_promotion'))){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
        
         $product->promotions()->attach($promotion); 
@@ -227,13 +227,13 @@ class ProductController extends Controller{
         if ($product->save()) {
             return Redirect::route('productsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
     public function removeProductPromotion(Request $request, $id){
         if(!$product = Product::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         if(!(Auth::guard('admin')->user()->role == 'Collaborator')){
@@ -245,11 +245,11 @@ class ProductController extends Controller{
         ]);
 
         if($validator->fails()){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         if (!$promotion = Promotion::find($request->input('id_promotion'))){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
        
         $product->promotions()->detach($promotion); 
@@ -257,7 +257,7 @@ class ProductController extends Controller{
         if ($product->save()) {
             return Redirect::route('productsAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
