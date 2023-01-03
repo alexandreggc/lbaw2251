@@ -16,7 +16,7 @@
         <table id="notifation" class="table table-condensed mb-4 table-responsive">
             <tbody id="shop-pop">
 
-                @if (is_null($notifications))
+                @if (is_null($usernotifications))
                     <tr>
                         <td>
                             <div

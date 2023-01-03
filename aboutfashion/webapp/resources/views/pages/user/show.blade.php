@@ -200,7 +200,8 @@
                                     <span>{{ $order->totalPrice($order['id']) }}</span>
                                 </li>
                             </ul>
-                            <a href="/order/{{ $order['id'] }}" class="card-link">More Details</a>
+                            <a href="/order/{{ $order['id'] }}" class="card-link ms-2 me-5">More Details</a>
+                            <button class="btn btn-danger ms-5" style="align-items: flex-end;"><a href="/order/{{ $order['id'] }}" style="color:#fff;text-decoration: none;" class="card-link">Cancel Order</a></button>
                         </div>
                     </div>
                 @endforeach
