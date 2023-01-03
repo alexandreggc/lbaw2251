@@ -15,57 +15,6 @@
         <section class="pb-5 mt-2">
             <div class="container">
                 <h3 class="display-5 mt-4 mb-4 text-left">CHECKOUT</h3>
-                <div class="row">
-                        <div class=" card mt-1" style="border-color: #dee2e6;border-radius: 0;display: flex;flex-direction:row;" >
-                            <div class="col col-md-6 mb-4 " style="flex: 1;" >
-                            <h4 class="mt-4 mx-2 mb-3" style="">ADDRESSES</h4>
-                            @if (is_null($addresses) || (!(count($addresses)>0))))
-                            <div class="choice mx-3 mt-2 mb-4 text-center" >
-                            <p>You don't have any address!</p>
-                            <a href="{{ route('addressCreateForm') }}" class="mt-5"> Add address</a>
-                            </div>
-                            @else
-                            <form class="text-center">
-                            @foreach ($addresses as $address)
-                            <div class="choice mx-3  mb-4 text-start addressClass" id="{{ $address['id'] }}">
-                            <input class="mx-4" type="radio" id="radio-address-{{ $address['id'] }}" name="radio-group" value="{{ $address['id'] }}" checked>
-                            <label class=" mx-2"for="radio-1">
-                                <div>{{ $address['name'] }} , {{ $address['street'] }} {{ $address['number'] }}
-                                </div>
-                            </label>
-                            </div>
-                            @endforeach
-                            <a href="{{ route('addressCreateForm') }}" class="mt-5"> Add address</a>
-                            </form>
-                            @endif
-                            </div>
-                            <div class="col-md-6 col mb-4 " style="flex: 1;">
-                            <h4 class="mt-4 mb-3 mx-2" style="">CARDS</h4>
-                            @if (is_null($cards) || (!(count($cards)>0))))
-                            <div class="choice mx-3 mt-2 mb-4 text-center">
-                            <p>You don't have any card!</p>
-                            <a href="{{ route('cardCreateForm') }}" class="mt-5"> Add card</a>
-                            </div>
-                            @else
-                            <form class="text-center">
-                            @foreach ($cards as $card)
-                            <div class="choice mx-3 mb-4 text-start cardClass"id="{{ $card['id'] }}" >
-                            <input class="mx-4" type="radio" id="radio-card-{{ $card['id'] }}" name="radio-group" value="{{ $card['id'] }}" checked>
-                            <label class=" mx-2"for="radio-1">
-                                <div>{{ $card['name'] }} <small>({{ $card['nickname'] }})</small>
-                                </div>
-                            </label>
-                            </div>
-                            @endforeach
-                            <a href="{{ route('cardCreateForm') }}" class="mt-5" style="text-align:center"> Add card</a>
-                            </form>
-                            @endif
-                            </div>
-                            
-                        </div>
-                </div>
-
-
                 <div class="row mt-2 w-100">
                     <div class="col-lg-8 col-md-8 col-8">
                     <div class=" card mt-1 " style="border-color: #dee2e6;border-radius: 0;padding:2rem;">
@@ -146,7 +95,7 @@
                     <div class=" col-lg-4 col-md-4 col-4 " style="padding:0;">
                         <div class=" card mt-1" style="border-color: #dee2e6;border-radius: 0;">
                             <h4 class="mt-5 mx-5" style="">CHECKOUT</h4>
-                            <div class="col mx-5 mb-5 my-2">
+                            <div class="col mx-5 mb-3 my-2">
                                 <div class="d-flex justify-content-between my-3 information">
                                     <span>Subtotal</span><span id="subtotal"></span>
                                 </div>
@@ -156,8 +105,53 @@
                                 <div class="d-flex justify-content-between my-3 information">
                                     <span>Total</span><span id="total" style="padding: 0;"></span>
                                 </div>
-                                <button class="btn btn-primary btn-block d-flex mx-auto mt-5" id="button_buyNow"
+                            
+                            </div>
+                        </div>
+                        <div class=" card mt-2" style="border-color: #dee2e6;border-radius: 0;">
+                        <div class="col mx-5 mb-5 mt-5 my-2">
+                            <form action="">
+                            <div class="card-group ">
+                                <h5 class="text-start ms-2">ADDRESSES</h5>
+                                @if (is_null($addresses) || (!(count($addresses)>0))))
+                                <div class="choice mx-3 mt-2 mb-4 text-center" >
+                                <p>You don't have any address!</p>
+                                 <a href="{{ route('addressCreateForm') }}" class="mx-3 mt-3"> Add address</a>
+                                </div>
+                                @else
+                                <fieldset class="form-group mx-3" style="width:100%; margin-top:1rem;">
+                                <select class="form-select select " id="address" name="id_address">
+                                    <option selected >Select address</option>
+                                    @foreach ($addresses as $address)
+                                    <option value="{{ $address['id'] }}">{{ $address['name'] }} , {{ $address['street'] }} {{ $address['number'] }}</option>
+                                    @endforeach
+                                </select>
+                                </fieldset>
+                                <a href="{{ route('addressCreateForm') }}" class="mx-3 mt-3"> Add address</a>
+                                @endif
+                            </div>
+                            <div class="card-group mt-4 ">
+                                <h5 class="text-start ms-2">CARDS</h5>
+                                @if (is_null($cards) || (!(count($cards)>0))))
+                                <div class="choice mx-3 mt-2 mb-4 text-center">
+                                <p>You don't have any card!</p>
+                                <a href="{{ route('cardCreateForm') }}" class=" mx-3 mt-3"> Add card</a>
+                                </div>
+                                @else
+                                <fieldset class="form-group mx-3" style="width:100%; margin-top:1rem;">
+                                <select class="form-select select " id="card" name="id_card">
+                                    <option selected >Select card</option>
+                                    @foreach ($cards as $card)
+                                    <option value="{{ $card['id'] }}">{{ $card['name'] }} <small>({{ $card['nickname'] }})</small></option>
+                                    @endforeach
+                                </select>
+                                </fieldset>
+                                <a href="{{ route('cardCreateForm') }}" class=" mx-3 mt-3"> Add card</a>
+                                @endif
+                            </div>
+                            <button class="btn btn-primary btn-block d-flex mx-auto mt-5" id="button_buyNow"
                                     style="background-color:rgba(0,0,0,.9);" type="button"><span>Buy Now</span></button>
+                            </form>
                             </div>
                         </div>
                     </div>
