@@ -12,9 +12,9 @@
     </head>
 
     <body>
-        <section class="pb-5">
+        <section class="pb-5 mt-2">
             <div class="container">
-                <h3 class="display-5 mt-3 mb-5 text-left">CHECKOUT</h3>
+                <h3 class="display-5 mt-4 mb-4 text-left">CHECKOUT</h3>
                 <div class="row">
                         <div class=" card mt-1" style="border-color: #dee2e6;border-radius: 0;display: flex;flex-direction:row;" >
                             <div class="col col-md-6 mb-4 " style="flex: 1;" >

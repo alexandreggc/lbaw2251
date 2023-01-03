@@ -178,4 +178,8 @@ class UserController extends Controller{
             return view('pages.wishlist', array('wishlist' => $wishlist));
         }
     } 
+    public function showNotifications(){
+        $user = Auth::user();
+        return view('pages.user.notifications', array('notifications'=>$user->notification));
+    } 
 }
