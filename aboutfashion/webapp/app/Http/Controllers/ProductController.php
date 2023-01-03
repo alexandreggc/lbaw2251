@@ -233,7 +233,7 @@ class ProductController extends Controller{
             $stock->id_size = $request->input('id_size');
             $stock->stock = $request->input('new_stock');
 
-            if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$stock->id_color,$stock->id_size ))) {
+            if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$id_color,$id_size ))) {
                 return Redirect::route('productsAdminPanel');
             } else {
                 return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
