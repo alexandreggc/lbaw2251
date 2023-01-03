@@ -123,6 +123,7 @@ Route::delete('/api/admin-panel/products/{id}', 'ProductController@delete')->mid
 Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/categories/{id}', 'CategoryController@delete')->middleware('auth:admin');
+Route::delete('/api/admin-panel/reviews/{id}', 'ReviewController@delete')->middleware('auth:admin');
 
 // Images
 Route::get('/pic', 'ImageController@test');
