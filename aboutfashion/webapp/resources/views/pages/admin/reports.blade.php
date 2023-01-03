@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
 @section('content')
+    @csrf
+    <script type="text/javascript" src={{ asset('js/report_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
             <h2 class="p-3">Hi Admin!</h2>
@@ -15,7 +17,7 @@
             </div>
             <div class="accordion" id="accordion">
                 @foreach($reports as $report)
-                    <div class="accordion-item">
+                    <div class="accordion-item" id="accordion-item-{{ $report->id }}">
                         <h2 class="accordion-header" id="heading{{$report->id}}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
                                     data-bs-target="#collapse{{$report->id}}" aria-expanded="true" 
@@ -54,17 +56,17 @@
                                         <div class="col-3"></div>
                                         <div class="col-1">
                                         @if ($report->resolved == false)
-                                            <button type="submit" class="btn btn-info btn-sm">
-                                                <i class="fa-solid fa-envelope"></i>
-                                                &nbsp;
-                                                Close
-                                            </button>
+                                            <div class="row">
+                                                <button class="btn btn-info btn-sm fa-solid fa-envelope close-report" 
+                                                        id="{{ $report->id }}">    
+                                                </button>
+                                            </div>
                                         @elseif ( $report->resolved == true)
-                                            <button type="submit" class="btn btn-warning btn-sm">
-                                                <i class="fa-solid fa-envelope-open"></i>
-                                                &nbsp;
-                                                Open
-                                            </button>
+                                            <div class="row">
+                                                <button class="btn btn-warning btn-sm fa-solid fa-envelope-open open-report" 
+                                                        id="{{ $report->id }}">
+                                                </button>
+                                            </div>
                                         @endif
                                         </div>
                                     @endif

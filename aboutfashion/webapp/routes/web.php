@@ -124,6 +124,8 @@ Route::delete('/api/admin-panel/promotions/{id}', 'PromotionController@delete')-
 Route::delete('/api/admin-panel/orders/{id}', 'OrderController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/categories/{id}', 'CategoryController@delete')->middleware('auth:admin');
 Route::delete('/api/admin-panel/reviews/{id}', 'ReviewController@delete')->middleware('auth:admin');
+Route::patch('/api/admin-panel/reports/open/{id}', 'ReportController@open')->middleware('auth:admin');
+Route::patch('/api/admin-panel/reports/close/{id}', 'ReportController@close')->middleware('auth:admin');
 
 // Images
 Route::get('/pic', 'ImageController@test');

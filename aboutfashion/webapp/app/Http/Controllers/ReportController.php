@@ -109,4 +109,44 @@ class ReportController extends Controller{
         $report->delete();
         return $report;
     }
+
+    public function open($id){
+        if(!is_numeric($id)){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+
+        $this->authorize('updateReport', Auth::guard('admin')->user());
+        $report = Report::find($id);
+        if(is_null($report)){
+            return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
+        }
+
+        $report->resolved = 0;
+
+        if ($review->save()) {
+            return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
+        }else{
+            return Redirect::back()->withErrors();
+        }
+    }
+
+    public function close($id){
+        if(!is_numeric($id)){
+            return Response::json(array('status' => 'error', 'message'=>'Bad request!'),400);
+        }
+
+        $this->authorize('updateReport', Auth::guard('admin')->user());
+        $report = Report::find($id);
+        if(is_null($report)){
+            return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
+        }
+
+        $report->resolved = 1;
+
+        if ($review->save()) {
+            return Redirect::route('reportsAdminPanel', array('id'=>Auth::user()));
+        }else{
+            return Redirect::back()->withErrors();
+        }
+    }
 }
