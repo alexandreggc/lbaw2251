@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="col-4 pt-4">
                                 <div class="card">
-                                    <img src="{{ $product->images[0]->file }}" alt="product image" class="img-fluid">
+                                    <img src="{{ asset($product->images[0]->imageURL()) }}" alt="product image" class="img-fluid">
                                 </div>
                             </div>
                             <div class="col-1"></div>
@@ -61,6 +61,89 @@
             </div>
             <div class="col-1"></div>
         </div>
+        <div class="row pb-3">
+            <h3>Edit images</h3>
+        </div>
+        <div class="row">
+            <div class="col" style="display: flex; flex-wrap: wrap;">
+                @foreach ($product->images as $image)
+                <div class="card mb-3" style="margin: 1em;">
+                    <div class="card-header">
+                        <h7 class="card-title d-flex justify-content-between">Image #{{$image->id}}
+                            <div class="justify-content-between" style="display: flex; flex-direction: row; align-items: center;">
+                                <a class="fas fa-edit" href="{{ url('/editProductImage'.$image->id) }}" data-bs-toggle="modal" data-bs-target="#editProductImage{{$image->id}}"></a>
+                                @if(count($product->images)>1)
+                                <form action="{{ route('deleteProductImage', ['id_image' => $image->id, 'id_product' => $product->id]) }}" method="post">
+                                    <input class="btn btn-danger btn-sm" type="submit" value="Delete" style="margin-left: 1em;"> </input>
+                                    @method('delete')
+                                    @csrf
+                                </form>
+                                @endif
+                            </div>
+                        </h7>
+                    </div>
+                    <img src="{{ asset($image->imageURL()) }}" id="productImage" style="object-fit:contain; width:250px; height:auto;"/>
+                </div>
+                <div class="modal fade" id="editProductImage{{$image->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Product Image #{{$image->id}}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            <form method="POST" action="{{ route('editProductImage', ['id_image' => $image->id, 'id_product' => $product->id]) }}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="formFile" class="form-label mt-4">Product Image file</label>
+                                        <input class="form-control" type="file" id="formFile" name="image">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            <div class="col-1">
+                <span class="error-text me-auto" style="color:red"> </span>
+                <button class="btn btn-primary reg" href="{{ url('/addProductImage') }}" data-bs-toggle="modal" data-bs-target="#addProductImage">Add Image</button>
+            </div>
+            <div class="modal fade" id="addProductImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add Product Image</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                                </button>
+                            </div>
+                            <form method="POST" action="{{ route('addProductImage', ['id_product' => $product->id]) }}" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    @csrf
+                                    <div class="form-group">
+                                        <label for="formFile" class="form-label mt-4">New Product Image file</label>
+                                        <input class="form-control" type="file" id="formFile" name="image">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <div class="col-1"></div>
+
+        </div>
+        <div class="row pb-3"></div>
         <div class="row pb-3">
             <h3>Edit promotions</h3>
         </div>

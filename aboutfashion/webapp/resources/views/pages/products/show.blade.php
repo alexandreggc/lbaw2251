@@ -20,11 +20,11 @@
                         <div class="col-md-6">
                             <div class="images p-3">
                                 <div class="text-center p-4">
-                                    <img id="main-image" src="{{ $product->images[0]->file }}" width="400" />
+                                    <img id="main-image" src="{{ asset($product->images[0]->imageURL()) }}" width="400" />
                                 </div>
                                 <div class="thumbnail text-center">
                                     @foreach ($product->images as $image)
-                                        <img src="{{ $image->file }}" onclick="change_image(this)" width="70" />
+                                        <img src="{{ asset($image->imageURL()) }}" onclick="change_image(this)" width="70" />
                                     @endforeach
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                                             <p class="text-end"><a href=""><button id=""
                                             style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                                             <img class="rounded-circle shadow-1-strong mb-4"
-                                                src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                                                src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}" alt="avatar"
                                                 style="width: 150px;" />
                                             <h5 class="mb-3">{{ $product->reviews[$j]->user->first_name }}
                                                 {{ $product->reviews[$j]->user->last_name }}</h5>
@@ -166,7 +166,7 @@
                         <p class="text-end"><a href=""><button id=""
                         style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                         <img class="rounded-circle shadow-1-strong mb-4"
-                            src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                            src="{{ asset($product->reviews[$j]->user->photo->imageURL())}}" alt="avatar"
                             style="width: 150px;" />
                         <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
                         <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
@@ -196,7 +196,7 @@
 <div class="col-lg-4 mx-auto">
     <p class="text-end"><a href=""><button id=""
     style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
-    <img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+    <img class="rounded-circle shadow-1-strong mb-4" src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}"
         alt="avatar" style="width: 150px;" />
     <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
     <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
@@ -229,7 +229,7 @@
                 <p class="text-end"><a href=""><button id=""
                 style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
                 <img class="rounded-circle shadow-1-strong mb-4"
-                    src="{{ $product->reviews[$j]->user->photo['file'] }}" alt="avatar"
+                    src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}" alt="avatar"
                     style="width: 150px;" />
                 <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
                 <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
@@ -259,7 +259,7 @@
 <div class="col-lg-4  mx-auto">
 <p class="text-end"><a href=""><button id=""
 style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
-<img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+<img class="rounded-circle shadow-1-strong mb-4" src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}"
     alt="avatar" style="width: 150px;" />
 <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
 <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>
@@ -289,7 +289,7 @@ style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid 
 <div class="col-lg-4  mx-auto">
 <p class="text-end"><a href=""><button id=""
 style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
-<img class="rounded-circle shadow-1-strong mb-4" src="{{ $product->reviews[$j]->user->photo['file'] }}"
+<img class="rounded-circle shadow-1-strong mb-4" src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}"
 alt="avatar" style="width: 150px;" />
 <h5 class="mb-3">{{ $product->reviews[$j]['id_user'] }}</h5>
 <p>{{ str_replace('-', '/', strrev(substr($product->reviews[$j]['date'], 0, 10))) }}</p>

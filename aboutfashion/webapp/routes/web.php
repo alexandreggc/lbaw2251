@@ -95,6 +95,9 @@ Route::get('/admin-panel/products/{id}/edit','ProductController@edit')->name('ed
 Route::patch('/admin-panel/products/{id}','ProductController@update')->name('updateProduct')->middleware('auth:admin');
 Route::get('/admin-panel/products/create','ProductController@create')->name('createProduct')->middleware('auth:admin');
 Route::put('/admin-panel/products/create','ProductController@store')->name('storeProduct')->middleware('auth:admin');
+Route::post('/product-image/edit/{id_image}/{id_product}', 'ProductController@editProductImage')->name('editProductImage');
+Route::delete('/product-image/delete/{id_image}/{id_product}', 'ProductController@deleteProductImage')->name('deleteProductImage');
+Route::post('/product-image/delete/{id_product}', 'ProductController@addProductImage')->name('addProductImage');
 
 //Categories
 Route::get('/admin-panel/categories/create','CategoryController@create')->name('createCategory')->middleware('auth:admin');
