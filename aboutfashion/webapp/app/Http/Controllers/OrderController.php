@@ -6,15 +6,16 @@ use App\Models\Card;
 use App\Models\Order;
 use App\Models\Stock;
 use App\Models\Address;
-use App\Notifications\ChangeOrderStatus;
-use App\Notifications\PendingConfirmationPayment;
 use Illuminate\Http\Request;
 use Psy\Readline\Hoa\Exception;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ChangeOrderStatus;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PendingConfirmationPayment;
 
 class OrderController extends Controller
 {
@@ -88,7 +89,7 @@ class OrderController extends Controller
 
     if ($order->save()) {
       $user = $order->user;
-      $user->notify(new ChangeOrderStatus($order));
+      Notification::send($user, new ChangeOrderStatus($order));
       return Redirect::route('ordersAdminPanel');
     } else {
       return Redirect::back()->withErrors(array('error'=>'error'));

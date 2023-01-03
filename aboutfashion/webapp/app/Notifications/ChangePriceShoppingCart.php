@@ -17,11 +17,11 @@ class ChangePriceShoppingCart extends Notification
      *
      * @return void
      */
-    protected $fillable = ['id']; 
+    private $product;
 
-    public function __construct()
+    public function __construct($product)
     {
-        //
+        $this->product = $product;
     }
 
     /**
@@ -43,11 +43,11 @@ class ChangePriceShoppingCart extends Notification
      */
     public function toMail($notifiable)
     {
-        $product = Product::find($notifiable['id']);
+        
         return (new MailMessage)
-                    ->subject('Product '. $product->name .' has changed price')
-                    ->line('The product '.$product->name.' in your shopping cart has changed its price to '.$product->price)
-                    ->action('View Product', url('/products/'.$product->id))
+                    ->subject('Product '. $this->product->name .' has changed price')
+                    ->line('The product '.$this->product->name.' in your shopping cart has changed its price to '.$this->product->price)
+                    ->action('View Product', url('/products/'.$this->product->id))
                     ->line('Thank you for using our application!');
     }
 
@@ -59,10 +59,9 @@ class ChangePriceShoppingCart extends Notification
      */
     public function toArray($notifiable)
     {
-        $product = Product::find($notifiable['id']);
         return [
             'title' => 'Changed Product Price',
-            'text' => 'The product '.$product->name.' in your shopping cart has changed its price to '.$product->price,
+            'text' => 'The product '.$this->product->name.' in your shopping cart has changed its price to '.$this->product->price,
         ];
     }
 }
