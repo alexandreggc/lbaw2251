@@ -34,9 +34,6 @@
             if (!($order = Session::get('cart'))) {
                 $order = null;
             }
-            else{
-                dump($order); 
-            }
         } elseif (
             !($order = Auth::user()
                 ->orders()

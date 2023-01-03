@@ -20,8 +20,10 @@ function deleteProduct(elem) {
 
     request.onload = function () {
         if (request.status == 200) {
-            console.log(document.getElementById('row-' + detail))
-            document.getElementById('row-' + detail).remove()
+            let string = 'row-' + detail
+            console.log(string)
+            document.getElementById(string).remove()
+            console.log('teste1')
             updatePrice()
         } else {
             console.log('ERROR!')
