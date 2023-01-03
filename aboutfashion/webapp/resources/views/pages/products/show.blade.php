@@ -226,8 +226,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4 mx-auto">
-                <p class="text-end"><a href=""><button id=""
-                style="border:none;background-color:#fff;" class="me-5 mt-5"><i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i></button></a></p>
+                <p class="text-end"> <!-- AQUIIIIII -->
+                    <a type="submit" href="{{ route('editProduct', ['id_review' => $product->reviews[$j]['id']]) }}">
+                        <button id="" style="border:none;background-color:#fff;" class="me-5 mt-5">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size:1.1rem;"></i>
+                        </button>
+                    </a>
+                </p>
                 <img class="rounded-circle shadow-1-strong mb-4"
                     src="{{ asset($product->reviews[$j]->user->photo->imageURL()) }}" alt="avatar"
                     style="width: 150px;" />
