@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\ChangePriceShoppingCart;
 use Exception;
 use App\Models\Size;
 use App\Models\User;
@@ -175,7 +176,7 @@ class ProductController extends Controller{
                     }
                 }
                 Notification::send($usersWishlist, new ChangePriceWishlist($product));
-                Notification::send($usersShopping, new ChangePriceWishlist($product));
+                Notification::send($usersShopping, new ChangePriceShoppingCart($product));
             }
             return Redirect::route('productsAdminPanel');
         } else {

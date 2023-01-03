@@ -64,7 +64,7 @@
                             </li>
                             @if (Auth::check())
                                 <li class="nav-item">
-                                    <a class="nav-link mx-2" href=#><i class="fa-regular fa-bell"
+                                    <a class="nav-link mx-2" href="/notifications"><i class="fa-regular fa-bell"
                                             style="font-size:24px;"></i></a>
                                 </li>
                             @endif

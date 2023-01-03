@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
     @csrf
-    @php 
-    echo($notifications);
-    @endphp
     <head>
         <ol class="breadcrumb p-3 pb-1">
             <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
@@ -28,7 +25,7 @@
                             </thead>
                             <tbody>
                                     @foreach ($notifications as $notification)
-                                        <tr id="row-{{ $notification->id }}" class="row-product-table">
+                                        <tr id="row-{{ $notification['id'] }}" class="row-product-table">
                                             <td class=" align-middle " data-th="Notification">
                                                 <div class="row">
                                                     <h4>{{ $notification['title'] }}</h4>
