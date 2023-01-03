@@ -149,6 +149,11 @@ class OrderController extends Controller
     $this->authorize('checkout', $card);
     $this->authorize('checkout', $address);
 
+    $order1 = Order::find($order->id);
+    $order1->id_card = $card->id;
+    $order1->id_address = $address->id;
+    $order1->save();
+
     $errors = array();
     foreach ($details as $detail) {
       $filters = array(['id_product', $detail['id_product']], ['id_color', $detail['id_color']], ['id_size', $detail['id_size']]);
@@ -167,7 +172,7 @@ class OrderController extends Controller
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
 
-    $user->notify(new PendingConfirmationPayment($order));
+    $user->notify(new PendingConfirmationPayment($order1));
     return redirect()->route('orderDetails', ['id' => $order->id]);
   }
 

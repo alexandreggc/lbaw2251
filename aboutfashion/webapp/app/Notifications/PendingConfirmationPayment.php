@@ -66,9 +66,7 @@ class PendingConfirmationPayment extends Notification
     {
         $order = Order::find($notifiable['id']);
         return [
-            'type' => 'PendingConfirmationPayment',
-            'id' => $order->id,
-            'status' => $order->status,
+            'title' => 'Pending payment approval!',
             'text' => 'Your Order '. $notifiable['id'] . ' is waiting for payment approval!',
         ];
     }
