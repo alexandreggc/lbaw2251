@@ -16,12 +16,7 @@ class ReviewController extends Controller{
     public function __construct(){
         $this->middleware('auth');
     } 
-    
-    public function index(){
-        //lista de users útil para o admin panel
-        //verificar nome da view
-        return view('reviews.index', ['reviews' => Review::all()]);
-    }
+
 
     public function listByUser($id_user){
         //lista de reviews de um user
