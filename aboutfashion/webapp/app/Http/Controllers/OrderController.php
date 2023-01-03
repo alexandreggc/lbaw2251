@@ -170,6 +170,36 @@ class OrderController extends Controller
     $user->notify(new PendingConfirmationPayment($order));
     return redirect()->route('orderDetails', ['id' => $order->id]);
   }
+
+  public function cancel(Request $request){
+    $this->middleware('auth:web');
+    $validator = Validator::make($request->all(), [
+      'id_order' => 'required|integer',
+    ]);
+
+    if ($validator->fails()) {
+      return redirect()->back()->withErrors(array('status' => 'error', 'message' => 'Error!'));
+    }
+
+    $order = Order::find($request['id_order']);
+    if(is_null($order)){
+      return redirect()->back();
+    }
+
+    if($order->status == 'Completed' || $order->status == 'Shopping Cart'){
+      return redirect()->back();
+    }
+
+    $this->authorize('cancelOrder', $order);
+    
+    try {
+      DB::select('SELECT cancel_order(?)', array($order->id));
+    } catch (Exception $e) {
+      return redirect()->back()->with('status', 'Something went wrong! Please try again!');
+    }
+    return redirect()->route('orderDetails', ['id' => $order->id]);
+  }
+  
   public function showCheckout()
   {
     $this->middleware('auth:web');
