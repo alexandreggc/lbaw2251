@@ -70,7 +70,7 @@ class OrderController extends Controller
   public function updateStatus(Request $request, $id)
   {
     if (!$order = Order::find($id)) {
-      Redirect::back()->withErrors();
+      return Redirect::back()->withErrors(array('error'=>'error'));
     }
     $this->authorize('updateOrderStatus',  $order);
 
@@ -81,7 +81,7 @@ class OrderController extends Controller
     ]);
 
     if ($validator->fails()) {
-      return Redirect::back()->withErrors();
+      return Redirect::back()->withErrors(array('error'=>'error'));
     }
 
     $order['status'] = $request->input('status');
@@ -91,7 +91,7 @@ class OrderController extends Controller
       $user->notify(new ChangeOrderStatus($order));
       return Redirect::route('ordersAdminPanel');
     } else {
-      return Redirect::back()->withErrors();
+      return Redirect::back()->withErrors(array('error'=>'error'));
     }
   }
 
@@ -184,6 +184,8 @@ class OrderController extends Controller
       return redirect()->back()->withErrors('status', 'Empty cart!');
     }
 
-    return view('pages.checkout', array('order' => $order,'user'=>$user, 'details' => $details, 'addresses' => $user->addresses, 'cards' => $user->cards));
+    return view('pages.user.checkout', array('order' => $order,'user'=>$user, 'details' => $details, 'addresses' => $user->addresses, 'cards' => $user->cards));
   }
 }
+
+  

@@ -57,7 +57,7 @@ async function addSize(element) {
         }
         out += `</div>
                     <div class="cart mt-4 align-items-center"> 
-                        <button class="btn btn-primary mr-2 px-4" id='add-to-cart'>Add to cart</button> 
+                        <button class="btn btn-primary mr-2 px-4" style="--bs-btn-hover-bg:#000;--bs-btn-hover-border-color:#000;--bs-btn-active-bg:#000;--bs-btn-active-border-color:#000;" id='add-to-cart'>Add to cart</button> 
                     </div>`
         size.innerHTML = out;
         (document.getElementById('add-to-cart')).addEventListener('click', addToCart);

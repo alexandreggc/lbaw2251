@@ -114,16 +114,9 @@ class ReportController extends Controller{
     }
 
     public function changeReport($id){
-        $validator = Validator::make($request->all(),[
-            'id' => 'required|int',
-        ]); 
-
-        if($validator->fails()){
-            return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
-        }
         $this->authorize('updateReport', Auth::guard('admin')->user());
         
-        $report = Report::find($request['id']);
+        $report = Report::find($id);
         if(is_null($report)){
             return Response::json(array('status' => 'error', 'message' => 'Report not found!'), 404);
         }

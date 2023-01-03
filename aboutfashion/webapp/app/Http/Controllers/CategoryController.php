@@ -25,7 +25,7 @@ class CategoryController extends Controller{
         ]);
         
         if($validator->fails()){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         $category = new Category();
@@ -35,7 +35,7 @@ class CategoryController extends Controller{
         $category->name = $request->input('name');
         if(!is_null($request->input('id_super_category'))){
             if(!$super_category = Category::find($request->input('id_super_category'))) {
-                Redirect::back()->withErrors();
+                return Redirect::back()->withErrors(array('error'=>'error'));
             }
             $category->id_super_category = $request->input('id_super_category');
         }
@@ -43,7 +43,7 @@ class CategoryController extends Controller{
         if($category->save()){
             return Redirect::route('categoriesAdminPanel');
         } else {
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
@@ -58,7 +58,7 @@ class CategoryController extends Controller{
 
     public function update(Request $request , $id){
         if(!$category = Category::find($id)){
-            Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
         $this->authorize('updateCategory', Auth::guard('admin')->user());
 
@@ -68,7 +68,7 @@ class CategoryController extends Controller{
         ]);
 
         if($validator->fails()){
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
 
         $category['name'] = $request->input('name');
@@ -77,7 +77,7 @@ class CategoryController extends Controller{
         if ($category->save()) {
             return Redirect::route('categoriesAdminPanel');
         } else {
-            return Redirect::back()->withErrors();
+            return Redirect::back()->withErrors(array('error'=>'error'));
         }
     }
 
