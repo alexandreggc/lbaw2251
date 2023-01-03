@@ -172,21 +172,18 @@ class OrderController extends Controller
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
 
-    $user->notify(new PendingConfirmationPayment($order1));
+    $user->notify(new PendingConfirmationPayment($order1->id));
     return redirect()->route('orderDetails', ['id' => $order->id]);
   }
 
-  public function cancel(Request $request){
+  public function cancel(int $id){
     $this->middleware('auth:web');
-    $validator = Validator::make($request->all(), [
-      'id_order' => 'required|integer',
-    ]);
 
-    if ($validator->fails()) {
-      return redirect()->back()->withErrors(array('status' => 'error', 'message' => 'Error!'));
+    if(!is_numeric($id)){
+      return redirect()->back();
     }
-
-    $order = Order::find($request['id_order']);
+    
+    $order = Order::find($id);
     if(is_null($order)){
       return redirect()->back();
     }

@@ -167,6 +167,8 @@
             <h2>My Orders</h2>
             <div class="cards_flex">
                 @foreach ($user->orders as $order)
+                    @if($order['status'] == 'Shopping Cart')
+                    @else
                     <div class="card border-primary mb-3" style="max-width: 23rem;">
                         <div class="card-header">Order #{{ $order['id'] }}</div>
                         <div class="card-body">
@@ -201,9 +203,13 @@
                                 </li>
                             </ul>
                             <a href="/order/{{ $order['id'] }}" class="card-link ms-2 me-5">More Details</a>
-                            <button class="btn btn-danger ms-5" style="align-items: flex-end;"><a href="/order/{{ $order['id'] }}" style="color:#fff;text-decoration: none;" class="card-link">Cancel Order</a></button>
+                            @if($order['status'] == 'Shopping Cart' || $order['status'] == 'Completed' || $order['status'] == 'Cancelled')
+                            @else
+                            <button class="btn btn-danger ms-5" style="align-items: flex-end;"><a href="/orders/{{ $order['id'] }}/cancel" style="color:#fff;text-decoration: none;" class="card-link">Cancel Order</a></button>
+                            @endif
                         </div>
                     </div>
+                    @endif
                 @endforeach
             </div>
         </div>
