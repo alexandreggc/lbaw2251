@@ -61,7 +61,7 @@
         <div class="row pb-3">
             <h3>Edit images</h3>
         </div>
-        <div class="row">
+        <div class="row pb-5">
             <div class="col" style="display: flex; flex-wrap: wrap;">
                 @foreach ($product->images as $image)
                 <div class="card mb-3" style="margin: 1em;">
@@ -138,9 +138,7 @@
                     </div>
                 </div>
             <div class="col-1"></div>
-
         </div>
-        <div class="row pb-3"></div>
         <div class="row pb-3">
             <h3>Edit promotions</h3>
         </div>
@@ -203,11 +201,12 @@
             </div>
             <div class="col-1"></div>
         </div>
-        <div class="row pb-3">
+        <div class="row pb-5">
             <h3>Manage Stock</h3>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-1"></div>
+            <div class="col-4">
                 <table class="table">
                     <thead>
                         <tr>
@@ -227,9 +226,15 @@
                                         @method('patch')
                                         <input type="hidden" name="id_color" value="{{$stock->color->id}}">
                                         <input type="hidden" name="id_size" value="{{$stock->size->id}}">
-                                        <input type="number" class="form-control" id="product_stock_{{$stock->id_color}}_{{$stock->id_size}}"
-                                            value="{{$stock->stock}}" name="new_stock">
-                                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                        <div class="row">
+                                            <div class="col">
+                                                <input type="number" class="form-control" id="product_stock_{{$stock->id_color}}_{{$stock->id_size}}"
+                                                value="{{$stock->stock}}" name="new_stock">
+                                            </div>
+                                            <div class="col">
+                                                <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>
@@ -237,7 +242,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-1"></div>
+            <div class="col-2"></div>
             <div class="col">
                 <h4 class="pb-3">Add new stock</h4>
                 <form method="POST" action="{{ route('addNewProductStock', ['id' => $product->id]) }}">

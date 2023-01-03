@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="row">
+<div class="row" style="--bs-gutter-x: 0em;">
     <div class="row bg-body" style="background-image: url('{{ asset('img/img3.jpg')}}');height: 90vh">
         <div class="col-lg-4 mx-auto my-auto">
             <h1 class="p-3 text-center" style="color:#fff;background-color:rgba(0,0,0,.9);">FASHION</h1>
@@ -21,7 +21,7 @@
     </div>
     
 </div>
-<div class="row mt-5 mb-5">
+<div class="row mt-5 mb-5" style="--bs-gutter-x: 0em;">
     <h3 class="p-3 text-center " style="color:rgba(0,0,0,.9);">Best Reviewed</h3>
     <div id="carousel" class="carousel slide carousel-dark " data-bs-ride="true">
             <div class="carousel-inner" id="carousel-inner">
