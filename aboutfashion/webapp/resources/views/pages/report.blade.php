@@ -31,8 +31,6 @@
                     <label for="report-description">Other:</label><br>
                     <textarea id="report-description" name="report-description"></textarea><br>
                     </div>
-
-                    
                     
                     <hr class="my-4">
                     <button type="submit" class="btn btn-primary" >
