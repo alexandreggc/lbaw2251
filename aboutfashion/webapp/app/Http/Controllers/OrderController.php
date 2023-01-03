@@ -6,6 +6,8 @@ use App\Models\Card;
 use App\Models\Order;
 use App\Models\Stock;
 use App\Models\Address;
+use App\Notifications\ChangeOrderStatus;
+use App\Notifications\PendingConfirmationPayment;
 use Illuminate\Http\Request;
 use Psy\Readline\Hoa\Exception;
 use Illuminate\Support\Facades\Redirect;
@@ -85,6 +87,8 @@ class OrderController extends Controller
     $order['status'] = $request->input('status');
 
     if ($order->save()) {
+      $user = $order->user;
+      $user->notify(new ChangeOrderStatus($order));
       return Redirect::route('ordersAdminPanel');
     } else {
       return Redirect::back()->withErrors();
@@ -162,6 +166,9 @@ class OrderController extends Controller
     } catch (Exception $e) {
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
+
+    $user->notify(new PendingConfirmationPayment($order));
+    return redirect()->route('orderDetails', ['id' => $order->id]);
   }
   public function showCheckout()
   {

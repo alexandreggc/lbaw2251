@@ -33,9 +33,6 @@ class Admin extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function notifications(){
-        return $this->belongsToMany('\App\Models\Notifications', 'admin_notification', 'id_admin', 'id_notification');
-    }
 
     public function image(){
         return $this->belongsTo('\App\Models\Image', 'id_image');

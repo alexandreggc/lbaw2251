@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Size;
+use App\Models\User;
 use App\Models\Color;
 use App\Models\Product;
-use App\Models\Promotion;
 use App\Models\Category;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\ChangePriceWishlist;
 
 class ProductController extends Controller{
     
@@ -70,6 +73,7 @@ class ProductController extends Controller{
         if(!$product = Product::find($id)){
             Redirect::back()->withErrors();
         }
+        $oldPrice = $product->price;
         $this->authorize('updateProduct', Auth::guard('admin')->user());
 
         $validator = Validator::make($request->all(),[
@@ -98,6 +102,19 @@ class ProductController extends Controller{
         }*/
 
         if ($product->save()) {
+            if($product->price != $oldPrice){
+                $usersShopping = array();
+                $usersWishlist = array();
+                foreach(User::all() as $user)
+                {
+                    if($user->wishlist->contains($product)){
+                        array_push($usersWishlist, $user);
+                    }
+
+                    
+                }
+                Notification::send($usersWishlist, new ChangePriceWishlist($product));
+            }
             return Redirect::route('productsAdminPanel');
         } else {
             return Redirect::back()->withErrors();
