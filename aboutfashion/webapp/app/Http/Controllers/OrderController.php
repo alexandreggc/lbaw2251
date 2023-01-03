@@ -45,16 +45,42 @@ class OrderController extends Controller{
 
   public function editStatus(Request $request){
     $this->middleware('guard:admin');
+    
     $order = Order::find($request->id);
     if(is_null($order)){
       abort('404');
     }
-    $this->authorize('updateOrderStatus', $order);
-    return view('pages.admin.editOrderStatus', ['order'=>$order]);
+
+    $this->authorize('updateOrderStatus', Auth::guard('admin')->user(), $order);
+
+    $status_enum = ['Shopping Cart', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
+
+    return view('pages.admin.editOrderStatus', ['order'=>$order, 'status_enum' => $status_enum]);
   }
 
   public function updateStatus(Request $request, $id){
-  
+    if(!$order = Order::find($id)){
+      Redirect::back()->withErrors();
+    }
+    $this->authorize('updateOrderStatus', Auth::guard('admin')->user(), $order);
+
+    $status_enum = ['Shopping Cart', 'Pending', 'In Progress', 'Completed', 'Cancelled'];
+
+    $validator = Validator::make($request->all(),[
+        'status' => 'required|string|in:'.implode(',', $status_enum),
+    ]);
+
+    if($validator->fails()){
+        return Redirect::back()->withErrors();
+    }
+
+    $order['status'] = $request->input('status');
+
+    if ($order->save()) {
+        return Redirect::route('ordersAdminPanel');
+    } else {
+        return Redirect::back()->withErrors();
+    }
   }
 
   public function delete($id){

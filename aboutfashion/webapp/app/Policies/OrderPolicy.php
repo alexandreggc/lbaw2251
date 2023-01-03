@@ -19,8 +19,7 @@ class OrderPolicy{
         return $user->id == $order->id_user;
     }
 
-    public function updateOrderStatus(Admin $admin, Order $order)
-    {
+    public function updateOrderStatus(Admin $admin, Order $order){
         return $admin->role == 'Collaborator';
     }
 }

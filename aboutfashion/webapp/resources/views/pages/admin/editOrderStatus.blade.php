@@ -21,18 +21,14 @@
                 <form method="POST" action="{{ route('updateOrderStatus', ['id' => $order->id]) }}">
                     @csrf
                     @method('patch')
-                    <div class="form-group">
-                        <label for="discount" class="form-label mt-4">Discount</label>
-                        <input type="number" class="form-control" id="promotion_discount" value="{{$promotion->discount}}" name="discount">
-                    </div>
-                    <div class="form-group">
-                        <label for="start_date" class="form-label mt-4">Start Date</label>
-                        <input type="date" class="form-control" id="promotion_start_date" value="{{$promotion->start_date}}" name="start_date">
-                    </div>
-                    <div class="form-group">
-                        <label for="final_date" class="form-label mt-4">Final Date</label>
-                        <input type="date" class="form-control" id="promotion_final_date" value="{{$promotion->final_date}}" name="final_date">
-                    </div>
+                    <!-- Category -->
+                    <label for="statusSelect" class="form-label mt-4">Status</label>
+                    <select class="form-select" id="statusSelect" name="status" value="{{$order['status']}}">
+                        <option value="{{ $order['status'] }}" selected>{{ $order->status }}</option>
+                        @foreach ($status_enum as $status)
+                            <option value="{{$status}}">{{$status}}</option>
+                        @endforeach
+                    </select>
                     <div class="modal-footer p-5 pe-0">
                         <span class="error-text me-auto" style="color:red"> </span>
                         <button type="submit" class="btn btn-primary reg btn-lg">Save</button>

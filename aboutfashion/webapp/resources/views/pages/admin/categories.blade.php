@@ -29,15 +29,11 @@
                         <div id="collapse{{ $category->id }}" class="accordion-collapse collapse"
                             aria-labelledby="heading{{ $category->id }}" data-bs-parent="#accordion">
                             <div class="accordion-body">
-                                <div class="row">
-                                    <div class="col-3">
-                                        @if (Auth::guard('admin')->user()->role == 'Collaborator')
-                                            <button class="btn btn-danger btn-sm pe-1 fa-solid fa-xmark delete-category" 
-                                                id="{{ $category->id }}">
-                                            </button>
-                                        @endif
-                                    </div>
-                                </div>
+                                @if (Auth::guard('admin')->user()->role == 'Collaborator')
+                                    <button class="btn btn-danger btn-sm pe-1 fa-solid fa-xmark delete-category" 
+                                        id="{{ $category->id }}">
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>
