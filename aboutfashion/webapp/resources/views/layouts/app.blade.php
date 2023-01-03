@@ -139,7 +139,7 @@
                                                         data-th="Produtoooooooooooooooooo">
                                                         <div class="row">
                                                             <div class="col-md-6 text-left">
-                                                                <img src="{{ $detail->product->images[0]['file'] }}"
+                                                                <img src="{{ asset($detail->product->images[0]->imageURL()) }}"
                                                                     alt=""
                                                                     class="img-fluid d-none d-md-block rounded mt-3 shadow ">
                                                             </div>
@@ -207,7 +207,7 @@
                                         data-th="Produtoooooooooooooooooo">
                                         <div class="row">
                                             <div class="col-md-6 text-left">
-                                                <img src="{{ $product->images[0]['file'] }}" alt=""
+                                                <img src="{{ asset($product->images[0]->imageURL()) }}" alt=""
                                                     class="img-fluid d-none d-md-block rounded mt-3 shadow ">
                                             </div>
                                             <div class="col-md-6  align-middle text-left mt-sm-2 mx-auto">

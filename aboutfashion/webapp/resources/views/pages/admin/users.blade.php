@@ -25,7 +25,7 @@
                                 data-bs-target="#collapse-{{ $user->id }}" aria-expanded="true"
                                 aria-controls="collapse-{{ $user->id }}">
                                 <div class="col-1 pe-3">
-                                    <img src="{{ $user->photo['file'] }}" alt="user photo" class="img-fluid">
+                                    <img src="{{ asset($user->photo->imageURL()) }}" alt="user photo" class="img-fluid">
                                 </div>
                                 @if ($user->blocked == 1)
                                     <div class="col">
