@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\ChangePriceShoppingCart;
 use Exception;
 use App\Models\Size;
 use App\Models\User;
 use App\Models\Color;
 use App\Models\Image;
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Promotion;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\ChangePriceWishlist;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\ChangePriceShoppingCart;
 
 class ProductController extends Controller{
     
@@ -128,11 +129,10 @@ class ProductController extends Controller{
         $promotions = Promotion::all();
         $colors = Color::all();
         $sizes = Size::all();
-        return view('pages.admin.editProduct', ['product'=>$product, 
-                                                'categories' => $categories, 
-                                                'promotions' => $promotions,
-                                                'colors' => $colors,
-                                            'sizes' => $sizes]);
+        $stocks = $product->stocks;
+        dump($stocks);
+        //dump($product->stocks);
+        //return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories, 'promotions' => $promotions,'colors' => $colors, 'sizes' => $sizes, 'stocks' => $stocks]);
     }
 
     public function update(Request $request){

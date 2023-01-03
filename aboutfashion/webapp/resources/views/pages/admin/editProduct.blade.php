@@ -216,7 +216,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($product->stocks as $stock)
+                        @foreach ($stocks as $stock)
                             <tr>
                                 <th scope="row">{{$stock->color->name}}</th>
                                 <td>{{$stock->size->name}}</td>

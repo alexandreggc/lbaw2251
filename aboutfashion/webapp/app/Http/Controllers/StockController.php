@@ -7,7 +7,6 @@ use App\Models\Color;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use League\CommonMark\Extension\Attributes\Node\Attributes;
 
 
 class StockController extends Controller
