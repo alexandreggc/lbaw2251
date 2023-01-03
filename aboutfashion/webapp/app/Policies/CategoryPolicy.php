@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Promotion;
+use App\Models\Category;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProductPolicy{
+class CategoryPolicy{
     use HandlesAuthorization;
 }

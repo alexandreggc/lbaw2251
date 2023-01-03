@@ -8,13 +8,18 @@
             <h2 class="p-3">Products</h2>
         </div>
         <div class="row mb-5">
-            <div class="col-2">
+            <div class="col pe-0">
                 <a type="button" class="btn btn-outline-primary mb-4" href="{{ route('createProduct') }}">
                     <i class="fa-solid fa-plus"></i>
                     Add Product
                 </a>
             </div>
-            <div class="col-4"></div>
+            <div class="col ps-0">
+                <a type="button" class="btn btn-outline-primary mb-4" href="{{ route('categoriesAdminPanel') }}">
+                    Manage Categories
+                </a>
+            </div>
+            <div class="col-2"></div>
             <div class="col-6">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
