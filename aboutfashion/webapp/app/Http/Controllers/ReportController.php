@@ -33,7 +33,7 @@ class ReportController extends Controller{
     public function store(Request $request){
         $validator = Validator::make($request->all(),[
             'report-type' => 'required',
-            'description' => 'nullable|string|max:100',
+            'report-description' => 'nullable|string|max:100',
         ]);
         
         if($validator->fails()){
@@ -41,16 +41,13 @@ class ReportController extends Controller{
         }
 
         $report = new Report();
-        $user = User::find($request->input('id_user'));
-        $review = Review::find($request->input('id_review'));
-        $report->id = $request->input('id');
+
         $report->id_user = $request->input('id_user');
         $report->id_review = $request->input('id_review');
-        $report->report_date = $request->input('report_date');
-        $report->resolved = $request->input('resolved');
         $report->description = $request->input('description');
-        
-        
+        $report->report_date = Carbon::now()->toDateString();
+        $report->resolved = 0;
+
         if($report->save()){
             return Redirect::route('successReport');
         }else{
@@ -60,21 +57,6 @@ class ReportController extends Controller{
 
     public function success(){
         return view('pages.reports.success');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return Response
-     */
-    public function show($id){
-        $user = Auth::user();
-        $report = Report::find($id); 
-        if(is_null($user)){
-            return view('pages.report',['report' => $report]);   
-        }
-        return view('pages.report',['report' => $report]);
     }
 
     public function changeReport(Request $request){
