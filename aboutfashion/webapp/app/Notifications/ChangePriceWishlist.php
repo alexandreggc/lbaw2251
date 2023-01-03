@@ -12,16 +12,11 @@ class ChangePriceWishlist extends Notification
 {
     use Queueable;
 
-    protected $fillable = ['id']; 
+    private $this->product;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function __construct($this->product)
     {
-        //
+        $this->product = $this->product;
     }
 
     /**
@@ -43,11 +38,10 @@ class ChangePriceWishlist extends Notification
      */
     public function toMail($notifiable)
     {
-        $product = Product::find($notifiable['id']);
         return (new MailMessage)
-                    ->subject('Product '. $product->name .' has changed price')
-                    ->line('The product '.$product->name.' in your wishlist has changed its price to '.$product->price)
-                    ->action('View Product', url('/products/'.$product->id))
+                    ->subject('Product '. $this->product->name .' has changed price')
+                    ->line('The product '.$this->product->name.' in your wishlist has changed its price to '.$this->product->price)
+                    ->action('View Product', url('/products/'.$this->product->id))
                     ->line('Thank you for using our application!');
     }
 
@@ -59,10 +53,9 @@ class ChangePriceWishlist extends Notification
      */
     public function toArray($notifiable)
     {
-        $product = Product::find($notifiable['id']);
         return [
             'title' => 'Changed Product Price',
-            'text' => 'The product '.$product->name.' in your wishlist has changed its price to '.$product->price,
+            'text' => 'The product '.$this->product->name.' in your wishlist has changed its price to '.$this->product->price,
         ];
     }
 }
