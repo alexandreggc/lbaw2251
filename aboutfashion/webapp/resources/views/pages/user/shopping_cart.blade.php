@@ -30,7 +30,7 @@
                                 @if (is_null($order) and is_null($guestCart))
                                 @elseif (is_null($guestCart))
                                     @foreach ($order->details as $detail)
-                                        <tr id="row-{{ $detail->id }}" class="row-product">
+                                        <tr id="row-{{ $detail->id }}" class="row-product-table">
                                             <td class=" align-middle " data-th="Product">
                                                 <div class="row">
                                                     <div class="col-md-3 text-left">
@@ -89,7 +89,7 @@
                     @endforeach
                 @else
                     @foreach ($guestCart as $detail)
-                        <tr id="row-{{ $detail['id'] }}" class="row-product">
+                        <tr id="row-{{ $detail['id'] }}" class="row-product-table">
                             <td class=" align-middle " data-th="Product">
                                 <div class="row">
                                     <div class="col-md-3 text-left">

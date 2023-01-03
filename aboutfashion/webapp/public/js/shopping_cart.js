@@ -20,7 +20,7 @@ function deleteProduct(elem) {
 
     request.onload = function () {
         if (request.status == 200) {
-            console.log('teste')
+            console.log(document.getElementById('row-' + detail))
             document.getElementById('row-' + detail).remove()
             updatePrice()
         } else {
@@ -63,7 +63,8 @@ function updatePrice() {
     let subtotal = 0
     let total = 0
 
-    let ids = document.getElementsByClassName('row-product')
+    let ids = document.getElementsByClassName('row-product-table')
+    console.log(ids)
     for (const idElem of ids) {
         id = idElem.id.substring(4)
         quantity = document.getElementById('quantity-' + id).innerText
