@@ -65,9 +65,7 @@ class ChangeOrderStatus extends Notification
     {
         $order = Order::find($notifiable['id']);
         return [
-            'type' => 'ChangeOrderStatus',
-            'id' => $order->id,
-            'status' => $order->status,
+            'title' => 'Change Order Status',
             'text' => 'Your Order '. $notifiable['id'] . ' has changed its status to ' . $order->status.'.',
         ];
     }

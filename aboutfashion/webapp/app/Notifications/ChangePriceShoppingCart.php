@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -42,9 +43,11 @@ class ChangePriceShoppingCart extends Notification
      */
     public function toMail($notifiable)
     {
+        $product = Product::find($notifiable['id']);
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->subject('Product '. $product->name .' has changed price')
+                    ->line('The product '.$product->name.' in your shopping cart has changed its price to '.$product->price)
+                    ->action('View Product', url('/products/'.$product->id))
                     ->line('Thank you for using our application!');
     }
 
@@ -56,8 +59,10 @@ class ChangePriceShoppingCart extends Notification
      */
     public function toArray($notifiable)
     {
+        $product = Product::find($notifiable['id']);
         return [
-            //
+            'title' => 'Changed Product Price',
+            'text' => 'The product '.$product->name.' in your shopping cart has changed its price to '.$product->price,
         ];
     }
 }
