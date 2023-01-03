@@ -16,15 +16,13 @@
       <div class="row">
           <h3> FAQ</h3>
           <h5 class="mt-2">Do I have to register to shop?</h5>
-          <small>Yes ldvpigashvjkmae,cºçapkocyaouyciaxºpcdawspkxdcsiehcn</small>
+          <small>Yes you need to have an account to shop</small>
           <h5 class="mt-2">Can I cancel my order?</h5>
-          <small>Yes ldvpigashvjkmae,cºçapkocyaouyciaxºpcdawspkxdcsiehcn</small>
+          <small>Yes you can cancel your order in the user profile unless the order is completed.</small>
           <h5 class="mt-2">Who made this website?</h5>
           <small> You can find more about our team in the <a href="/about">about page</a>.</small>
           <h5 class="mt-2">What if someone does comment an inappropriate comment?</h5>
           <small>Our site is constantly monitored by admins from all over the world. They analyse reports made by users and issue the correct responses. If you violate our terms of conduct, you may be banned for a determined ammount of time (maybe forever).</small>
-
-
       </div>
     </section>
 
