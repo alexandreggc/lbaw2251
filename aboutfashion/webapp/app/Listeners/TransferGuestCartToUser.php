@@ -29,6 +29,10 @@ class TransferGuestCartToUser
     public function handle(Login $event)
     {
 
+        if(Auth::guard('admin')){
+            return;
+        }
+
         $guestCart = Session::get('cart');
         if (is_null($guestCart)) {
             return;

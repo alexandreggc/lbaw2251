@@ -1,3 +1,4 @@
+console.log('teste')
 attachEvents()
 function attachEvents() {
     for (const button of document.getElementsByClassName('delete-category'))

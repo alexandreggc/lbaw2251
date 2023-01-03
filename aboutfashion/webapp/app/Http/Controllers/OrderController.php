@@ -16,11 +16,10 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller{
 
-  public function __construct(){
-    $this->middleware('auth:web');
-  }
+  
 
   public function show($id){
+    $this->middleware('auth:web');
     $order = Order::find($id);
     $this->authorize('show', $order);
     return view('pages.order', ['order' => $order]);
@@ -45,8 +44,12 @@ class OrderController extends Controller{
   }
 
   public function editStatus(Request $request){
+    $this->middleware('guard:admin');
     $order = Order::find($request->id);
-    $this->authorize('updateOrderStatus', Auth::guard('admin')->user());
+    if(is_null($order)){
+      abort('404');
+    }
+    $this->authorize('updateOrderStatus', $order);
     return view('pages.admin.editOrderStatus', ['order'=>$order]);
   }
 
@@ -55,6 +58,7 @@ class OrderController extends Controller{
   }
 
   public function delete($id){
+    $this->middleware('auth:web');
       if(!is_numeric($id)){
           return Response::json(array('status' => 'error', 'message'=>'Error!'),400);
       }
@@ -73,6 +77,7 @@ class OrderController extends Controller{
   }
 
   public function checkout(Request $request){
+    $this->middleware('auth:web');
     $validator = Validator::make($request->all(), [
       'id_card' => 'required|integer',
       'id_address' => 'required|integer'
@@ -123,6 +128,7 @@ class OrderController extends Controller{
     }
   }
   public function showCheckout(){
+    $this->middleware('auth:web');
     $user = Auth::user();
     if(is_null($wishlist = $user->wishlist)){
         return view('pages.wishlist', array('wishlist' => null));

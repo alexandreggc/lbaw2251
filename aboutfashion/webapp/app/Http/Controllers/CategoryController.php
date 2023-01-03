@@ -74,7 +74,7 @@ class CategoryController extends Controller{
         $category['name'] = $request->input('name');
         $category['id_super_category'] = $request->input('id_super_category');
 
-        if ($Category->save()) {
+        if ($category->save()) {
             return Redirect::route('categoriesAdminPanel');
         } else {
             return Redirect::back()->withErrors();
