@@ -12,11 +12,11 @@ class ChangePriceWishlist extends Notification
 {
     use Queueable;
 
-    private $this->product;
+    private $product;
 
-    public function __construct($this->product)
+    public function __construct($product)
     {
-        $this->product = $this->product;
+        $this->product = $product;
     }
 
     /**
