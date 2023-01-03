@@ -148,7 +148,7 @@
                 @endif
                 </tbody>
                 </table>
-                <a href="{{ route('searchProductView') }}" class="mt-5"><i class="fas fa-arrow-left mr-2"></i>Continue
+                <a href="{{ route('searchProductView') }}" class="mt-5"><i class="fas fa-arrow-left mr-2"></i> Continue
                     Shopping</a>
 
             </div>
@@ -166,7 +166,7 @@
                             <span>Total</span><span id="total" style="padding: 0;"></span>
                         </div>
                         <button class="btn btn-primary btn-block d-flex mx-auto mt-5"
-                            style="background-color:rgba(0,0,0,.9);" type="button"><span>Checkout</span></button>
+                            style="background-color:rgba(0,0,0,.9);" type="button"><a href="{{ route('checkout') }}" style="color:#fff;text-decoration: none;" ><span>Checkout</span></a></button>
                     </div>
                 </div>
             </div>

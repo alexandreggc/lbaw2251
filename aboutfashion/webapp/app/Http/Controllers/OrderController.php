@@ -127,15 +127,22 @@ class OrderController extends Controller{
       return redirect()->back()->with('status', 'Something went wrong! Please try again!');
     }
   }
-  public function showCheckout(){
+  public function showCheckout()
+  {
     $this->middleware('auth:web');
     $user = Auth::user();
-    if(is_null($wishlist = $user->wishlist)){
-        return view('pages.wishlist', array('wishlist' => null));
-    }else{
-        return view('pages.wishlist', array('wishlist' => $wishlist));
+    $order = $user->orders()->where('status', 'Shopping Cart')->first();
+    if (is_null($order)) {
+      return redirect()->back()->withErrors('status', 'Empty cart!');
     }
-} 
+
+    $details = $order->details;
+    if (count($details) == 0) {
+      return redirect()->back()->withErrors('status', 'Empty cart!');
+    }
+
+    return view('pages.user.checkout', array('order' => $order,'user'=>$user, 'details' => $details, 'addresses' => $user->addresses, 'cards' => $user->cards));
+  }
+}
 
   
-}
