@@ -19,13 +19,14 @@
                     Manage Categories
                 </a>
             </div>
-            <div class="col-2"></div>
+            <div class="col-8"></div>
+            <!--<div class="col-2"></div>
             <div class="col-6">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-            </div>
+            </div>-->
             <div class="accordion" id="accordion">
                 @foreach ($products as $product)
                     <div class="accordion-item" id="accordion-item-{{ $product->id }}">

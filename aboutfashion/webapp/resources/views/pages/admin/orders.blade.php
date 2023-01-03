@@ -5,16 +5,16 @@
     <script type="text/javascript" src={{ asset('js/order_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
-            <h2 class="p-3">Orders</h2>
+            <h2 class="p-3 pb-5">Orders</h2>
         </div>
         <div class="row mb-5">
-            <div class="col-6"></div>
+            <!--<div class="col-6"></div>
             <div class="col-6 mb-3">
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-            </div>
+            </div>-->
             <div class="row-12">
                 <div class="accordion" id="accordion">
                     @foreach($orders as $order)

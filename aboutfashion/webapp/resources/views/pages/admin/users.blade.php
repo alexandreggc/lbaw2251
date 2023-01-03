@@ -5,9 +5,9 @@
     <script type="text/javascript" src={{ asset('js/users_admin.js') }} defer></script>
     <div class="container">
         <div class="row">
-            <h2 class="p-3">Users</h2>
+            <h2 class="p-3 pb-5">Users</h2>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <div class="col-6"></div>
             <div class="col-6 pb-3">
                 <form class="d-flex">
@@ -15,7 +15,7 @@
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
-        </div>
+        </div>-->
         <div class="row">
             <div class="accordion" id="accordion">
                 @foreach ($users as $user)
