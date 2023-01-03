@@ -128,11 +128,12 @@ class ProductController extends Controller{
         $categories = Category::all();
         $promotions = Promotion::all();
         $colors = Color::all();
-        $sizes = Size::all();
-        $stocks = $product->stocks;
-        dump($stocks);
-        //dump($product->stocks);
-        //return view('pages.admin.editProduct', ['product'=>$product, 'categories' => $categories, 'promotions' => $promotions,'colors' => $colors, 'sizes' => $sizes, 'stocks' => $stocks]);
+        $sizes = Size::all(); 
+        return view('pages.admin.editProduct', ['product'=>$product, 
+                                                'categories' => $categories, 
+                                                'promotions' => $promotions,
+                                                'colors' => $colors,
+                                            'sizes' => $sizes]);
     }
 
     public function update(Request $request){
