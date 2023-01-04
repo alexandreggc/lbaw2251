@@ -1,20 +1,33 @@
 # lbaw2251 - About Fashion
 
-Welcome to the documentation pages of the About Fashion system!
+#### Docker Commands
 
-You can find here detailed information about the product, from a high-level vision to low-level implementation decisions, a kind of Software Development Report, organized by discipline:
+Comandos Docker para iniciar a imagem disponível no Container Registry do Git do grupo, que utiliza a base de dados de produção:
 
-* Requirements Specification
-    * [ER Component](aboutfashion/docs/ER__Requirements_Specification_Component.md)
-* Database Specification
-    * [EBD Component](aboutfashion/docs/EBD_Database_Specification_Component.md)
+```
+docker run -it -p 8000:80 --name=lbaw2251 -e DB_DATABASE="lbaw2251" -e DB_SCHEMA="lbaw2251" -e DB_USERNAME="lbaw2251" -e DB_PASSWORD=xxJlDZqv git.fe.up.pt:5050/lbaw/lbaw2223/lbaw2251
+```
+```
+docker exec -it lbaw2251 bash
+```
+```
+root@2804d54698c0:/# tail -f /var/log/nginx/error.log    # follow the errors
+root@2804d54698c0:/# tail -f /var/log/nginx/access.log   # follow the accesses
+```
 
-So far, contributions are exclusively made by the initial team, but we hope to open them to the community, in all areas and topics: requirements, technologies, development, experimentation, testing, etc.
+#### Administration Credentials
 
-Please contact us!
+> Administration URL: <strong>/admin-panel</strong>.
+> 
+> Primeiro é necessário efetuar *login* em <strong>/admin-panel/login</strong> e depois é feito o redirecionamento para <strong>/admin-panel</strong>.
+>
+>| Type | E-mail | Password |
+>| ---- | ------ | -------- |
+>| Collaborator | kgrishanov2@twitter.com | teste12345 |
+>| Technician | up202006562@up.pt | teste12345 |
 
-Thank you!
+#### User Credentials
 
-Alexandre Correia, up202007042@edu.fe.up.pt <br> Ana Sofia Costa, up202007602@edu.fe.up.pt <br> Daniel Rodrigues, up202006562@edu.fe.up.pt <br> Diogo Fonte, up202004175@edu.fc.up.pt
-
----
+>| Type | E-mail | Password |
+>| ---- | ------ | -------- |
+>| example account | daniel-jose2002@live.com.pt | teste12345 |
