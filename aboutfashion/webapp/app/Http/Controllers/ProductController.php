@@ -216,7 +216,7 @@ class ProductController extends Controller{
         $validator = Validator::make($request->all(),[
             'id_color' => 'required|integer',
             'id_size' => 'required|integer',
-            'quantity' => 'required|integer',
+            'new_stock' => 'required|integer',
         ]);
 
         if($validator->fails()){
@@ -224,16 +224,11 @@ class ProductController extends Controller{
         }
 
         $id_color = $request->input('id_color');
-        $id_size = $request->input('id_size');
+        $id_size = $request->input('new_stock');
 
-        if(is_null(Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first)){
-            $stock = new Stock();
-            $stock->id_product = $id;
-            $stock->id_color = $request->input('id_color');
-            $stock->id_size = $request->input('id_size');
-            $stock->stock = $request->input('new_stock');
-
-            if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$id_color,$id_size ))) {
+        if(is_null(Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first())){
+            
+            if (DB::insert('insert into stock (stock, id_product, id_color, id_size) values (?, ?, ?, ?)', [$request->input('new_stock'),$id,$id_color,$id_size ])){
                 return Redirect::route('productsAdminPanel');
             } else {
                 return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
