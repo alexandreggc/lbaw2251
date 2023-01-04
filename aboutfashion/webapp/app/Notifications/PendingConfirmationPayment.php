@@ -15,7 +15,7 @@ class PendingConfirmationPayment extends Notification
     private $order;
     public function __construct($order)
     {
-        $this->order = $order;
+        $this->order = Order::find($order);
     }
 
     /**
