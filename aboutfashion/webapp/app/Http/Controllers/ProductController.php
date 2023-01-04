@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\ProductWishlistAvailable;
 use Exception;
 use App\Models\Size;
 use App\Models\User;
@@ -224,11 +225,21 @@ class ProductController extends Controller{
         }
 
         $id_color = $request->input('id_color');
-        $id_size = $request->input('new_stock');
+        $id_size = $request->input('id_size');
 
         if(is_null(Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first())){
             
             if (DB::insert('insert into stock (stock, id_product, id_color, id_size) values (?, ?, ?, ?)', [$request->input('new_stock'),$id,$id_color,$id_size ])){
+                $users = array();
+                $product = Product::find($id);
+                $stockN = Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first();
+                foreach(User::all() as $user)
+                {
+                    if($user->wishlist->contains($product)){
+                        array_push($users, $user);
+                    }
+                }
+                Notification::send($users, new ProductWishlistAvailable($product, $stockN));
                 return Redirect::route('productsAdminPanel');
             } else {
                 return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
@@ -265,9 +276,20 @@ class ProductController extends Controller{
             return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Stock not found!'));
         }
 
-        $stock->stock = $request->input('new_stock');
-
-        if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($stock->stock,$stock->id_product,$stock->id_color,$stock->id_size ))) {
+        if (DB::update('UPDATE stock SET stock = ? WHERE id_product = ? AND id_color = ? AND id_size = ?', array($request->input('new_stock'),$id,$id_color,$id_size ))) {
+                if($stock->stock < $request->input('new_stock')){
+                    $users = array();
+                    $product = Product::find($id);
+                    $stockN = Stock::where('id_size', $id_size)->where('id_color', $id_color)->where('id_product', $id)->first();
+                foreach(User::all() as $user)
+                {
+                    if($user->wishlist->contains($product)){
+                        array_push($users, $user);
+                    }
+                }
+                Notification::send($users, new ProductWishlistAvailable($product, $stockN));    
+                }
+                
             return Redirect::route('productsAdminPanel');
         } else {
             return Redirect::back()->withErrors(array('status' => 'error', 'message'=>'Error!'));
